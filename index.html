@@ -242,7 +242,7 @@
   <div class="sub">B737 OPERATIONS — WEATHER SUMMARY DASHBOARD</div>
   <div class="header-meta">
     <span class="badge">7 AIRPORTS</span>
-    <span>2 / 7 COMPLETED</span>
+    <span>3 / 7 COMPLETED</span>
     <span>Last updated: 2026-03-04</span>
   </div>
 </div>
@@ -356,32 +356,42 @@
   </div>
 
   <!-- ===== KMQ / RJNK ===== -->
-  <div class="card placeholder">
+  <div class="card ready" onclick="window.location.href='KMQ/RJNK_Weather_Briefing.html'">
     <div class="card-top">
       <div>
         <div class="airport-name">小松空港 <span class="icao">RJNK</span></div>
         <div class="airport-code">KMQ ─ 日本海側</div>
       </div>
-      <div class="status-badge status-pending">PENDING</div>
+      <div class="status-badge status-ready">READY</div>
     </div>
     <div class="rwy-row">
-      <span class="rwy-badge" style="opacity:0.5;">RWY —</span>
-      <span style="color:#3a4f63;">— × — m</span>
-      <span class="rwy-detail" style="color:#2a3f53;">ELEV — ft</span>
+      <span class="rwy-badge">RWY 06/24</span>
+      <span>2,700 × 45 m</span>
+      <span class="rwy-detail">ELEV 22 ft ｜ OPS H24</span>
     </div>
-    <div class="placeholder-body">
-      <div class="pdf-count">10</div>
-      <div class="pdf-label">source PDFs</div>
+    <div class="metrics">
+      <div class="metric-box">
+        <div class="metric-val" style="font-size:11pt;">不定<span>(S寄り)</span></div>
+        <div class="metric-label">年間卓越傾向</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#ff6b35;">W-NW</div>
+        <div class="metric-label">冬季横風方向</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#fbbf24;">冬季雷</div>
+        <div class="metric-label">最重要ハザード</div>
+      </div>
     </div>
-    <div class="placeholder-tags">
+    <div class="tags">
       <span class="tag tag-thunder">冬季雷</span>
       <span class="tag tag-snow">降雪</span>
-      <span class="tag tag-turb">乱気流</span>
+      <span class="tag tag-turb">山岳波</span>
       <span class="tag tag-deice">除雪</span>
       <span class="tag tag-snow">あられ</span>
     </div>
     <div class="card-links">
-      <a class="disabled">HTML Briefing</a>
+      <a href="KMQ/RJNK_Weather_Briefing.html">HTML Briefing</a>
       <a class="disabled">PDF Download</a>
     </div>
   </div>
