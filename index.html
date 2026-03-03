@@ -242,7 +242,7 @@
   <div class="sub">B737 OPERATIONS — WEATHER SUMMARY DASHBOARD</div>
   <div class="header-meta">
     <span class="badge">7 AIRPORTS</span>
-    <span>3 / 7 COMPLETED</span>
+    <span>4 / 7 COMPLETED</span>
     <span>Last updated: 2026-03-04</span>
   </div>
 </div>
@@ -441,31 +441,45 @@
   </div>
 
   <!-- ===== OIT / RJFO ===== -->
-  <div class="card placeholder">
+  <div class="card ready" onclick="window.location.href='OIT/RJFO_Weather_Briefing.html'">
     <div class="card-top">
       <div>
         <div class="airport-name">大分空港 <span class="icao">RJFO</span></div>
-        <div class="airport-code">OIT ─ 九州東部</div>
+        <div class="airport-code">OIT ─ 国東半島・海上空港</div>
       </div>
-      <div class="status-badge status-pending">PENDING</div>
+      <div class="status-badge status-ready">READY</div>
     </div>
     <div class="rwy-row">
-      <span class="rwy-badge" style="opacity:0.5;">RWY —</span>
-      <span style="color:#3a4f63;">— × — m</span>
-      <span class="rwy-detail" style="color:#2a3f53;">ELEV — ft</span>
+      <span class="rwy-badge">RWY 01/19</span>
+      <span>3,000 × 45 m</span>
+      <span class="rwy-detail">ELEV 17 ft ｜ OPS 2230-1300UTC</span>
     </div>
-    <div class="placeholder-body">
-      <div class="pdf-count">7</div>
-      <div class="pdf-label">source PDFs</div>
+    <div class="metrics">
+      <div class="metric-box">
+        <div class="metric-val" style="font-size:11pt;">NW</div>
+        <div class="metric-label">年間最多風向</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#818cf8;">海霧</div>
+        <div class="metric-label">最重要ハザード</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val">11<span>日</span></div>
+        <div class="metric-label">年間霧日数</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val">15<span>日</span></div>
+        <div class="metric-label">年間降雪日数</div>
+      </div>
     </div>
-    <div class="placeholder-tags">
+    <div class="tags">
+      <span class="tag tag-fog">移流霧・海霧</span>
       <span class="tag tag-turb">低層乱気流</span>
-      <span class="tag tag-vis">視程障害</span>
-      <span class="tag tag-thunder">雷</span>
-      <span class="tag tag-snow">雪</span>
+      <span class="tag tag-snow">降雪</span>
+      <span class="tag tag-thunder">熱雷</span>
     </div>
     <div class="card-links">
-      <a class="disabled">HTML Briefing</a>
+      <a href="OIT/RJFO_Weather_Briefing.html">HTML Briefing</a>
       <a class="disabled">PDF Download</a>
     </div>
   </div>
