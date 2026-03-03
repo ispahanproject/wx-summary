@@ -242,7 +242,7 @@
   <div class="sub">B737 OPERATIONS — WEATHER SUMMARY DASHBOARD</div>
   <div class="header-meta">
     <span class="badge">7 AIRPORTS</span>
-    <span>4 / 7 COMPLETED</span>
+    <span>5 / 7 COMPLETED</span>
     <span>Last updated: 2026-03-04</span>
   </div>
 </div>
@@ -326,31 +326,41 @@
   </div>
 
   <!-- ===== FUK / RJFF ===== -->
-  <div class="card placeholder">
+  <div class="card ready" onclick="window.location.href='FUK/RJFF_Weather_Briefing.html'">
     <div class="card-top">
       <div>
         <div class="airport-name">福岡空港 <span class="icao">RJFF</span></div>
-        <div class="airport-code">FUK ─ 九州北部</div>
+        <div class="airport-code">FUK ─ 九州北部・福岡市街地</div>
       </div>
-      <div class="status-badge status-pending">PENDING</div>
+      <div class="status-badge status-ready">READY</div>
     </div>
     <div class="rwy-row">
-      <span class="rwy-badge" style="opacity:0.5;">RWY —</span>
-      <span style="color:#3a4f63;">— × — m</span>
-      <span class="rwy-detail" style="color:#2a3f53;">ELEV — ft</span>
+      <span class="rwy-badge">RWY 16/34</span>
+      <span>2,800 × 60 m</span>
+      <span class="rwy-detail">ELEV 30 ft ｜ H24 Curfew 2300-0700L</span>
     </div>
-    <div class="placeholder-body">
-      <div class="pdf-count">6</div>
-      <div class="pdf-label">source PDFs</div>
+    <div class="metrics">
+      <div class="metric-box">
+        <div class="metric-val" style="font-size:11pt;">NNW/SSE</div>
+        <div class="metric-label">卓越風向（RWY方向）</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#ff6b35;">背振山</div>
+        <div class="metric-label">乱気流源</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val">19<span>日</span></div>
+        <div class="metric-label">年間降雪日数</div>
+      </div>
     </div>
-    <div class="placeholder-tags">
-      <span class="tag tag-turb">乱気流</span>
-      <span class="tag tag-vis">視程障害</span>
-      <span class="tag tag-thunder">雷</span>
-      <span class="tag tag-snow">雪</span>
+    <div class="tags">
+      <span class="tag tag-turb">乱気流（背振山）</span>
+      <span class="tag tag-thunder">夏季熱雷</span>
+      <span class="tag tag-snow">降雪</span>
+      <span class="tag tag-fog">放射霧</span>
     </div>
     <div class="card-links">
-      <a class="disabled">HTML Briefing</a>
+      <a href="FUK/RJFF_Weather_Briefing.html">HTML Briefing</a>
       <a class="disabled">PDF Download</a>
     </div>
   </div>
