@@ -1,0 +1,11 @@
+# PDF source files (too large for git)
+*.pdf
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+
+# Claude
+.claude/
