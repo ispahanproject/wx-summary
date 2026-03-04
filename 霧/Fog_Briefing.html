@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923;
+    color: #e0e6ed;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 14mm 16mm 12mm 16mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    background: #0f1923;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid #a78bfa;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .header-left h1 {
+    font-size: 20pt;
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: 4px;
+  }
+  .header-left h1 span.accent { color: #a78bfa; font-weight: 300; }
+  .header-left .subtitle {
+    font-size: 8pt;
+    color: #7a8fa6;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 7.5pt;
+    color: #7a8fa6;
+  }
+  .header-right .page-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #a78bfa22, #a78bfa11);
+    border: 1px solid #a78bfa55;
+    border-radius: 4px;
+    padding: 3px 10px;
+    color: #a78bfa;
+    font-weight: 500;
+    font-size: 9pt;
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+  }
+
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+
+  .card {
+    background: linear-gradient(160deg, #1a2836, #152230);
+    border: 1px solid #1e3448;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 7px;
+    gap: 6px;
+  }
+  .card-header .icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .icon-fog { background: #a78bfa22; color: #a78bfa; }
+  .icon-info { background: #34d39922; color: #34d399; }
+  .icon-warn { background: #ff6b3522; color: #ff6b35; }
+  .icon-snow { background: #e2e8f022; color: #e2e8f0; }
+  .icon-tool { background: #00d4ff22; color: #00d4ff; }
+  .icon-case { background: #fbbf2422; color: #fbbf24; }
+  .icon-region { background: #f4365822; color: #f43658; }
+  .icon-shield { background: #34d39922; color: #34d399; }
+
+  .card-header h2 {
+    font-size: 9.5pt;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 7pt;
+    font-weight: 500;
+    margin-right: 3px;
+    letter-spacing: 0.5px;
+  }
+  .tag-purple { background: #a78bfa18; color: #a78bfa; border: 1px solid #a78bfa44; }
+  .tag-blue { background: #00d4ff18; color: #00d4ff; border: 1px solid #00d4ff44; }
+  .tag-orange { background: #ff6b3518; color: #ff6b35; border: 1px solid #ff6b3544; }
+  .tag-red { background: #f4365818; color: #f43658; border: 1px solid #f4365844; }
+  .tag-yellow { background: #fbbf2418; color: #fbbf24; border: 1px solid #fbbf2444; }
+  .tag-green { background: #34d39918; color: #34d399; border: 1px solid #34d39944; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th {
+    background: #0d1820; color: #7a8fa6; font-weight: 400;
+    padding: 4px 6px; text-align: left; font-size: 7pt;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448;
+  }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
+  table tr:last-child td { border-bottom: none; }
+
+  .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
+  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; text-align: center; }
+  .metric .val { font-size: 14pt; font-weight: 300; color: #a78bfa; line-height: 1.2; letter-spacing: 0.5px; }
+  .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li {
+    position: relative; padding-left: 12px; margin-bottom: 3px;
+    color: #b0c0d0; font-size: 7.8pt;
+  }
+  .bullet-list li::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 4px; height: 4px; border-radius: 50%; background: #a78bfa;
+  }
+  .bullet-list li.warn::before { background: #ff6b35; }
+  .bullet-list li.danger::before { background: #f43658; }
+
+  .highlight { color: #a78bfa; font-weight: 500; }
+  .warn-text { color: #ff6b35; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+
+  .caution-box {
+    background: linear-gradient(135deg, #ff6b3512, #ff6b3508);
+    border: 1px solid #ff6b3533;
+    border-left: 3px solid #ff6b35;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #ffcba4;
+  }
+  .caution-box strong { color: #ff6b35; }
+
+  .info-box {
+    background: linear-gradient(135deg, #a78bfa12, #a78bfa08);
+    border: 1px solid #a78bfa33;
+    border-left: 3px solid #a78bfa;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #d4c5f9;
+  }
+
+  .fog-type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 6px 0;
+  }
+  .fog-type-item {
+    background: #0d1820;
+    border-radius: 5px;
+    padding: 7px 9px;
+    border: 1px solid #1e3448;
+  }
+  .fog-type-item .name {
+    font-size: 8.5pt;
+    font-weight: 500;
+    color: #a78bfa;
+    margin-bottom: 2px;
+  }
+  .fog-type-item .en {
+    font-size: 6.5pt;
+    color: #5a7288;
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+  }
+  .fog-type-item .desc {
+    font-size: 7pt;
+    color: #8a9ab0;
+    line-height: 1.4;
+  }
+
+  .metar-code {
+    font-family: 'Fira Code', 'SF Mono', monospace;
+    font-size: 7pt;
+    background: #0a1018;
+    border: 1px solid #1e3448;
+    border-radius: 3px;
+    padding: 5px 8px;
+    color: #a78bfa;
+    margin: 4px 0;
+    display: block;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+
+  .case-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+  .case-date {
+    font-size: 8pt;
+    font-weight: 500;
+    color: #fbbf24;
+    letter-spacing: 0.5px;
+  }
+  .case-airport {
+    font-size: 8pt;
+    font-weight: 500;
+    color: #00d4ff;
+  }
+  .case-impact {
+    font-size: 7pt;
+    color: #f43658;
+    font-weight: 500;
+  }
+
+  .quick-ref {
+    background: linear-gradient(135deg, #0d1820, #0a1219);
+    border: 1px solid #a78bfa33;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 6px;
+  }
+  .quick-ref-title {
+    font-size: 7.5pt;
+    color: #a78bfa;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .quick-ref-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .quick-ref-item {
+    text-align: center;
+    padding: 4px;
+  }
+  .quick-ref-item .qr-val {
+    font-size: 10pt;
+    font-weight: 300;
+    color: #a78bfa;
+  }
+  .quick-ref-item .qr-label {
+    font-size: 6pt;
+    color: #5a7288;
+    text-transform: uppercase;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid #1e3448;
+    margin: 8px 0;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 10mm;
+    left: 16mm;
+    right: 16mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 6pt;
+    color: #3a4f63;
+    border-top: 1px solid #1a2836;
+    padding-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1: FOG KNOWLEDGE ============ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>FOG <span class="accent">BRIEFING</span></h1>
+      <div class="subtitle">B737 OPERATIONS — 霧に関する知識・事例・対策</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 1 / 4</div>
+      <div>FOG KNOWLEDGE</div>
+      <div>Source: 24 PDFs / MET INFO</div>
+    </div>
+  </div>
+
+  <!-- 霧の種類 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-fog">☁</div>
+      <h2>霧の種類 — SIX TYPES OF FOG</h2>
+    </div>
+    <p style="font-size:7.5pt;color:#8a9ab0;margin-bottom:6px;">
+      霧は微小な水滴が空中に漂い<span class="highlight">視程1km未満</span>となる現象。1km以上は「もや（BR）」。相対湿度はほぼ100%。複数要因の複合で発生することもある。
+    </p>
+    <div class="fog-type-grid">
+      <div class="fog-type-item">
+        <div class="name">放射霧</div>
+        <div class="en">RADIATION FOG</div>
+        <div class="desc">夜間の放射冷却で地表付近の空気が冷却。雲なし・弱風時に発生。秋〜冬、盆地・山間空港で多い。日射で消滅。</div>
+      </div>
+      <div class="fog-type-item">
+        <div class="name">移流霧</div>
+        <div class="en">ADVECTION FOG</div>
+        <div class="desc">冷たい海面上に暖湿気が流入し冷却。いわゆる海霧。梅雨期、北日本太平洋沿岸・瀬戸内海西部で多い。長時間持続。</div>
+      </div>
+      <div class="fog-type-item">
+        <div class="name">蒸気霧</div>
+        <div class="en">STEAM FOG</div>
+        <div class="desc">暖かい水面上を寒気が通過時に蒸発水蒸気が冷却。海水温が気温より6℃以上高い時に発生。冬の日本海・河川沿い。</div>
+      </div>
+      <div class="fog-type-item">
+        <div class="name">滑昇霧</div>
+        <div class="en">UPSLOPE FOG</div>
+        <div class="desc">地形斜面に沿って空気が上昇し断熱膨張で冷却。夏の山岳斜面で多い。標高の高い空港（TAK, HIJ等）で注意。</div>
+      </div>
+      <div class="fog-type-item">
+        <div class="name">前線霧</div>
+        <div class="en">FRONTAL FOG</div>
+        <div class="desc">前線面の暖かい雨が寒気中を落下し蒸発水蒸気が冷却。または雨で濡れた地面に冷気流入。広域・長時間継続。</div>
+      </div>
+      <div class="fog-type-item">
+        <div class="name">混合霧</div>
+        <div class="en">MIXING FOG</div>
+        <div class="desc">気温の異なる2つの空気塊が混合し暖気側が冷却。水温差のある河川合流点などで見られる。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METAR表記 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-info">✦</div>
+      <h2>METARにおける霧の表記</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <table>
+          <tr><th>コード</th><th>名称</th><th>特徴</th></tr>
+          <tr><td><span class="highlight">FG</span></td><td>霧 Fog</td><td>観測所に存在、視程1,000m未満</td></tr>
+          <tr><td><span class="highlight">VCFG</span></td><td>周辺霧 Vicinity Fog</td><td>標点8〜16km範囲に存在</td></tr>
+          <tr><td><span class="highlight">PRFG</span></td><td>部分霧 Partial Fog</td><td>飛行場の一部を覆う、反対側は晴</td></tr>
+          <tr><td><span class="highlight">BCFG</span></td><td>散在霧 Patched Fog</td><td>飛行場に散在、観測所にはなし</td></tr>
+          <tr><td><span class="highlight">MIFG</span></td><td>地霧 Shallow Fog</td><td>地上2mの視程は1,000m以上</td></tr>
+          <tr><td><span class="danger-text">FZFG</span></td><td>着氷性霧 Freezing Fog</td><td>気温0℃以下で着氷の危険</td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#7a8fa6;margin-bottom:4px;letter-spacing:0.5px;">観測範囲</p>
+        <svg viewBox="0 0 240 130" style="width:100%;height:auto;">
+          <defs>
+            <radialGradient id="rg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.15"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0.02"/></radialGradient>
+            <radialGradient id="rg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00d4ff" stop-opacity="0.12"/><stop offset="100%" stop-color="#00d4ff" stop-opacity="0.02"/></radialGradient>
+          </defs>
+          <circle cx="120" cy="65" r="55" fill="url(#rg1)" stroke="#a78bfa" stroke-width="0.5" stroke-dasharray="3,2"/>
+          <circle cx="120" cy="65" r="30" fill="url(#rg2)" stroke="#00d4ff" stroke-width="0.7"/>
+          <circle cx="120" cy="65" r="3" fill="#ff6b35"/>
+          <text x="120" y="58" text-anchor="middle" font-size="6" fill="#ff6b35" font-family="Poppins, Noto Sans CJK JP">標点</text>
+          <text x="155" y="68" font-size="6" fill="#00d4ff" font-family="Poppins, Noto Sans CJK JP">8km</text>
+          <text x="178" y="68" font-size="6" fill="#a78bfa" font-family="Poppins, Noto Sans CJK JP">16km</text>
+          <text x="120" y="100" text-anchor="middle" font-size="6" fill="#00d4ff" font-family="Poppins, Noto Sans CJK JP">METAR観測範囲</text>
+          <text x="120" y="125" text-anchor="middle" font-size="6" fill="#a78bfa" font-family="Poppins, Noto Sans CJK JP">VC（Vicinity）範囲</text>
+          <line x1="123" y1="65" x2="150" y2="65" stroke="#00d4ff" stroke-width="0.5" stroke-dasharray="2,1"/>
+          <line x1="123" y1="65" x2="175" y2="65" stroke="#a78bfa" stroke-width="0.5" stroke-dasharray="2,1"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- 黄砂と煙霧 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-warn">⚠</div>
+      <h2>黄砂・煙霧による視程障害</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:7.5pt;color:#8a9ab0;margin-bottom:4px;">
+          <span class="warn-text">煙霧（HZ）</span>: 乾いた微粒子による視程低下。METARでは視程5km以下で使用。<br>
+          <span class="warn-text">黄砂（SA）</span>: 東アジア砂漠域から飛来。春に多い。地上視程より飛行視程が高いことが多く注意。
+        </p>
+        <table>
+          <tr><th>コード</th><th>名称</th><th>視程条件</th></tr>
+          <tr><td>SA / DU</td><td>砂塵 / 塵</td><td>BLSA/BLDU: ≤5km</td></tr>
+          <tr><td>SS / DS</td><td>砂嵐 / 塵嵐</td><td>視程1km未満</td></tr>
+          <tr><td>- (弱)</td><td colspan="2">視程1km以上</td></tr>
+          <tr><td>(無印)</td><td colspan="2">視程0.5km以上〜1km未満</td></tr>
+          <tr><td>+ (強)</td><td colspan="2">視程0.5km未満</td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-size:7pt;color:#5a7288;margin-bottom:3px;letter-spacing:0.5px;">事例: 2002/4/8 FUK 黄砂</p>
+        <ul class="bullet-list">
+          <li>黄砂により視程2,200mまで悪化</li>
+          <li class="warn">11便欠航、80便に最大3時間遅延</li>
+          <li>METAR: <span style="color:#a78bfa;">SA</span> + <span style="color:#fbbf24;">YELLOW SAND</span> P/RR</li>
+        </ul>
+        <p style="font-size:7pt;color:#5a7288;margin-top:5px;margin-bottom:3px;letter-spacing:0.5px;">事例: 2013/3/10 HND 煙霧</p>
+        <ul class="bullet-list">
+          <li>寒冷前線通過で視程3,000mまで低下</li>
+          <li>METAR: <span style="color:#a78bfa;">BLDU</span> + 強風による砂塵巻上げ</li>
+          <li>ウィンドシア観測、MOD-SEV TURB報告</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 監視ツール -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-tool">◎</div>
+      <h2>霧の監視に役立つ気象情報</h2>
+    </div>
+    <div class="grid-3">
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#00d4ff;margin-bottom:3px;">ひまわり霧情報</p>
+        <ul class="bullet-list">
+          <li>赤外差分画像による霧域推定</li>
+          <li>夜間でも監視可能</li>
+          <li>30分毎更新</li>
+          <li>凡例: <span class="danger-text">赤</span>=非常に濃い <span class="warn-text">橙</span>=濃い <span style="color:#fbbf24;">黄</span>=やや濃い</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#00d4ff;margin-bottom:3px;">SYNOP / FOSTER</p>
+        <ul class="bullet-list">
+          <li>地上実況気象通報の視程情報</li>
+          <li>FOSTERのMAP上で確認可能</li>
+          <li>視程色分け:<br><span class="danger-text">&lt;1000m</span> / <span style="color:#34d399;">1000-3200m</span> / <span style="color:#00d4ff;">&gt;3200m</span></li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#00d4ff;margin-bottom:3px;">LFM 下層悪天予想図</p>
+        <ul class="bullet-list">
+          <li>水平格子2km、局地モデル</li>
+          <li>TAFに表現されない局地的現象を把握</li>
+          <li>低視程予想域をオレンジで描画</li>
+          <li>濃いオレンジ = 視程1km未満</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>PRE-FLIGHT WX BRIEFING — FOG KNOWLEDGE & CASE STUDIES</span>
+    <span>Source: JAL B737 Weather Manual / MET INFO</span>
+  </div>
+</div>
+
+<!-- ============ PAGE 2: HND / CTS / TOHOKU ============ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>FOG <span class="accent">CASES</span></h1>
+      <div class="subtitle">B737 OPERATIONS — HND・CTS・東北地方の霧事例</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 2 / 4</div>
+      <div>REGIONAL CASE STUDIES</div>
+    </div>
+  </div>
+
+  <!-- HND -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-case">✈</div>
+      <h2>HND（羽田空港）— 春の海霧</h2>
+      <span class="tag tag-red">HIGH IMPACT</span>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="case-header">
+          <span class="case-date">2010/2/25</span>
+          <span class="case-impact">DIV 33便 / 欠航 183便</span>
+        </div>
+        <ul class="bullet-list">
+          <li>0630L頃からVIS低下、CAT II最低気象条件未満</li>
+          <li>1100L過ぎまで5時間継続</li>
+          <li>東京湾海水温が相対的に低く、解消遅延の一因</li>
+          <li>METAR: VIS 0100m、RVR 0250m</li>
+        </ul>
+      </div>
+      <div>
+        <div class="case-header">
+          <span class="case-date">2016/3/8</span>
+          <span class="case-impact">G/A多発 / SSP発動</span>
+        </div>
+        <ul class="bullet-list">
+          <li>東京湾の海霧がRWYに流入、FOG BANK移動</li>
+          <li>TAFは「TEMPO 1500 BR」→ 実際はFG</li>
+          <li>SSP発動で管制間隔拡大、上空待機拡大</li>
+          <li>RWY毎に状況が異なる特徴</li>
+        </ul>
+      </div>
+    </div>
+    <div class="caution-box">
+      <strong>⚠ HND教訓:</strong> TAFに「TEMPO 1500 BR」が表現されている場合は要注意。海水温13℃前後（春）、T=Td（RH100%）、弱風時に東京湾の海霧が発生。RWY34R SSP ONで到着便ATC混雑。FOG BANKが移動し回復が遅れることがある。
+    </div>
+    <div class="metrics-row">
+      <div class="metric"><div class="val">13℃</div><div class="label">海水温目安</div></div>
+      <div class="metric"><div class="val">T=Td</div><div class="label">飽和条件</div></div>
+      <div class="metric"><div class="val">弱風</div><div class="label">気圧傾度小</div></div>
+      <div class="metric"><div class="val">FOG BANK</div><div class="label">移動に注意</div></div>
+    </div>
+  </div>
+
+  <!-- CTS FZFG -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-snow">❄</div>
+      <h2>CTS（新千歳空港）— 着氷性霧 FZFG</h2>
+      <span class="tag tag-red">FZFG</span>
+    </div>
+    <div class="case-header">
+      <span class="case-date">2012/1/10</span>
+      <span class="case-airport">RJCC</span>
+      <span class="case-impact">DIV 1便</span>
+    </div>
+    <div class="grid-2">
+      <div>
+        <ul class="bullet-list">
+          <li>前日に気温上昇→比較的湿った降雪</li>
+          <li>その後晴天域に入り<span class="danger-text">地上気温 -10℃以下</span>まで低下</li>
+          <li>内陸部で発生した地霧がFOG BANKとなり移動・流入</li>
+          <li>早朝を中心にFZFG発生の可能性が高い</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7pt;color:#5a7288;margin-bottom:3px;">METAR抜粋（VIS 0300-0400m）</p>
+        <div class="metar-code">RJCC 092330 VRB02KT 0400
+R01L/0300N R01R/0350V0650U
+FZFG FEW001 M11/M13 Q1019</div>
+        <div class="info-box">
+          前日TAFには予報なし。当日TAFでTEMPO追加。FOG BANKの流入は予測困難。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 東北の霧 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-region">▲</div>
+      <h2>東北の霧 — AOJ・MSJ・AXT</h2>
+      <span class="tag tag-purple">ヤマセ</span>
+      <span class="tag tag-blue">移流霧</span>
+    </div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:7.5pt;color:#8a9ab0;margin-bottom:4px;">
+          <span class="highlight">ヤマセ（山背）</span>: 北日本太平洋側で初夏〜盛夏に吹く冷湿な北東風。オホーツク海高気圧由来。低温で霧・低層雲を伴う。
+        </p>
+        <p style="font-size:7.5pt;color:#8a9ab0;margin-bottom:4px;">
+          <span class="highlight">要注意パターン</span>: 三陸沖にオホーツク海高気圧＋東北南部〜関東に梅雨前線が停滞。
+        </p>
+        <table>
+          <tr><th>日付</th><th>空港</th><th>DIV</th><th>気象概況</th></tr>
+          <tr><td>2012/6/17</td><td>AOJ</td><td>2便</td><td>前線南岸停滞+ﾌﾟ海高気圧</td></tr>
+          <tr><td>2011/6/27</td><td>AOJ</td><td>3便</td><td>前線本州北部+太平洋高</td></tr>
+          <tr><td>2009/6/30</td><td>MSJ</td><td>3便</td><td>前線南岸停滞+ﾌﾟ海高気圧</td></tr>
+          <tr><td>2016/6/9</td><td>AOJ</td><td>1便</td><td>TAFにFG表現なし→当日追加</td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#fbbf24;margin-bottom:4px;">AXT（秋田空港）の霧特性</p>
+        <ul class="bullet-list">
+          <li>放射霧・蒸気霧が主体（雄物川沿い）</li>
+          <li>解消: 日の出後約2〜3時間</li>
+          <li class="warn">10〜12月は解消が10〜12時まで遅延</li>
+          <li>西風なら空港に移流しないが、東寄りの風で運搬されることあり</li>
+          <li class="warn">秋は気温上昇が弱く解消遅延に注意</li>
+        </ul>
+        <table style="margin-top:5px;">
+          <tr><th>日付</th><th>影響</th><th>霧種</th></tr>
+          <tr><td>2016/10/19</td><td>欠航2 ATB/DIV2</td><td>放射霧</td></tr>
+          <tr><td>2019/10/1</td><td>BCFG→FG</td><td>放射霧+蒸気霧</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>PRE-FLIGHT WX BRIEFING — FOG KNOWLEDGE & CASE STUDIES</span>
+    <span>PAGE 2 / 4</span>
+  </div>
+</div>
+
+<!-- ============ PAGE 3: SETO INLAND SEA ============ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>SETO <span class="accent">INLAND SEA</span></h1>
+      <div class="subtitle">B737 OPERATIONS — 瀬戸内海周辺の霧事例</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 3 / 4</div>
+      <div>瀬戸内海の霧</div>
+    </div>
+  </div>
+
+  <!-- 瀬戸内海の霧概要 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-region">◆</div>
+      <h2>瀬戸内海周辺の霧 — 3つの発生要因</h2>
+    </div>
+    <div class="grid-3">
+      <div style="background:#0d1820;border-radius:5px;padding:7px 9px;border:1px solid #1e3448;">
+        <p style="font-size:8pt;font-weight:500;color:#a78bfa;margin-bottom:2px;">① 放射霧</p>
+        <p style="font-size:7pt;color:#8a9ab0;line-height:1.4;">前日降水後に天気回復→夜間放射冷却で空気が飽和。4〜7月にOIT・KKJ・UBJ・MYJなど西部で発生。</p>
+      </div>
+      <div style="background:#0d1820;border-radius:5px;padding:7px 9px;border:1px solid #1e3448;">
+        <p style="font-size:8pt;font-weight:500;color:#00d4ff;margin-bottom:2px;">② 移流霧（海霧）</p>
+        <p style="font-size:7pt;color:#8a9ab0;line-height:1.4;">太平洋高気圧縁辺の暖湿気が流入→冷たい海面で冷却。5〜7月、気温＞海水温となる時期に多発。風速5-6kt以下。</p>
+      </div>
+      <div style="background:#0d1820;border-radius:5px;padding:7px 9px;border:1px solid #1e3448;">
+        <p style="font-size:8pt;font-weight:500;color:#ff6b35;margin-bottom:2px;">③ 前線霧</p>
+        <p style="font-size:7pt;color:#8a9ab0;line-height:1.4;">梅雨前線等の降水時、暖かい雨が冷気層中を落下し霧発生。広域・長時間。HIJ・OKJ・TAKなど高標高空港で顕著。</p>
+      </div>
+    </div>
+    <svg viewBox="0 0 520 100" style="width:100%;height:auto;">
+      <!-- Seto Inland Sea Map -->
+      <rect x="0" y="0" width="520" height="100" fill="#0a1219" rx="4"/>
+      <!-- Coastlines simplified -->
+      <path d="M10,35 Q60,25 110,30 Q160,28 200,32 Q240,30 280,28 Q320,32 370,30 Q400,25 440,30 Q480,28 510,35" stroke="#1e3448" fill="none" stroke-width="1"/>
+      <path d="M10,65 Q60,75 110,70 Q160,72 200,68 Q240,70 280,72 Q320,68 370,70 Q400,75 440,70 Q480,72 510,65" stroke="#1e3448" fill="none" stroke-width="1"/>
+      <text x="260" y="52" text-anchor="middle" font-size="8" fill="#1e3448" font-family="Poppins, Noto Sans CJK JP" font-weight="300">瀬 戸 内 海</text>
+      <!-- Airport markers -->
+      <circle cx="55" cy="55" r="4" fill="#f43658" opacity="0.8"/><text x="55" y="70" text-anchor="middle" font-size="6" fill="#f43658" font-family="Poppins, Noto Sans CJK JP">OIT</text>
+      <circle cx="90" cy="32" r="4" fill="#ff6b35" opacity="0.8"/><text x="90" y="25" text-anchor="middle" font-size="6" fill="#ff6b35" font-family="Poppins, Noto Sans CJK JP">KKJ</text>
+      <circle cx="130" cy="35" r="4" fill="#fbbf24" opacity="0.8"/><text x="130" y="28" text-anchor="middle" font-size="6" fill="#fbbf24" font-family="Poppins, Noto Sans CJK JP">UBJ</text>
+      <circle cx="200" cy="65" r="4" fill="#a78bfa" opacity="0.8"/><text x="200" y="78" text-anchor="middle" font-size="6" fill="#a78bfa" font-family="Poppins, Noto Sans CJK JP">MYJ</text>
+      <circle cx="280" cy="32" r="4" fill="#34d399" opacity="0.8"/><text x="280" y="25" text-anchor="middle" font-size="6" fill="#34d399" font-family="Poppins, Noto Sans CJK JP">HIJ</text>
+      <circle cx="350" cy="35" r="4" fill="#00d4ff" opacity="0.8"/><text x="350" y="28" text-anchor="middle" font-size="6" fill="#00d4ff" font-family="Poppins, Noto Sans CJK JP">OKJ</text>
+      <circle cx="390" cy="58" r="4" fill="#e2e8f0" opacity="0.8"/><text x="390" y="71" text-anchor="middle" font-size="6" fill="#e2e8f0" font-family="Poppins, Noto Sans CJK JP">TAK</text>
+      <circle cx="470" cy="60" r="4" fill="#818cf8" opacity="0.8"/><text x="470" y="73" text-anchor="middle" font-size="6" fill="#818cf8" font-family="Poppins, Noto Sans CJK JP">KIX</text>
+      <!-- Season label -->
+      <text x="260" y="95" text-anchor="middle" font-size="7" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">4月〜7月: 放射霧・移流霧 / 梅雨期: 前線霧 — 広域同時発生に注意</text>
+    </svg>
+  </div>
+
+  <!-- 空港別特性 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-fog">☁</div>
+      <h2>空港別の霧特性</h2>
+    </div>
+    <table>
+      <tr><th>空港</th><th>標高</th><th>主な霧種</th><th>特記事項</th></tr>
+      <tr><td><span style="color:#f43658;">OIT</span></td><td>17ft</td><td>移流霧（海霧）</td><td>年平均11日。6-7月顕著。T-Td&lt;2℃+微風で発生。午後2時まで残ることあり</td></tr>
+      <tr><td><span style="color:#ff6b35;">KKJ</span></td><td>7ft</td><td>放射霧・海霧</td><td>海上空港。RWY ENDで霧が滞留しやすい</td></tr>
+      <tr><td><span style="color:#fbbf24;">UBJ</span></td><td>7ft</td><td>放射霧</td><td>KKJと地理的に近く連動して霧発生。FOG BANK流入</td></tr>
+      <tr><td><span style="color:#a78bfa;">MYJ</span></td><td>7ft</td><td>放射霧・海霧</td><td>TAF予報なしでも突然霧発生の事例あり（2013/4/25）</td></tr>
+      <tr><td><span style="color:#34d399;">HIJ</span></td><td>1088ft</td><td>前線霧・降水霧</td><td>高標高。850hPa SW20kt+暖湿気＋地上弱風で発生。長時間継続</td></tr>
+      <tr><td><span style="color:#00d4ff;">OKJ</span></td><td>806ft</td><td>前線霧</td><td>高標高。前線接近時に視程悪化が顕著</td></tr>
+      <tr><td><span style="color:#e2e8f0;">TAK</span></td><td>607ft</td><td>滑昇霧・前線霧</td><td>台地空港。東風時RW26 FNLに霧滞留。CIG 1000ft以下で要警戒</td></tr>
+    </table>
+  </div>
+
+  <!-- 主要事例 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-case">✈</div>
+      <h2>瀬戸内海 — 主要事例一覧</h2>
+    </div>
+    <table>
+      <tr><th>日付</th><th>霧種</th><th>影響空港</th><th>影響</th><th>要点</th></tr>
+      <tr><td><span class="case-date" style="font-size:7pt;">2013/4/25</span></td><td>放射霧</td><td>KKJ UBJ MYJ</td><td>DIV→FUK/TAK</td><td>MYJはTAF・気象官署見解とも予報なし</td></tr>
+      <tr><td><span class="case-date" style="font-size:7pt;">2015/3/17</span></td><td>放射霧</td><td>KKJ TAK TKS KIX</td><td>DIV/G-A多数</td><td>TAK/KIXはTAF予報なし。ひまわり霧情報が有効</td></tr>
+      <tr><td><span class="case-date" style="font-size:7pt;">2015/6/11</span></td><td>前線霧</td><td>TAK HIJ OIT</td><td>DIV/ATB多発</td><td>梅雨前線+θe342K暖湿気。終日視程不良</td></tr>
+      <tr><td><span class="case-date" style="font-size:7pt;">2016/5/10</span></td><td>暖湿流</td><td>TAK (OKJ OIT)</td><td>12便欠航</td><td>RH100%終日。JL475は3回G/A後ATB</td></tr>
+      <tr><td><span class="case-date" style="font-size:7pt;">2017/4/8</span></td><td>前線霧</td><td>UBJ OIT TKS SHM</td><td>29便欠航 ATB9</td><td>前線霧、終日継続が特徴</td></tr>
+      <tr><td><span class="case-date" style="font-size:7pt;">2017/6/29</span></td><td>海霧</td><td>OIT KKJ UBJ</td><td>JL DIV→FUK</td><td>暖湿気+周防灘で砕波西風=海霧</td></tr>
+    </table>
+    <div class="caution-box">
+      <strong>⚠ 瀬戸内海の教訓:</strong> 霧の予報は数値予報でも困難。TAFに霧予報がなくても、前日降水・暖湿気流入・放射冷却の条件が揃えば突然発生する。複数空港同時発生の場合、ダイバート先も確保困難になる。
+    </div>
+  </div>
+
+  <!-- TAK冬季 -->
+  <div class="card" style="margin-bottom:0;">
+    <div class="card-header">
+      <div class="icon icon-warn">!</div>
+      <h2>TAK（高松空港）— 悪天は「冬」にあり</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:7.5pt;color:#8a9ab0;margin-bottom:4px;">
+          梅雨期のイメージが強いが、統計的には<span class="danger-text">1月がDIV最多（12件/5年）</span>。2月10件、3月6件と冬季に集中。約3割がCAT N/G（予想困難な無情報DIV）。
+        </p>
+        <ul class="bullet-list">
+          <li>標高185m（607ft）の高台空港</li>
+          <li>降水時の視程障害は予想困難</li>
+          <li class="danger">CIG 1000ft以下はFOGへの変身を「警戒」</li>
+          <li>一気にマージナル→BLW WXの可能性</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7pt;color:#5a7288;margin-bottom:3px;">2014-2018 TAK月別DIV数</p>
+        <svg viewBox="0 0 240 80" style="width:100%;height:auto;">
+          <rect x="0" y="0" width="240" height="80" fill="#0a1219" rx="3"/>
+          <!-- Bars: 4月=0, 5月=7, 6月=8, 7月=1, 8月=5, 9月=6, 10月=0, 11月=2, 12月=4, 1月=12, 2月=10, 3月=6 -->
+          <rect x="8" y="70" width="12" height="0" fill="#a78bfa" rx="1"/><text x="14" y="78" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">4</text>
+          <rect x="27" y="42" width="12" height="28" fill="#a78bfa" rx="1"/><text x="33" y="78" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">5</text>
+          <rect x="46" y="38" width="12" height="32" fill="#a78bfa" rx="1"/><text x="52" y="78" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">6</text>
+          <rect x="65" y="66" width="12" height="4" fill="#a78bfa" rx="1"/><text x="71" y="78" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">7</text>
+          <rect x="84" y="50" width="12" height="20" fill="#a78bfa" rx="1"/><text x="90" y="78" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">8</text>
+          <rect x="103" y="46" width="12" height="24" fill="#a78bfa" rx="1"/><text x="109" y="78" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">9</text>
+          <rect x="122" y="70" width="12" height="0" fill="#a78bfa" rx="1"/><text x="128" y="78" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">10</text>
+          <rect x="141" y="62" width="12" height="8" fill="#a78bfa" rx="1"/><text x="147" y="78" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">11</text>
+          <rect x="160" y="54" width="12" height="16" fill="#a78bfa" rx="1"/><text x="166" y="78" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">12</text>
+          <rect x="179" y="22" width="12" height="48" fill="#f43658" rx="1"/><text x="185" y="78" text-anchor="middle" font-size="5" fill="#f43658" font-family="Poppins, Noto Sans CJK JP" font-weight="500">1</text>
+          <rect x="198" y="30" width="12" height="40" fill="#ff6b35" rx="1"/><text x="204" y="78" text-anchor="middle" font-size="5" fill="#ff6b35" font-family="Poppins, Noto Sans CJK JP">2</text>
+          <rect x="217" y="46" width="12" height="24" fill="#fbbf24" rx="1"/><text x="223" y="78" text-anchor="middle" font-size="5" fill="#fbbf24" font-family="Poppins, Noto Sans CJK JP">3</text>
+          <!-- Value Labels -->
+          <text x="185" y="18" text-anchor="middle" font-size="6" fill="#f43658" font-family="Poppins, Noto Sans CJK JP" font-weight="500">12</text>
+          <text x="204" y="26" text-anchor="middle" font-size="6" fill="#ff6b35" font-family="Poppins, Noto Sans CJK JP">10</text>
+          <text x="223" y="42" text-anchor="middle" font-size="6" fill="#fbbf24" font-family="Poppins, Noto Sans CJK JP">6</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>PRE-FLIGHT WX BRIEFING — FOG KNOWLEDGE & CASE STUDIES</span>
+    <span>PAGE 3 / 4</span>
+  </div>
+</div>
+
+<!-- ============ PAGE 4: COUNTERMEASURES ============ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>FOG <span class="accent">COUNTERMEASURES</span></h1>
+      <div class="subtitle">B737 OPERATIONS — 霧の予測指標と対策</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 4 / 4</div>
+      <div>予測・対策・まとめ</div>
+    </div>
+  </div>
+
+  <!-- 予測指標 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-tool">◎</div>
+      <h2>霧の予測指標 — PREDICTION THRESHOLDS</h2>
+    </div>
+    <table>
+      <tr><th>指標</th><th>閾値</th><th>適用</th><th>備考</th></tr>
+      <tr><td>気温-露点温度差</td><td class="highlight">T-Td &lt; 2℃</td><td>全般</td><td>前日20時頃の値で翌朝の霧発生を予測（特にOIT）</td></tr>
+      <tr><td>相対湿度</td><td class="highlight">RH ≒ 100%</td><td>全般</td><td>霧発生時はほぼ100%。RH100%終日継続の事例あり（TAK 2016/5）</td></tr>
+      <tr><td>海水温と気温差</td><td class="highlight">気温 &gt; 海水温</td><td>海霧</td><td>瀬戸内海5-7月。HND春は海水温13℃前後</td></tr>
+      <tr><td>海水温-気温差</td><td class="highlight">SST - T &gt; 6℃</td><td>蒸気霧</td><td>海水温が気温より6℃以上高い時。冬季日本海・河川沿い</td></tr>
+      <tr><td>地上風速</td><td class="highlight">5-6kt以下</td><td>移流霧</td><td>弱風時に発生しやすい。風向にも注意（海からの流入）</td></tr>
+      <tr><td>850hPa相当温位</td><td class="warn-text">θe ≥ 342K</td><td>前線霧</td><td>高相当温位の暖湿気流入で広域霧発生（2015/6/11事例）</td></tr>
+      <tr><td>850hPa風</td><td class="warn-text">SW 20kt+</td><td>HIJ</td><td>南西風暖湿気＋地上弱風→降水霧発生</td></tr>
+      <tr><td>地上気温</td><td class="danger-text">≤ -10℃</td><td>CTS FZFG</td><td>前日湿った降雪後の冷え込みでFOG BANK流入</td></tr>
+      <tr><td>放射冷却条件</td><td>晴天+弱風</td><td>放射霧</td><td>前日降水→翌日天気回復パターンが典型</td></tr>
+    </table>
+  </div>
+
+  <!-- TAFの読み方 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-warn">⚠</div>
+      <h2>TAF確認のポイント — LESSONS LEARNED</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#ff6b35;margin-bottom:5px;">TAF予報の限界</p>
+        <ul class="bullet-list">
+          <li class="danger">霧の予報は数値予報でも困難</li>
+          <li class="warn">TAFにFG表現がなくても突然発生する事例が多数</li>
+          <li>MYJ 2013/4/25: TAF・気象官署見解とも霧情報なし→FG発生</li>
+          <li>CTS 2012/1/10: 前日TAFにFZFG予報なし→当日追加</li>
+          <li>TAK 2015/3/17: 早朝TAFにFG予報なし→AMD発行</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#ff6b35;margin-bottom:5px;">要注意TAF表現</p>
+        <div class="caution-box">
+          <strong>HND:</strong> 「TEMPO 1500 BR」→ 霧への発達リスク<br>
+          <strong>TAK:</strong> CIG 1000ft以下 → FOGへの変身を警戒<br>
+          <strong>OIT:</strong> 「BR」+弱い東〜南東風 → 海霧流入リスク<br>
+          <strong>全般:</strong> 前日降水後の「NSW」→ 翌朝放射霧リスク
+        </div>
+        <p style="font-size:8pt;font-weight:500;color:#34d399;margin-top:5px;margin-bottom:5px;">確認すべき情報</p>
+        <ul class="bullet-list">
+          <li>ひまわり霧情報（夜間含め30分毎）</li>
+          <li>FOSTER SYNOP視程情報</li>
+          <li>LFM下層悪天予想図</li>
+          <li>海水温データ（神奈川県水産技術C等）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 霧発生時の解消時間 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-info">◇</div>
+      <h2>霧の解消パターン</h2>
+    </div>
+    <table>
+      <tr><th>霧種</th><th>解消メカニズム</th><th>所要時間</th><th>注意事項</th></tr>
+      <tr><td>放射霧</td><td>日射による気温上昇</td><td>日の出後2-3時間</td><td>秋は気温上昇弱く解消遅延。10-12月は昼まで残ることあり</td></tr>
+      <tr><td>移流霧（海霧）</td><td>暖湿気供給の停止・風向変化</td><td>午前10時頃まで</td><td>弱い東〜南東風継続時は午後2時頃まで残存（OIT）</td></tr>
+      <tr><td>前線霧</td><td>前線通過・風向変化</td><td>終日継続の場合あり</td><td>前線停滞時は長時間。気温20℃前後でも濃霧発生</td></tr>
+      <tr><td>蒸気霧</td><td>風速変化・気温上昇</td><td>日の出後2-3時間</td><td>夕方以降発生分は風向・風速がキー（気温上昇望めず）</td></tr>
+      <tr><td>FZFG</td><td>気温上昇・風向変化</td><td>FOG BANKの移動次第</td><td>FOG BANKの流入・移動は予測困難</td></tr>
+    </table>
+  </div>
+
+  <!-- OCC対応のポイント -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-shield">✓</div>
+      <h2>運航判断のポイント — OCC DECISION MAKING</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#34d399;margin-bottom:5px;">飛行計画作成時</p>
+        <ul class="bullet-list">
+          <li>前日降水＋翌日晴天予報 → 放射霧リスク評価</li>
+          <li>暖湿気流入パターン → 海霧・前線霧リスク評価</li>
+          <li>瀬戸内海複数空港同時霧 → ダイバート先確保困難の認識</li>
+          <li>高標高空港（TAK/HIJ/OKJ） → CIG低下即FOGの可能性</li>
+          <li class="warn">CAT-N/G PLNでも霧発生リスクあり → 燃料追加検討</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#34d399;margin-bottom:5px;">運航中の監視</p>
+        <ul class="bullet-list">
+          <li>ひまわり霧情報・SYNOP視程をリアルタイム監視</li>
+          <li>衛星可視画像でFOG BANK位置を確認（日中のみ）</li>
+          <li>METAR推移: PRFG→BCFG→FGの進行パターンに注意</li>
+          <li>現地航務との情報交換（気象官署見解確認）</li>
+          <li class="warn">FOG BANKの移動方向・速度に注意（HND・CTS）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="quick-ref">
+    <div class="quick-ref-title">■ QUICK REFERENCE — 霧対策チェックリスト</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div>
+        <ul class="bullet-list" style="font-size:7.5pt;">
+          <li>□ TAFの「BR」「BCFG」「PRFG」表現を確認</li>
+          <li>□ T-Td差を確認（&lt;2℃で霧リスク高）</li>
+          <li>□ ひまわり霧情報で霧域を面的に把握</li>
+          <li>□ LFM下層悪天予想図で局地予報確認</li>
+          <li>□ 海水温データの確認（海霧リスク評価）</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="bullet-list" style="font-size:7.5pt;">
+          <li>□ 前日の降水有無と翌日の天気回復予報</li>
+          <li>□ 瀬戸内海: 複数空港同時霧のダイバート先</li>
+          <li>□ 高標高空港: CIG 1000ft以下でFOG警戒</li>
+          <li>□ 秋〜冬: 放射霧解消遅延の可能性</li>
+          <li>□ METAR推移: PRFG→BCFG→FG進行監視</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>PRE-FLIGHT WX BRIEFING — FOG KNOWLEDGE & CASE STUDIES</span>
+    <span>PAGE 4 / 4</span>
+  </div>
+</div>
+
+</body>
+</html>
