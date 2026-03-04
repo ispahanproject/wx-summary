@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923; color: #e0e6ed; font-size: 8.5pt; line-height: 1.45;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page { width: 210mm; min-height: 297mm; padding: 14mm 16mm 12mm 16mm; position: relative; overflow: hidden; page-break-after: always; background: #0f1923; }
+  .page:last-child { page-break-after: avoid; }
+  .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #00d4ff; padding-bottom: 8px; margin-bottom: 12px; }
+  .header-left h1 { font-size: 20pt; font-weight: 300; color: #ffffff; letter-spacing: 4px; }
+  .header-left h1 span.icao { color: #00d4ff; font-weight: 300; }
+  .header-left .subtitle { font-size: 8pt; color: #7a8fa6; letter-spacing: 1px; margin-top: 2px; }
+  .header-right { text-align: right; font-size: 7.5pt; color: #7a8fa6; }
+  .header-right .rwy-badge { display: inline-block; background: linear-gradient(135deg, #00d4ff22, #00d4ff11); border: 1px solid #00d4ff55; border-radius: 4px; padding: 3px 10px; color: #00d4ff; font-weight: 500; font-size: 9pt; letter-spacing: 2px; margin-bottom: 3px; }
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+  .card { background: linear-gradient(160deg, #1a2836, #152230); border: 1px solid #1e3448; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; }
+  .card-header { display: flex; align-items: center; margin-bottom: 7px; gap: 6px; }
+  .card-header .icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .icon-wind { background: #00d4ff22; color: #00d4ff; }
+  .icon-turb { background: #ff6b3522; color: #ff6b35; }
+  .icon-vis  { background: #a78bfa22; color: #a78bfa; }
+  .icon-snow { background: #e2e8f022; color: #e2e8f0; }
+  .icon-rain { background: #3b82f622; color: #60a5fa; }
+  .icon-ts   { background: #fbbf2422; color: #fbbf24; }
+  .icon-case { background: #f4365822; color: #f43658; }
+  .icon-info { background: #00d4ff22; color: #00d4ff; }
+  .card-header h2 { font-size: 9.5pt; font-weight: 500; color: #ffffff; letter-spacing: 1.5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th { background: #0d1820; color: #7a8fa6; font-weight: 400; padding: 4px 6px; text-align: left; font-size: 7pt; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448; }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
+  table tr:last-child td { border-bottom: none; }
+  .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
+  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; text-align: center; }
+  .metric .val { font-size: 14pt; font-weight: 300; color: #00d4ff; line-height: 1.2; letter-spacing: 0.5px; }
+  .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li { position: relative; padding-left: 12px; margin-bottom: 3px; color: #b0c0d0; font-size: 7.8pt; }
+  .bullet-list li::before { content: ''; position: absolute; left: 0; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: #00d4ff; }
+  .bullet-list li.warn::before { background: #ff6b35; }
+  .bullet-list li.danger::before { background: #f43658; }
+  .highlight { color: #00d4ff; font-weight: 500; }
+  .warn-text { color: #ff6b35; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+  .green-text { color: #34d399; font-weight: 500; }
+  .purple-text { color: #a78bfa; font-weight: 500; }
+  .danger-box { background: linear-gradient(135deg, #ef444412, #ef444408); border: 1px solid #ef444433; border-left: 3px solid #ef4444; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #fca5a5; }
+  .danger-box strong { color: #ef4444; }
+  .info-box { background: linear-gradient(135deg, #00d4ff12, #00d4ff08); border: 1px solid #00d4ff33; border-left: 3px solid #00d4ff; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #7dd3fc; }
+  .info-box strong { color: #00d4ff; }
+  .warn-box { background: linear-gradient(135deg, #ff6b3512, #ff6b3508); border: 1px solid #ff6b3533; border-left: 3px solid #ff6b35; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #fdba74; }
+  .warn-box strong { color: #ff6b35; }
+  .pattern-box { background: #0d1820; border-radius: 5px; padding: 8px 10px; border: 1px solid #1e3448; margin-bottom: 8px; }
+  .pattern-box .pattern-title { font-weight: 500; font-size: 8.5pt; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .pattern-box .pattern-title .num { display: inline-flex; width: 18px; height: 18px; border-radius: 50%; background: #00d4ff22; color: #00d4ff; align-items: center; justify-content: center; font-size: 8pt; font-weight: 600; flex-shrink: 0; }
+  .pie-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 7.8pt; }
+  .pie-item .bar { height: 8px; border-radius: 3px; }
+  .rwy-table td:first-child { font-weight: 500; color: #00d4ff; white-space: nowrap; }
+  .footer-ref { position: absolute; bottom: 10mm; left: 16mm; right: 16mm; font-size: 6.5pt; color: #3a4f63; border-top: 1px solid #1a2836; padding-top: 4px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- ========== PAGE 1/4: AIRPORT OVERVIEW & WIND ========== -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>RJTT <span class="icao">HND</span></h1>
+      <div class="subtitle">東京国際空港（羽田）── 空港概要・風・強風パターン</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">PAGE 1 / 4</div>
+      <div>13 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric"><div class="val">4<span style="font-size:7pt;color:#5a7288;">本</span></div><div class="label">RWY</div></div>
+    <div class="metric"><div class="val">21<span style="font-size:7pt;color:#5a7288;">ft</span></div><div class="label">ELEV</div></div>
+    <div class="metric"><div class="val">H24</div><div class="label">OPS HR</div></div>
+    <div class="metric"><div class="val" style="color:#ff6b35;">44<span style="font-size:7pt;color:#5a7288;">%</span></div><div class="label">台風(50KT+原因)</div></div>
+    <div class="metric"><div class="val" style="color:#ff6b35;">36<span style="font-size:7pt;color:#5a7288;">%</span></div><div class="label">寒冷前線(50KT+)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>空港諸元 ── RJTT</h2></div>
+    <table class="rwy-table">
+      <tr><th>RWY</th><th>寸法</th><th>ILS</th><th>備考</th></tr>
+      <tr><td>16L / 34R</td><td>3,000 × 60 m</td><td>CAT I (34R)</td><td>代表風観測点(34R)</td></tr>
+      <tr><td>16R / 34L</td><td>3,000 × 60 m</td><td>CAT I (34L)</td><td>NE風時ハンガーウェーブ(34L)</td></tr>
+      <tr><td>04 / 22</td><td>2,500 × 60 m</td><td>CAT I (22)</td><td>RWY22 Short Final運河Down Wash</td></tr>
+      <tr><td>05 / 23</td><td>2,500 × 60 m</td><td>CAT I (23)</td><td>D滑走路 ─ METAR値より5-10kt強い</td></tr>
+    </table>
+    <div class="info-box"><strong>地形:</strong> 東=東京湾＋房総半島(300-400m丘陵)、NW-NE=関東平野(100km)、W=丹沢・秩父連山(1000m+)。多摩川河口に位置。</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-wind">&#9778;</div><h2>風の特徴</h2></div>
+      <ul class="bullet-list">
+        <li>冬季: <span class="highlight">北寄り</span>の季節風、夏季: <span class="highlight">南寄り</span></li>
+        <li>横風が運航に影響を及ぼすことは<span class="green-text">少ない</span></li>
+        <li>25KT+強風: 春=<span class="warn-text">日本海低気圧+前線</span>、秋=<span class="danger-text">台風</span></li>
+        <li>海陸風: 海風(S)=<span class="highlight">10時前後</span>、陸風(N)=日没1-2h後</li>
+      </ul>
+      <p style="font-size:7.5pt;color:#00d4ff;margin-top:6px;margin-bottom:4px;">&#9654; 風通報代表点</p>
+      <ul class="bullet-list">
+        <li>代表風: <span class="highlight">RWY34R</span></li>
+        <li>D-RWY(05/23)はMETAR値より<span class="danger-text">5-10kt強い</span></li>
+        <li>RW16LとRW05の風速にも<span class="warn-text">5-10KTの差</span>あり</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-wind">&#9778;</div><h2>瞬間風速50KT以上 ── 気圧配置</h2></div>
+      <p style="font-size:7pt;color:#7a8fa6;margin-bottom:6px;">2000年〜2010年4月の統計</p>
+      <div class="pie-item"><div class="bar" style="width:44%;background:#f43658;"></div><span><span class="danger-text">台風 44%</span></span></div>
+      <div class="pie-item"><div class="bar" style="width:36%;background:#ff6b35;"></div><span><span class="warn-text">寒冷前線前面 36%</span></span></div>
+      <div class="pie-item"><div class="bar" style="width:12%;background:#5a7288;"></div><span>その他 12%</span></div>
+      <div class="pie-item"><div class="bar" style="width:8%;background:#3b82f6;"></div><span><span class="highlight">冬型 8%</span></span></div>
+      <div class="warn-box"><strong>KEY:</strong> 強風の大半は<strong>寒冷前線</strong>と<strong>台風</strong>に起因。春の日本海低気圧時の南西強風と秋の台風が2大要因。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>季節別 運航影響風</h2></div>
+    <table>
+      <tr><th>季節</th><th>主な現象</th><th>風向</th><th>影響</th></tr>
+      <tr><td>春</td><td>日本海低気圧＋寒冷前線</td><td class="warn-text">SW 200-230°</td><td>RWY16L/R横風制限、G40kt+</td></tr>
+      <tr><td>夏</td><td>南寄り卓越＋TS</td><td>S系</td><td>海風、しゅう雨時の突風</td></tr>
+      <tr><td>秋</td><td>台風</td><td class="danger-text">全方位</td><td>暴風、大規模EVAC実績あり</td></tr>
+      <tr><td>冬</td><td>冬型気圧配置</td><td class="highlight">NW</td><td>北西季節風、山岳波</td></tr>
+    </table>
+  </div>
+
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJTT HND Weather Briefing</span><span>Page 1 ─ Airport Overview & Wind</span></div>
+</div>
+
+<!-- ========== PAGE 2/4: TURBULENCE / LLWS / MOUNTAIN WAVE ========== -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>RJTT <span class="icao">HND</span></h1>
+      <div class="subtitle">タービュランス・低層ウィンドシアー・富士山山岳波</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">PAGE 2 / 4</div>
+      <div>13 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>RWY別 乱気流・LLWS特性</h2></div>
+    <table>
+      <tr><th>RWY / 場面</th><th>条件</th><th>現象</th><th>注意事項</th></tr>
+      <tr><td class="highlight">34L Final</td><td>NE〜E風 10kt+</td><td class="warn-text">ハンガーウェーブ</td><td>格納庫が障害物 → 乱気流</td></tr>
+      <tr><td class="highlight">22 Final</td><td>SW風 20kt+</td><td class="warn-text">ターミナル後流</td><td>ターミナルが障害物 → 乱気流</td></tr>
+      <tr><td class="highlight">22 Short Final</td><td>常時</td><td>運河Down Wash</td><td>運河上空でDown Washに遭遇</td></tr>
+      <tr><td class="highlight">16L/16R 離陸</td><td>SW風 15kt+</td><td class="danger-text">Gust Speed変動</td><td>Rotation操作時に注意。16RはCargo Terminal越えでさらにRough</td></tr>
+      <tr><td class="highlight">34 着陸</td><td>地上N＋上空W</td><td>ウィンドシア</td><td>木更津通過後に注意</td></tr>
+      <tr><td class="highlight">22/23 Approach</td><td>西日時</td><td>逆光</td><td>RWY等が見つけにくい</td></tr>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>南西強風パターン ── 最重要</h2></div>
+      <ul class="bullet-list">
+        <li class="danger">主に<span class="danger-text">日本海低気圧に伴う寒冷前線前面</span>で発生</li>
+        <li>風向<span class="danger-text">220°±10°</span>が特に気流悪化</li>
+        <li>風向200°〜230°、平均<span class="danger-text">20kt+</span>、G<span class="danger-text">40kt+</span></li>
+        <li>横風成分<span class="danger-text">20kt超</span>で操縦に影響 → 高い操縦技術必要</li>
+        <li>RWY16L/Rにおいて横風による運航制限</li>
+        <li>本州南海上に優勢な高気圧がある場合にも発生</li>
+      </ul>
+      <div class="danger-box"><strong>2019/5/21事例:</strong> 寒冷前線前面でRWY23横風25KT超。RWY22のみ使用1h以上→ATC混雑。ALWINでRWY23がRWY22より<strong>5-8kt強い</strong>。G44kt。</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>寒冷前線通過後の注意</h2></div>
+      <ul class="bullet-list">
+        <li class="warn">前線通過後<span class="warn-text">約2時間</span>は低高度にウィンドシアー残存</li>
+        <li class="warn">地上風が北西に変わっても<span class="warn-text">1時間程度</span>は下層に南西風が存在</li>
+        <li>地上風と下層風の風向差によりウィンドシアに遭遇</li>
+      </ul>
+      <p style="font-size:7.5pt;color:#ff6b35;margin-top:8px;margin-bottom:4px;">&#9654; 2019/5/21 ALWIN比較</p>
+      <table>
+        <tr><th>AGL</th><th>RWY22 SPD</th><th>RWY23 SPD</th><th>差</th></tr>
+        <tr><td>750ft</td><td>38kt</td><td class="danger-text">44kt</td><td>+6</td></tr>
+        <tr><td>500ft</td><td>36kt</td><td class="danger-text">41kt</td><td>+5</td></tr>
+        <tr><td>200ft</td><td>30kt</td><td class="danger-text">34kt</td><td>+4</td></tr>
+        <tr><td>50ft</td><td>26G37kt</td><td class="danger-text">39kt</td><td>+13</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>富士山による山岳波</h2></div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <ul class="bullet-list">
+          <li>山頂風速<span class="warn-text">40-50kt超</span>で山岳波が出現</li>
+          <li>山頂風速<span class="danger-text">60kt超</span>でModerate以上のTurbulence</li>
+          <li>冬型気圧配置 + 上層北西風が強い時</li>
+          <li>顕著な寒冷前線通過後、地上気圧傾度大 + 強風軸が中部山岳上空</li>
+        </ul>
+      </div>
+      <div>
+        <div class="pattern-box" style="margin-bottom:0;">
+          <div class="pattern-title"><span class="num" style="background:#ff6b3522;color:#ff6b35;">!</span> <span style="color:#ff6b35;">山岳波の強度目安</span></div>
+          <table>
+            <tr><th>富士山頂風速</th><th>影響</th></tr>
+            <tr><td>40kt未満</td><td class="green-text">影響なし</td></tr>
+            <tr><td class="warn-text">40-50kt</td><td>影響出始め（LIGHT TURB）</td></tr>
+            <tr><td class="danger-text">60kt超</td><td>MOD以上のTURB遭遇</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJTT HND Weather Briefing</span><span>Page 2 ─ Turbulence & LLWS</span></div>
+</div>
+
+<!-- ========== PAGE 3/4: FOG & VISIBILITY ========== -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>RJTT <span class="icao">HND</span></h1>
+      <div class="subtitle">視程障害・霧 ── 発生条件・事例分析</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">PAGE 3 / 4</div>
+      <div>13 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>視程障害現象 ── 概要</h2></div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;">&#9654; 霧の発生傾向</p>
+        <ul class="bullet-list">
+          <li>4月、6月、7月に多い。次いで3月、11月</li>
+          <li>VIS<span class="highlight">800m未満</span>となる事例は<span class="green-text">まれ</span></li>
+          <li>放射霧: 日出後<span class="highlight">1-2時間</span>以内に消失</li>
+          <li>シアーライン北上 / 風速強まりで悪視程解消</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;">&#9654; 春の霧 ── 発生条件</p>
+        <ul class="bullet-list">
+          <li class="warn">前日: 低気圧に向かい<span class="warn-text">暖湿気流入</span>＋降水 → 湿度高い</li>
+          <li class="warn">当日: 気圧傾度小 → <span class="warn-text">風弱い</span>。地表付近に逆転層</li>
+          <li class="warn">東京湾海水温<span class="warn-text">13℃前後</span>（春はまだ低い）</li>
+          <li>暖湿気が冷たい海水面で冷却 → 海霧発生</li>
+        </ul>
+      </div>
+    </div>
+    <div class="danger-box"><strong>TAF注意:</strong> HNDのTAFにおいて「<strong>TEMPO 1500 BR</strong>」は要注意。実際にはさらに顕著な視程悪化となるケースあり。</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-case">&#9888;</div><h2>霧事例 &#9312; 2010年2月25日</h2></div>
+      <ul class="bullet-list">
+        <li>東京湾内で<span class="danger-text">濃霧</span>発生</li>
+        <li class="danger">ダイバート<span class="danger-text">33便</span>（うちJAL 15便）</li>
+        <li class="danger">欠航<span class="danger-text">183便</span>（うちJAL 76便）</li>
+        <li>VIS<span class="danger-text">100m</span>まで低下、VV000（天頂不明瞭）</li>
+        <li>0600L頃よりBR → 0630L過ぎ急速にVIS低下</li>
+        <li>CAT II最低気象条件をも下回る状況</li>
+        <li>1100L過ぎまで低視程継続</li>
+      </ul>
+      <div class="danger-box"><strong>原因:</strong> 東京湾内の海水温が相対的に低く、HND付近の気温も周囲より低温。霧がなかなか<strong>解消しなかった</strong>原因の一つ。</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-case">&#9888;</div><h2>霧事例 &#9313; 2016年3月8日</h2></div>
+      <ul class="bullet-list">
+        <li>前日からの暖湿気 → 各地で霧発生</li>
+        <li>東京湾の<span class="danger-text">海霧</span>が空港に流入</li>
+        <li>0900L頃〜 G/A便発生 → 上空待機拡大</li>
+        <li>RWY34L/R → RWY23/22に変更 → 海霧で再度RWY34へ</li>
+        <li><span class="danger-text">SSP体制発動</span> → 管制間隔拡大</li>
+        <li>TAF予報: VIS 1500m BR → 実際は<span class="danger-text">さらに悪化</span></li>
+      </ul>
+      <div class="warn-box"><strong>教訓:</strong> RWY毎に状況が異なることがある（FOG BANKの移動）。RWY05 RVRはこの事例対策から設置された。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>霧の確認方法 &amp; 対策</h2></div>
+    <div class="grid-3" style="margin-bottom:0;">
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num">1</span> <span style="color:#00d4ff;">TAF確認</span></div>
+        <ul class="bullet-list">
+          <li>「VIS 1500 BR」が報じられる事が多い</li>
+          <li>TAF赤字 = 注意喚起</li>
+          <li>東京航空地方気象台に確認</li>
+        </ul>
+      </div>
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num">2</span> <span style="color:#00d4ff;">衛星画像</span></div>
+        <ul class="bullet-list">
+          <li>Met-Air → 実況情報</li>
+          <li>高頻度衛星画像 → <span class="highlight">霧画像</span></li>
+          <li>海水温データ（13℃以下で要注意）</li>
+        </ul>
+      </div>
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num">3</span> <span style="color:#00d4ff;">運航影響</span></div>
+        <ul class="bullet-list">
+          <li>NO CAT便のAPCH困難</li>
+          <li>RWY34R SSP ON → ATC混雑</li>
+          <li>FOG BANKが東京湾を移動</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJTT HND Weather Briefing</span><span>Page 3 ─ Fog & Visibility</span></div>
+</div>
+
+<!-- ========== PAGE 4/4: SNOW / RAIN / THUNDER / TYPHOON ========== -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>RJTT <span class="icao">HND</span></h1>
+      <div class="subtitle">降雪・降雨・雷・台風 ── 判断基準・事例</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">PAGE 4 / 4</div>
+      <div>13 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-snow">&#10052;</div><h2>降雪 ── 判断基準</h2></div>
+      <p style="font-size:7.5pt;color:#e2e8f0;margin-bottom:4px;">&#9654; 降雪パターン</p>
+      <ul class="bullet-list">
+        <li>南岸低気圧が本州南岸を東進し<span class="highlight">八丈島沖</span>を通過する場合に降雪</li>
+        <li>低気圧コース: N32°〜N34°（三宅島N34° / 八丈島N33°）</li>
+        <li>雪質: ほとんど<span class="highlight">Wet Snow</span></li>
+      </ul>
+      <p style="font-size:7.5pt;color:#e2e8f0;margin-bottom:4px;margin-top:6px;">&#9654; 降雪閾値</p>
+      <table>
+        <tr><th>指標</th><th>閾値</th><th>備考</th></tr>
+        <tr><td>館野850hPa気温</td><td class="danger-text">-3℃以下</td><td>-6℃以下で確実（MET Obs）</td></tr>
+        <tr><td>地上気温</td><td>3℃+→雨 / 2℃→みぞれ</td><td class="danger-text">2℃未満→雪</td></tr>
+        <tr><td>950hPa風向</td><td>N / NNE</td><td>0℃以下で降雪目安</td></tr>
+        <tr><td>湿度</td><td>低湿度</td><td>4℃前後でも雪の場合あり</td></tr>
+      </table>
+      <div class="info-box"><strong>止む目安:</strong> 低気圧の中心がE140°を通過すると間もなく止む。</div>
+      <div class="warn-box"><strong>HOT注意:</strong> T3(国際線)→D-RWYまでのTAXING TIMEが長く、雪質によっては<strong>HOT切れ</strong>に留意。</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-ts">&#9889;</div><h2>雷</h2></div>
+      <p style="font-size:7.5pt;color:#fbbf24;margin-bottom:4px;">&#9654; 夏季雷（7-8月最多）</p>
+      <ul class="bullet-list">
+        <li>夏型気圧配置で関東西部〜北部<span class="highlight">山間部</span>で発生</li>
+        <li>関東平野部へ<span class="warn-text">南下移動</span></li>
+        <li><span class="warn-text">北から</span>のエコーの影響が大きい</li>
+        <li>西方からのエコーは山で減衰 → 影響は少ない</li>
+      </ul>
+      <p style="font-size:7.5pt;color:#fbbf24;margin-bottom:4px;margin-top:6px;">&#9654; 遭遇多発エリア</p>
+      <ul class="bullet-list">
+        <li>SID: 栃木県<span class="highlight">那須岳</span>付近</li>
+        <li>STAR: 茨城県<span class="highlight">大子</span>付近</li>
+      </ul>
+      <p style="font-size:7.5pt;color:#fbbf24;margin-bottom:4px;margin-top:6px;">&#9654; 連続被雷（2月下旬〜5月）</p>
+      <ul class="bullet-list">
+        <li class="danger">強いエコーでなくても<span class="danger-text">連続被雷</span>が発生</li>
+        <li>界雷が多い。「冬季雷」と推測される場合も</li>
+        <li>被雷高度OAT: <span class="warn-text">0℃〜-10℃</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-rain">&#9748;</div><h2>降雨パターン</h2></div>
+      <ul class="bullet-list">
+        <li>6-7月: <span class="highlight">梅雨型</span>（典型的）</li>
+        <li>9-10月: <span class="highlight">秋雨型</span></li>
+        <li>その他: 低気圧・前線通過に伴う雨</li>
+        <li>夏季: TSによるしゅう雨</li>
+        <li>冬季: 降水日は<span class="green-text">少ない</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-case">&#9888;</div><h2>台風事例</h2></div>
+      <table>
+        <tr><th>日付</th><th>台風</th><th>影響</th></tr>
+        <tr><td>2019/9/9</td><td class="danger-text">台風15号</td><td>HND/NRT 暴風</td></tr>
+        <tr><td>2019/10/12</td><td class="danger-text">台風19号</td><td>HND/NRT 大規模EVAC</td></tr>
+        <tr><td>2021/8</td><td>台風10号</td><td>房総半島接近</td></tr>
+        <tr><td>2022/8</td><td>台風8号</td><td>HND影響</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>QUICK REFERENCE ── HND 判断基準サマリー</h2></div>
+    <table>
+      <tr><th>現象</th><th>監視指標</th><th>閾値 / トリガー</th><th>影響</th></tr>
+      <tr><td><span class="danger-text">SW強風</span></td><td>風向220°±10°</td><td class="danger-text">平均20kt+ / G40kt+</td><td>RWY16横風制限, LLWS</td></tr>
+      <tr><td><span class="warn-text">ハンガーウェーブ</span></td><td>NE-E風(34L), SW風(22)</td><td class="warn-text">10kt+(34L) / 20kt+(22)</td><td>Final乱気流</td></tr>
+      <tr><td><span class="purple-text">霧</span></td><td>TAF「1500 BR」＋海水温</td><td class="warn-text">海水温13℃+弱風+逆転層</td><td>DVT, G/A, SSP</td></tr>
+      <tr><td><span class="highlight">降雪</span></td><td>南岸L経路+850hPa気温</td><td class="danger-text">850hPa -3℃ / 地上2℃未満</td><td>積雪, De-ice, HOT切れ</td></tr>
+      <tr><td><span style="color:#fbbf24;font-weight:500;">雷</span></td><td>北からのエコー南下</td><td class="warn-text">7-8月夏型 / 2-5月連続被雷</td><td>被雷, TS COND</td></tr>
+      <tr><td><span class="danger-text">富士山山岳波</span></td><td>富士山頂風速</td><td class="danger-text">40kt→LIGHT / 60kt→MOD+</td><td>TURB (SID/STAR)</td></tr>
+    </table>
+  </div>
+
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJTT HND Weather Briefing</span><span>Page 4 ─ Snow / Rain / Thunder / Typhoon</span></div>
+</div>
+
+</body>
+</html>
