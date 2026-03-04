@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923; color: #e0e6ed; font-size: 8.5pt; line-height: 1.45;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page { width: 210mm; min-height: 297mm; padding: 14mm 16mm 12mm 16mm; position: relative; overflow: hidden; page-break-after: always; background: #0f1923; }
+  .page:last-child { page-break-after: avoid; }
+  .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #00d4ff; padding-bottom: 8px; margin-bottom: 12px; }
+  .header-left h1 { font-size: 20pt; font-weight: 300; color: #ffffff; letter-spacing: 4px; }
+  .header-left h1 span.icao { color: #00d4ff; font-weight: 300; }
+  .header-left .subtitle { font-size: 8pt; color: #7a8fa6; letter-spacing: 1px; margin-top: 2px; }
+  .header-right { text-align: right; font-size: 7.5pt; color: #7a8fa6; }
+  .header-right .rwy-badge { display: inline-block; background: linear-gradient(135deg, #00d4ff22, #00d4ff11); border: 1px solid #00d4ff55; border-radius: 4px; padding: 3px 10px; color: #00d4ff; font-weight: 500; font-size: 9pt; letter-spacing: 2px; margin-bottom: 3px; }
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+  .card { background: linear-gradient(160deg, #1a2836, #152230); border: 1px solid #1e3448; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; }
+  .card-header { display: flex; align-items: center; margin-bottom: 7px; gap: 6px; }
+  .card-header .icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .icon-wind { background: #00d4ff22; color: #00d4ff; }
+  .icon-turb { background: #ff6b3522; color: #ff6b35; }
+  .icon-vis  { background: #a78bfa22; color: #a78bfa; }
+  .icon-snow { background: #e2e8f022; color: #e2e8f0; }
+  .icon-ts   { background: #fbbf2422; color: #fbbf24; }
+  .icon-case { background: #f4365822; color: #f43658; }
+  .icon-info { background: #00d4ff22; color: #00d4ff; }
+  .card-header h2 { font-size: 9.5pt; font-weight: 500; color: #ffffff; letter-spacing: 1.5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th { background: #0d1820; color: #7a8fa6; font-weight: 400; padding: 4px 6px; text-align: left; font-size: 7pt; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448; }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
+  table tr:last-child td { border-bottom: none; }
+  .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
+  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; text-align: center; }
+  .metric .val { font-size: 14pt; font-weight: 300; color: #00d4ff; line-height: 1.2; letter-spacing: 0.5px; }
+  .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li { position: relative; padding-left: 12px; margin-bottom: 3px; color: #b0c0d0; font-size: 7.8pt; }
+  .bullet-list li::before { content: ''; position: absolute; left: 0; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: #00d4ff; }
+  .bullet-list li.warn::before { background: #ff6b35; }
+  .bullet-list li.danger::before { background: #f43658; }
+  .highlight { color: #00d4ff; font-weight: 500; }
+  .warn-text { color: #ff6b35; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+  .green-text { color: #34d399; font-weight: 500; }
+  .purple-text { color: #a78bfa; font-weight: 500; }
+  .danger-box { background: linear-gradient(135deg, #ef444412, #ef444408); border: 1px solid #ef444433; border-left: 3px solid #ef4444; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #fca5a5; }
+  .danger-box strong { color: #ef4444; }
+  .info-box { background: linear-gradient(135deg, #00d4ff12, #00d4ff08); border: 1px solid #00d4ff33; border-left: 3px solid #00d4ff; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #7dd3fc; }
+  .info-box strong { color: #00d4ff; }
+  .warn-box { background: linear-gradient(135deg, #ff6b3512, #ff6b3508); border: 1px solid #ff6b3533; border-left: 3px solid #ff6b35; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #fdba74; }
+  .warn-box strong { color: #ff6b35; }
+  .pattern-box { background: #0d1820; border-radius: 5px; padding: 8px 10px; border: 1px solid #1e3448; margin-bottom: 7px; }
+  .pattern-box .pattern-title { font-weight: 500; font-size: 8.5pt; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+  .pattern-box .num { display: inline-flex; width: 18px; height: 18px; border-radius: 50%; background: #00d4ff22; color: #00d4ff; align-items: center; justify-content: center; font-size: 8pt; font-weight: 600; flex-shrink: 0; }
+  .wind-clock { display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
+  .wc-row { display: flex; align-items: center; gap: 8px; font-size: 7.5pt; }
+  .wc-time { width: 60px; color: #5a7288; flex-shrink: 0; }
+  .wc-dir { color: #00d4ff; font-weight: 500; width: 90px; flex-shrink: 0; }
+  .wc-spd { color: #c8d5e0; }
+  .terrain-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 5px 0; }
+  .terrain-item { background: #0d1820; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; border: 1px solid #1e3448; }
+  .terrain-item .name { color: #7a8fa6; }
+  .terrain-item .elev { color: #ff6b35; font-weight: 600; }
+  .fog-grid { display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; font-size: 7.5pt; margin: 4px 0; }
+  .fg-dir { color: #00d4ff; font-weight: 500; white-space: nowrap; }
+  .fg-desc { color: #b0c0d0; }
+  .footer-ref { position: absolute; bottom: 10mm; left: 16mm; right: 16mm; font-size: 6.5pt; color: #3a4f63; border-top: 1px solid #1a2836; padding-top: 4px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- ========== PAGE 1/2: AIRPORT OVERVIEW, WIND, TURBULENCE/LLWS ========== -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>RJFT <span class="icao">KMJ</span></h1>
+      <div class="subtitle">熊本空港 ── 阿蘇山台地・東風山岳波・地形性LLWS</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">PAGE 1 / 2</div>
+      <div>7 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric"><div class="val">642<span style="font-size:7pt;color:#5a7288;">ft</span></div><div class="label">ELEV（台地）</div></div>
+    <div class="metric"><div class="val" style="font-size:10pt;">0700-2200L</div><div class="label">OPS HR</div></div>
+    <div class="metric"><div class="val" style="color:#ff6b35;">5230<span style="font-size:7pt;color:#5a7288;">ft</span></div><div class="label">高岳(阿蘇 E 13nm)</div></div>
+    <div class="metric"><div class="val" style="color:#f43658;">53<span style="font-size:7pt;color:#5a7288;">kt</span></div><div class="label">2000ft東風極値</div></div>
+    <div class="metric"><div class="val" style="color:#ff6b35;">SW</div><div class="label">年間最多風向</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>空港諸元 ── RJFT</h2></div>
+      <ul class="bullet-list">
+        <li>熊本平野と阿蘇山の<span class="highlight">中間台地</span>（菊池台地）</li>
+        <li>RWY<span class="highlight">07/25</span>（CAT III対応：RWY07）</li>
+        <li>代表風: <span class="highlight">RWY07</span></li>
+        <li>ELEV 642ft：周辺山岳を見下ろす高台</li>
+      </ul>
+      <p style="font-size:7.5pt;color:#ff6b35;margin-top:7px;margin-bottom:4px;">&#9654; 周辺地形</p>
+      <div class="terrain-row">
+        <div class="terrain-item"><div class="name">高岳（阿蘇 E 13nm）</div><div class="elev">5230ft</div></div>
+        <div class="terrain-item"><div class="name">阿蘇外輪山（E 12km）</div><div class="elev">~2300ft</div></div>
+        <div class="terrain-item"><div class="name">熊岳（W 11nm）</div><div class="elev">2250ft</div></div>
+        <div class="terrain-item"><div class="name">金峰山（W）</div><div class="elev">2180ft</div></div>
+        <div class="terrain-item"><div class="name">小山（RWY07 THR前）</div><div class="elev">622ft</div></div>
+        <div class="terrain-item"><div class="name">戸島山（RWY07 THR前）</div><div class="elev">436ft</div></div>
+      </div>
+      <div class="info-box"><strong>阿蘇火山:</strong> 噴煙活動時は進入ルート変更。噴火時は中岳<strong>5NM以内へのVector禁止</strong>。HND便は福岡経由ATMルートの場合あり。</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-wind">&#9778;</div><h2>風の特徴 ── 海陸風日変化</h2></div>
+      <p style="font-size:7.5pt;color:#00d4ff;margin-bottom:5px;">&#9654; 気圧傾度穏やか時の日変化</p>
+      <div class="wind-clock">
+        <div class="wc-row"><span class="wc-time">夜間〜朝方</span><span class="wc-dir">ENE (060-070°)</span><span class="wc-spd">3-5kt ─ 山風（陸風）</span></div>
+        <div class="wc-row"><span class="wc-time">午前中</span><span class="wc-dir">変動</span><span class="wc-spd">弱く、風向不安定</span></div>
+        <div class="wc-row"><span class="wc-time">昼頃</span><span class="wc-dir warn-text">SSW〜SW</span><span class="wc-spd warn-text">7-10kt（夏: 10-13kt） ← RWY07 Tail</span></div>
+        <div class="wc-row"><span class="wc-time">夕方</span><span class="wc-dir">ENE</span><span class="wc-spd">徐々に弱まる</span></div>
+      </div>
+      <p style="font-size:7.5pt;color:#00d4ff;margin-bottom:4px;margin-top:6px;">&#9654; 強風・ガスト発生型</p>
+      <ul class="bullet-list">
+        <li class="warn">九州西方低気圧接近型: <span class="warn-text">E〜SE風</span> → ガスト出現率最高</li>
+        <li class="warn">日本海低気圧型: <span class="warn-text">SW風</span> → ガスト発生</li>
+        <li>NE・SW風でもGUST発生するが出現率は低い</li>
+        <li>年間最多: <span class="highlight">SW</span>、次いでWSW、NW、ENE</li>
+        <li>S・SE・SSE・NNE・NE風は著しく少ない</li>
+      </ul>
+      <div class="warn-box"><strong>昼間SW風注意:</strong> 日中の南西風はRWY07着陸にTail windとなる。夏は10-13ktと強くなることがある。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>タービュランス・LLWS ── 東風山岳波が最重要ハザード</h2></div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <p style="font-size:7.5pt;color:#f43658;margin-bottom:4px;">&#9654; NE〜E強風時（阿蘇外輪山越え）</p>
+        <ul class="bullet-list">
+          <li class="danger">東方山岳系の<span class="danger-text">山越え強い下降流</span> → 台地風下にTURB</li>
+          <li class="danger">RWY07 APCH中: <span class="danger-text">強いUp &amp; Down Draft</span></li>
+          <li class="danger">RWY07 T/O後: <span class="danger-text">強いDown Draft</span></li>
+          <li>熊本市上空3000〜5000ft: 阿蘇山系による山岳波</li>
+          <li class="warn">秋春の朝: 放射冷却 → 阿蘇外輪からの<span class="warn-text">強い吹き出し</span></li>
+          <li class="danger">地上NE風<span class="danger-text">20kt+</span>の場合は要注意</li>
+        </ul>
+        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:4px;margin-top:6px;">&#9654; SW〜W強風時（RWY25使用）</p>
+        <ul class="bullet-list">
+          <li class="warn">空港台地を吹き上げる風 → Down WINDから<span class="warn-text">FINALにかけてTURB</span></li>
+        </ul>
+        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:4px;margin-top:6px;">&#9654; その他</p>
+        <ul class="bullet-list">
+          <li>日射によるUpdraft: 10,000ft以下で予期せぬ揺れ</li>
+          <li>場合によっては<span class="warn-text">意図した降下率が得られない</span>ことあり</li>
+          <li>Short Final: Tail wind時に<span class="warn-text">押し下げられる</span>ことあり（両RWY）</li>
+        </ul>
+      </div>
+      <div>
+        <div class="danger-box" style="margin-bottom:8px;">
+          <strong>&#9888; 事例: 2019/5/18 東風強風</strong><br>
+          METAR: 09025G<strong>39KT</strong>、TAF予想(G30KT)を超過<br>
+          2000ft: 119°/<strong>53kt</strong>（高気圧周囲の気圧傾度高まり）<br>
+          → MT.WAVE + LLWS発生 → <strong>4便DIV/ATB</strong>
+        </div>
+        <div class="pattern-box">
+          <div class="pattern-title"><span class="num" style="background:#f4365822;color:#f43658;">!</span> <span style="color:#f43658;">東風2000ft監視指標</span></div>
+          <table>
+            <tr><th>高度</th><th>2019/5/18実測</th><th>注意レベル</th></tr>
+            <tr><td>FL 500</td><td>108°/33kt</td><td style="color:#5a7288;">問題なし</td></tr>
+            <tr><td>FL 1000</td><td>102°/41kt</td><td style="color:#fbbf24;">警戒</td></tr>
+            <tr><td style="color:#f43658;">FL 2000</td><td style="color:#f43658;">119°/53kt</td><td style="color:#f43658;">MT.WAVE発生</td></tr>
+            <tr><td>FL 3000</td><td>122°/43kt</td><td style="color:#fbbf24;">注意</td></tr>
+          </table>
+        </div>
+        <div class="warn-box">
+          <strong>監視ツール:</strong><br>
+          ・下層悪天予想図で東風強風域を確認<br>
+          ・ACARS WINDで高度別東風成分を確認<br>
+          ・WPR（ウィンドプロファイラ）で実況確認
+        </div>
+        <div class="info-box"><strong>LLWS特記:</strong> 夏の風弱い日中、墓地付近（通過高度1000ft付近）でWS Warningを伴う非常に強い<strong>上昇気流</strong>の遭遇事例あり。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJFT KMJ Weather Briefing</span><span>Page 1 ─ Airport Overview, Wind & Turbulence</span></div>
+</div>
+
+<!-- ========== PAGE 2/2: VISIBILITY / WEATHER PATTERNS / SNOW / QUICK REF ========== -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>RJFT <span class="icao">KMJ</span></h1>
+      <div class="subtitle">視程・悪天パターン・降雪・特記事項 ── 判断基準</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">PAGE 2 / 2</div>
+      <div>7 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>視程障害 ── 発生メカニズムと特性</h2></div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;">&#9654; 悪視程の特性</p>
+        <ul class="bullet-list">
+          <li>悪視程と低シーリングがほぼ<span class="highlight">同時発生</span></li>
+          <li>年間70%以上が<span class="highlight">1時間以内</span>に解消</li>
+          <li>梅雨期は<span class="warn-text">数時間</span>続くことが多い</li>
+          <li>悪天風向: ほぼ<span class="warn-text">S〜NW</span>（熊本平野や木山川谷間の視程障害が南〜NW風で運ばれる）</li>
+          <li class="green-text">NE〜SE風: 悪視程は<span class="green-text">極めて少ない</span>（山越え下降流のため）</li>
+          <li>850hPa東風 → フェーン → 宮崎・鹿児島が悪天でもKMJは良好なことが多い</li>
+        </ul>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;margin-top:6px;">&#9654; 時刻別傾向</p>
+        <ul class="bullet-list">
+          <li>明け方〜昼前: <span class="warn-text">無降水（霧・もや）</span>による悪化多い</li>
+          <li>日中: <span class="warn-text">降水</span>を伴う悪化が多い</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;">&#9654; 降水強度と視程</p>
+        <table>
+          <tr><th>降水強度</th><th>VIS&lt;1600m率</th><th>VIS&lt;5000m率</th></tr>
+          <tr><td>-RA（弱い雨）</td><td class="green-text">10%以下</td><td>—</td></tr>
+          <tr><td>RA（雨）</td><td class="warn-text">〜20%</td><td class="warn-text">〜60%</td></tr>
+          <tr><td style="color:#f43658;">+RA（強い雨）</td><td class="danger-text">〜40%</td><td class="danger-text">〜90%</td></tr>
+          <tr><td>-SN（弱い雪）</td><td>数%</td><td>—</td></tr>
+          <tr><td>SN（雪）</td><td class="warn-text">〜40%</td><td>—</td></tr>
+        </table>
+        <div class="warn-box" style="margin-top:6px;"><strong>特記:</strong> 台地から平野へRVR透過率計に影響しない雲が湧き出す場合、<strong>RVR値良好でも実際の水平視程が悪い</strong>ことがある。平野上の低い雲でミドルマーカー付近が雲中の場合もあり。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>悪天気圧配置パターン ── 3型</h2></div>
+      <div class="pattern-box">
+        <div class="pattern-title"><span class="num" style="background:#f4365822;color:#f43658;">1</span> <span class="danger-text">最も悪い ── 二つ玉低気圧</span></div>
+        <p style="font-size:7.5pt;color:#b0c0d0;">前線が九州中部を東西に走り、暖湿気の移流が著しく前線の移動が遅い場合、南〜西風で悪天が持続</p>
+      </div>
+      <div class="pattern-box">
+        <div class="pattern-title"><span class="num" style="background:#ff6b3522;color:#ff6b35;">2</span> <span class="warn-text">悪い ── 土佐沖低気圧・低気圧通過</span></div>
+        <p style="font-size:7.5pt;color:#b0c0d0;">低気圧・前線通過後、NW〜N弱い風でBR・FG・St発生。狭いが密度濃い。1〜3時間BELOW/ABOVEを繰り返す</p>
+      </div>
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num">3</span> <span>一時的に悪い ── 寒冷前線通過</span></div>
+        <p style="font-size:7.5pt;color:#b0c0d0;">WNW〜N弱い風でも周期的に悪化。ただし回復が見込まれる</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>風向別 霧・低雲発生（露点差≤2℃）</h2></div>
+      <div class="fog-grid">
+        <span class="fg-dir">180°〜240°</span><span class="fg-desc"><span class="warn-text">2〜3HR</span> RWY07 Final・南側 FOG（MIST/RAIN）</span>
+        <span class="fg-dir">240°〜300°</span><span class="fg-desc"><span class="warn-text">1HR以内</span>繰り返し RWY07 Final FOG</span>
+        <span class="fg-dir">300°〜030°</span><span class="fg-desc">30min〜1HR RWY07 Final・北側 FOG（MIST）</span>
+        <span class="fg-dir" style="color:#34d399;">030°〜120°</span><span class="fg-desc" style="color:#34d399;">FOGなし。既存FOGは解消する</span>
+        <span class="fg-dir" style="color:#34d399;">120°〜180°</span><span class="fg-desc" style="color:#34d399;">FOGほぼなし</span>
+      </div>
+      <div class="info-box" style="margin-top:6px;"><strong>回復のサイン:</strong> NE〜SE風が吹き出せば回復。Below Minimumとなるのは<strong>降雨中と雨上がり直後</strong>、風向が<strong>SW象限(180〜270°)</strong>の場合が多い。</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-snow">&#10052;</div><h2>降雪</h2></div>
+      <ul class="bullet-list">
+        <li>NW〜W季節風が卓越しても降雪は<span class="green-text">比較的少ない</span></li>
+        <li>ほとんどが<span class="highlight">しゅう雪型</span>で降雪量は一般に少ない</li>
+        <li>降雪時の悪視程: SN時に<span class="warn-text">約40%</span>と高くなる</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>月別悪視程傾向</h2></div>
+      <ul class="bullet-list">
+        <li>5000m未満: <span class="warn-text">2〜7月</span>および11月に多い</li>
+        <li>2月: 霧・もやも多く影響。8月: ほとんど降水原因</li>
+        <li>9月: 霧/もやと降水が<span class="highlight">同程度</span></li>
+        <li>11月: 降水少ないが<span class="warn-text">降水があれば悪視程になりやすい</span></li>
+        <li>12月: 霧・もやによる悪化が多い（降水より多い）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>QUICK REFERENCE ── KMJ 判断基準サマリー</h2></div>
+    <table>
+      <tr><th>現象</th><th>監視指標</th><th>閾値 / トリガー</th><th>影響</th></tr>
+      <tr><td><span class="danger-text">東風山岳波・LLWS</span></td><td>2000ft東風成分</td><td class="danger-text">2000ft 50kt+ (E方向)</td><td>RWY07 Strong Up/Down Draft、DIV</td></tr>
+      <tr><td><span class="warn-text">NE強風TURB</span></td><td>地上NE風＋外輪山</td><td class="warn-text">地上NE 20kt+</td><td>3000-5000ft TURB、Down Draft</td></tr>
+      <tr><td><span class="warn-text">SW強風TURB</span></td><td>SW-W強風・RWY25</td><td>台地吹き上げ</td><td>Downwind〜Final TURB</td></tr>
+      <tr><td><span class="purple-text">低視程・低雲</span></td><td>風向S〜NW＋露点差≤2℃</td><td class="warn-text">SW(180-270°)で最多</td><td>Below Minima、G/A</td></tr>
+      <tr><td><span class="highlight">悪天持続</span></td><td>二つ玉低気圧</td><td class="danger-text">最悪パターン</td><td>長時間Below、DIV</td></tr>
+      <tr><td><span style="color:#e2e8f0;font-weight:500;">RVR注意</span></td><td>台地下からの雲湧き</td><td>RVR値≠実視程</td><td>DAで目標視認不能</td></tr>
+    </table>
+  </div>
+
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJFT KMJ Weather Briefing</span><span>Page 2 ─ Visibility / Weather Patterns / Snow</span></div>
+</div>
+
+</body>
+</html>
