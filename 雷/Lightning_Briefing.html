@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923;
+    color: #e0e6ed;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 14mm 16mm 12mm 16mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    background: #0f1923;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid #fbbf24;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .header-left h1 {
+    font-size: 20pt;
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: 4px;
+  }
+  .header-left h1 span.accent { color: #fbbf24; font-weight: 300; }
+  .header-left .subtitle {
+    font-size: 8pt;
+    color: #7a8fa6;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 7.5pt;
+    color: #7a8fa6;
+  }
+  .header-right .page-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #fbbf2422, #fbbf2411);
+    border: 1px solid #fbbf2455;
+    border-radius: 4px;
+    padding: 3px 10px;
+    color: #fbbf24;
+    font-weight: 500;
+    font-size: 9pt;
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+  }
+
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+
+  .card {
+    background: linear-gradient(160deg, #1a2836, #152230);
+    border: 1px solid #1e3448;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 7px;
+    gap: 6px;
+  }
+  .card-header .icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .icon-bolt { background: #fbbf2422; color: #fbbf24; }
+  .icon-info { background: #34d39922; color: #34d399; }
+  .icon-warn { background: #ff6b3522; color: #ff6b35; }
+  .icon-snow { background: #00d4ff22; color: #00d4ff; }
+  .icon-tool { background: #00d4ff22; color: #00d4ff; }
+  .icon-case { background: #fbbf2422; color: #fbbf24; }
+  .icon-region { background: #f4365822; color: #f43658; }
+  .icon-shield { background: #34d39922; color: #34d399; }
+  .icon-winter { background: #a78bfa22; color: #a78bfa; }
+  .icon-summer { background: #ff6b3522; color: #ff6b35; }
+  .icon-stat { background: #00d4ff22; color: #00d4ff; }
+
+  .card-header h2 {
+    font-size: 9.5pt;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 7pt;
+    font-weight: 500;
+    margin-right: 3px;
+    letter-spacing: 0.5px;
+  }
+  .tag-yellow { background: #fbbf2418; color: #fbbf24; border: 1px solid #fbbf2444; }
+  .tag-blue { background: #00d4ff18; color: #00d4ff; border: 1px solid #00d4ff44; }
+  .tag-orange { background: #ff6b3518; color: #ff6b35; border: 1px solid #ff6b3544; }
+  .tag-red { background: #f4365818; color: #f43658; border: 1px solid #f4365844; }
+  .tag-purple { background: #a78bfa18; color: #a78bfa; border: 1px solid #a78bfa44; }
+  .tag-green { background: #34d39918; color: #34d399; border: 1px solid #34d39944; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th {
+    background: #0d1820; color: #7a8fa6; font-weight: 400;
+    padding: 4px 6px; text-align: left; font-size: 7pt;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448;
+  }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
+  table tr:last-child td { border-bottom: none; }
+
+  .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
+  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; text-align: center; }
+  .metric .val { font-size: 14pt; font-weight: 300; color: #fbbf24; line-height: 1.2; letter-spacing: 0.5px; }
+  .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li {
+    position: relative; padding-left: 12px; margin-bottom: 3px;
+    color: #b0c0d0; font-size: 7.8pt;
+  }
+  .bullet-list li::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 4px; height: 4px; border-radius: 50%; background: #fbbf24;
+  }
+  .bullet-list li.warn::before { background: #ff6b35; }
+  .bullet-list li.danger::before { background: #f43658; }
+
+  .highlight { color: #fbbf24; font-weight: 500; }
+  .warn-text { color: #ff6b35; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+
+  .caution-box {
+    background: linear-gradient(135deg, #ff6b3512, #ff6b3508);
+    border: 1px solid #ff6b3533;
+    border-left: 3px solid #ff6b35;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #ffcba4;
+  }
+  .caution-box strong { color: #ff6b35; }
+
+  .info-box {
+    background: linear-gradient(135deg, #fbbf2412, #fbbf2408);
+    border: 1px solid #fbbf2433;
+    border-left: 3px solid #fbbf24;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #fde68a;
+  }
+
+  .type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 6px 0;
+  }
+  .type-item {
+    background: #0d1820;
+    border-radius: 5px;
+    padding: 7px 9px;
+    border: 1px solid #1e3448;
+  }
+  .type-item .name {
+    font-size: 8.5pt;
+    font-weight: 500;
+    color: #fbbf24;
+    margin-bottom: 2px;
+  }
+  .type-item .en {
+    font-size: 6.5pt;
+    color: #5a7288;
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+  }
+  .type-item .desc {
+    font-size: 7pt;
+    color: #8a9ab0;
+    line-height: 1.4;
+  }
+
+  .metar-code {
+    font-family: 'Fira Code', 'SF Mono', monospace;
+    font-size: 7pt;
+    background: #0a1018;
+    border: 1px solid #1e3448;
+    border-radius: 3px;
+    padding: 5px 8px;
+    color: #fbbf24;
+    margin: 4px 0;
+    display: block;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+
+  .case-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+  .case-date {
+    font-size: 8pt;
+    font-weight: 500;
+    color: #fbbf24;
+    letter-spacing: 0.5px;
+  }
+
+  .svg-container {
+    display: flex;
+    justify-content: center;
+    margin: 6px 0;
+  }
+
+  .qr-table td:first-child {
+    color: #fbbf24;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 10mm;
+    left: 16mm;
+    right: 16mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 6.5pt;
+    color: #3d5068;
+    border-top: 1px solid #1e3448;
+    padding-top: 5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- PAGE 1: 雷の基礎知識 LIGHTNING FUNDAMENTALS                    -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1><span class="accent">&#x26A1;</span> LIGHTNING <span class="accent">BRIEFING</span></h1>
+      <div class="subtitle">THUNDERSTORM KNOWLEDGE &amp; LIGHTNING STRIKE PREVENTION ─ 57 PDF SOURCES</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 1 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- Metrics Row -->
+  <div class="metrics-row">
+    <div class="metric"><div class="val">57</div><div class="label">PDF SOURCES</div></div>
+    <div class="metric"><div class="val">3</div><div class="label">夏季雷タイプ</div></div>
+    <div class="metric"><div class="val">-10~0&#x2103;</div><div class="label">被雷層 STRIKE LAYER</div></div>
+    <div class="metric"><div class="val">10-100x</div><div class="label">冬季雷エネルギー比</div></div>
+  </div>
+
+  <!-- Summer Lightning Types -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-bolt">&#x26A1;</div>
+      <h2>夏季雷の3タイプ SUMMER LIGHTNING</h2>
+      <span class="tag tag-yellow">6-9月</span>
+    </div>
+    <div class="type-grid">
+      <div class="type-item">
+        <div class="name">熱雷</div>
+        <div class="en">HEAT THUNDERSTORM</div>
+        <div class="desc">強い日射による地表加熱で対流が発生。午後に内陸部で発達。局地的・短時間で移動性小</div>
+      </div>
+      <div class="type-item">
+        <div class="name">界雷</div>
+        <div class="en">FRONTAL THUNDERSTORM</div>
+        <div class="desc">前線面に沿って暖気が上昇しCBが発達。前線の移動に伴い広範囲に影響。寒冷前線通過時に特に活発</div>
+      </div>
+      <div class="type-item">
+        <div class="name">渦雷</div>
+        <div class="en">VORTEX THUNDERSTORM</div>
+        <div class="desc">低気圧中心付近の上昇気流でCBが発達。低気圧の移動に伴い広範囲に移動。予想がつきやすい</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summer vs Winter Comparison -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-info">&#x2194;</div>
+        <h2>夏季雷 vs 冬季雷 比較</h2>
+      </div>
+      <table>
+        <tr><th>項目</th><th>夏季雷</th><th>冬季雷</th></tr>
+        <tr><td>雲頂高度</td><td>10-12 km</td><td style="color:#fbbf24">3-4 km</td></tr>
+        <tr><td>雲底高度</td><td>3-5 km</td><td style="color:#fbbf24">300-500 m</td></tr>
+        <tr><td>影響範囲</td><td>局地的・狭い</td><td style="color:#f43658">広範囲</td></tr>
+        <tr><td>極性</td><td>負極性が主</td><td style="color:#f43658">正極性も多い</td></tr>
+        <tr><td>エネルギー</td><td>1（基準）</td><td style="color:#f43658">10-100倍</td></tr>
+        <tr><td>損傷</td><td>比較的軽微</td><td style="color:#f43658">大きい</td></tr>
+        <tr><td>被雷層</td><td>12,000-18,000ft</td><td style="color:#fbbf24">2,000-8,000ft</td></tr>
+        <tr><td>世界分布</td><td>全世界</td><td style="color:#fbbf24">ノルウェー/五大湖/日本海</td></tr>
+      </table>
+    </div>
+    <div>
+      <!-- CB Types -->
+      <div class="card">
+        <div class="card-header">
+          <div class="icon icon-warn">&#x2601;</div>
+          <h2>CB タイプ</h2>
+        </div>
+        <ul class="bullet-list">
+          <li><span class="highlight">マルチセル型</span> ─ 日本で最も一般的。複数のセルが群として発達・衰退を繰り返す。個々のセル寿命は30-60分だが群全体として持続</li>
+          <li class="warn"><span class="warn-text">スーパーセル型</span> ─ 単一の巨大セル。回転する上昇気流(メソサイクロン)を持つ。竜巻・大粒の雹・激しいダウンバーストを伴う</li>
+        </ul>
+      </div>
+      <!-- Strike Layer -->
+      <div class="card">
+        <div class="card-header">
+          <div class="icon icon-region">&#x26A0;</div>
+          <h2>被雷危険層 -10&#x2103;~0&#x2103;</h2>
+        </div>
+        <table>
+          <tr><th>季節</th><th>被雷層高度</th><th>備考</th></tr>
+          <tr><td style="color:#a78bfa">冬 (12-2月)</td><td style="color:#f43658">2,000-8,000 ft</td><td>低層 ─ SID/STAR中に通過</td></tr>
+          <tr><td style="color:#34d399">春秋 (3-5/10-11月)</td><td>8,000-12,000 ft</td><td>中層</td></tr>
+          <tr><td style="color:#ff6b35">夏 (6-9月)</td><td>12,000-18,000 ft</td><td>高層</td></tr>
+        </table>
+        <div class="caution-box">
+          <strong>&#x26A0; 典型パターン:</strong> エコーを避けた後、風下側の薄い雲(CLDに電荷蓄積)で被雷するケースが多発。エコー＋風下側の-10&#x2103;~0&#x2103;層では十分な距離を確保すること。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SSI and Lightning Probability -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-tool">&#x1F321;</div>
+        <h2>SSI ショワルター安定指数</h2>
+      </div>
+      <table>
+        <tr><th>SSI 値</th><th>安定度</th><th>雷の可能性</th></tr>
+        <tr><td>> +3</td><td style="color:#34d399">安定</td><td>低い</td></tr>
+        <tr><td>0 ~ -3</td><td style="color:#fbbf24">やや不安定</td><td>雷の可能性あり</td></tr>
+        <tr><td>-4 ~ -6</td><td style="color:#ff6b35">不安定</td><td>激しい雷の可能性</td></tr>
+        <tr><td>< -6</td><td style="color:#f43658">非常に不安定</td><td style="color:#f43658">激しい雷の可能性大</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-bolt">&#x1F4CA;</div>
+        <h2>雷発生確度 PROBABILITY</h2>
+      </div>
+      <table>
+        <tr><th>確度</th><th>意味</th><th>確率</th></tr>
+        <tr><td style="color:#f43658;font-weight:500">A</td><td>雷の発生する可能性が高い</td><td style="color:#f43658">30%以上</td></tr>
+        <tr><td style="color:#ff6b35;font-weight:500">B</td><td>可能性がやや高い</td><td style="color:#ff6b35">15%程度</td></tr>
+        <tr><td style="color:#fbbf24;font-weight:500">C</td><td>可能性が低い</td><td>5%程度</td></tr>
+        <tr><td style="color:#34d399;font-weight:500">D</td><td>可能性がほとんどない</td><td style="color:#34d399">1%未満</td></tr>
+      </table>
+      <div class="info-box">時系列予報（気象庁）に雷発生確度が含まれる。イントラ気象サイトから参照可能。</div>
+    </div>
+  </div>
+
+  <!-- Induced Lightning -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-region">&#x26A1;</div>
+      <h2>誘発雷 TRIGGERED LIGHTNING</h2>
+      <span class="tag tag-red">最重要</span>
+    </div>
+    <ul class="bullet-list">
+      <li class="danger"><span class="danger-text">航空機の被雷の多くは「誘発雷」</span> ─ 電荷を帯びた雲域に航空機が接近・通過することがトリガーとなり放電が発生</li>
+      <li>冬型の強風で雲頂付近の雲が流され、エコー中心から離れた場所でも電荷が蓄積 → 近くを通過する航空機が誘発</li>
+      <li class="warn">現状の気象情報では<span class="warn-text">誘発雷の予測・探知は困難</span>。エコー域＋風下側CLDに対する十分な距離確保が最善策</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <span>LIGHTNING BRIEFING ─ PAGE 1 / 5</span>
+    <span>SOURCE: JAL B737 WEATHER MANUAL / 57 PDFs / MET INFO</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 2: 冬季雷 WINTER LIGHTNING                               -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1><span class="accent">&#x26A1;</span> 冬季雷 <span class="accent">WINTER LIGHTNING</span></h1>
+      <div class="subtitle">JAPAN SEA SIDE ─ 世界的に珍しい現象 ─ KMQ / AXT / IZO / SDJ</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 2 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics-row">
+    <div class="metric"><div class="val">11-1月</div><div class="label">多発シーズン</div></div>
+    <div class="metric"><div class="val">KMQ</div><div class="label">最多被雷空港</div></div>
+    <div class="metric"><div class="val">3.5件</div><div class="label">KMQ/1000便</div></div>
+    <div class="metric"><div class="val">60件</div><div class="label">KMQ 08-09年</div></div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Winter Lightning Conditions -->
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <div class="icon icon-winter">&#x2744;</div>
+          <h2>冬季雷の発生条件</h2>
+          <span class="tag tag-purple">日本海側</span>
+        </div>
+        <ul class="bullet-list">
+          <li>シベリア寒気 → 暖かい対馬海流上で<span class="highlight">大気不安定</span></li>
+          <li>500hPa気圧の谷の<span class="highlight">前面</span>で発雷（谷通過後は止む）</li>
+          <li>500hPa風向: <span class="highlight">WSW~SW</span>で発生 → <span class="warn-text">NWに変わると止む</span></li>
+          <li>地上風向: <span class="highlight">SSW~SW 10kt前後</span>（190°~230°方向）</li>
+          <li><span class="warn-text">夕方~朝</span>に多発、日中は比較的少ない</li>
+          <li>継続時間: 1時間以内が半数、残りは<span class="warn-text">平均4-5時間</span></li>
+          <li><span class="danger-text">あられ(GS)</span>を伴う場合は特に発雷しやすい</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="icon icon-warn">&#x1F321;</div>
+          <h2>500hPa 気温閾値（輪島）</h2>
+        </div>
+        <table>
+          <tr><th>月</th><th>500hPa気温</th><th>判断</th></tr>
+          <tr><td>11月</td><td style="color:#fbbf24;font-weight:500">-20&#x2103; 以下</td><td>発雷注意</td></tr>
+          <tr><td>12月</td><td style="color:#ff6b35;font-weight:500">-27&#x2103; 以下</td><td>発雷注意</td></tr>
+          <tr><td>1月</td><td style="color:#f43658;font-weight:500">-30&#x2103; 以下</td><td>発雷注意</td></tr>
+        </table>
+        <div class="info-box">気圧傾度が小さくなり日本海に低圧部が形成 + 上空寒気 → 沿岸部にシアライン発生で発雷確率上昇。</div>
+      </div>
+    </div>
+
+    <!-- KMQ Statistics -->
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <div class="icon icon-stat">&#x1F4CA;</div>
+          <h2>KMQ 被雷件数推移</h2>
+          <span class="tag tag-green">減少傾向</span>
+        </div>
+        <table>
+          <tr><th>年度</th><th>被雷件数</th><th>傾向</th></tr>
+          <tr><td>FY2012</td><td style="color:#f43658;font-weight:500">32件</td><td>最多年度</td></tr>
+          <tr><td>FY2013</td><td style="color:#f43658">27件</td><td>11月:7 / 12月:11</td></tr>
+          <tr><td>FY2014</td><td style="color:#ff6b35">21件</td><td>12月:8 最多月</td></tr>
+          <tr><td>FY2015</td><td style="color:#fbbf24">12件</td><td>例年より少なめ</td></tr>
+          <tr><td>FY2016</td><td style="color:#34d399;font-weight:500">5件</td><td>大幅減少</td></tr>
+          <tr><td>FY2017</td><td>10件</td><td>対策効果確認</td></tr>
+        </table>
+        <div class="caution-box">
+          <strong>KMQ月別平均 (FY13-17):</strong> 12月=5.2件(最多) / 1月=3.4件 / 11月=2.4件 / 2月=2.2件。ほとんどが<strong>RWY24使用時</strong>に発生し、特に<strong>進入降下中</strong>が多い。
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="icon icon-case">&#x1F3AF;</div>
+          <h2>KMQ 被雷地点傾向</h2>
+        </div>
+        <ul class="bullet-list">
+          <li>着陸時: <span class="highlight">RWY24のBase付近</span>（KINKA, HIMRO, GOSIK周辺）</li>
+          <li>離陸時: 空港から<span class="highlight">5-10nm海岸線付近</span>、高度8,000ft以下</li>
+          <li>発生場所: 空港の<span class="highlight">西~北東の海上 50km以内</span></li>
+          <li class="danger"><span class="danger-text">2014/11/17</span>: 同日2件被雷（JL1281 + JL1283）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIDAS & FOSTER -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-tool">&#x1F4E1;</div>
+        <h2>LIDAS 小松基地独自システム</h2>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="highlight">Lightning Detection & Warning System</span></li>
+        <li>空電方向探知機3局 + 電場計27局、海岸線沿い100km×20kmに設置</li>
+        <li>気象庁LIDENとは<span class="warn-text">別システム</span>（自衛隊独自）</li>
+        <li>エコー頂温度を検出: <span class="highlight">-15&#x2103;=誘発雷</span> / <span class="danger-text">-20&#x2103;=自然発雷</span> の目安</li>
+        <li>小松管制隊は多くの情報を保有 → <span class="highlight">積極的にリクエスト！</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-tool">&#x1F5A5;</div>
+        <h2>FOSTER エコートップ活用</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>MAP上の数字 × 1,000ft = エコートップ高度</li>
+        <li class="warn">冬季雷注意目安: FOSTER表示 <span class="warn-text">【16】(4-6km未満)</span> に着目</li>
+        <li>雲頂5-6km / エコー頂4-5kmで被雷が多いとされる</li>
+        <li>エコートップはJapanレーダーのみ10分毎更新</li>
+      </ul>
+      <table>
+        <tr><th>レベル</th><th>高度</th><th>表示(×1000ft)</th></tr>
+        <tr><td>3</td><td>2-4km</td><td>7, 10</td></tr>
+        <tr><td style="color:#fbbf24;font-weight:500">4</td><td style="color:#fbbf24">4-6km</td><td style="color:#fbbf24;font-weight:500">16 ← 注意</td></tr>
+        <tr><td>5</td><td>6-8km</td><td>23</td></tr>
+        <tr><td>6</td><td>8-10km</td><td>30</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Echo Top Temperature Reference -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-shield">&#x2705;</div>
+      <h2>冬季雷 被雷回避のポイント</h2>
+    </div>
+    <ul class="bullet-list">
+      <li>冬季の被雷は<span class="highlight">OAT 0&#x2103;~-5&#x2103;</span>の高度帯（低層）で最も多い</li>
+      <li>DEP/ARR経路上のエコー域には十分注意。<span class="warn-text">薄いエコーでも電荷蓄積あり</span></li>
+      <li>AXT事例: 最終進入前の低高度で<span class="highlight">山地付近の飛行を極力回避</span></li>
+      <li>空港SOによる被雷層(0~-5&#x2103;)のBRIC入力 → <span class="highlight">VerticalとLateral</span>に雷を回避</li>
+      <li class="danger"><span class="danger-text">被雷してAOGするくらいなら、DVTも選択肢のうちの一つ</span>（着陸だけが正解ではない）</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <span>LIGHTNING BRIEFING ─ PAGE 2 / 5</span>
+    <span>SOURCE: KMQ統計 FY12-17 / 小松管制隊訪問コメント / MET INFO</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 3: 夏季雷事例 SUMMER TS CASES (ITM FOCUS)                -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1><span class="accent">&#x26A1;</span> 夏季雷事例 <span class="accent">ITM CASES</span></h1>
+      <div class="subtitle">伊丹空港 雷雨パターン ─ 丹波太郎 / 山城次郎 / DVT事例</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 3 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- ITM Lightning Patterns SVG -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-summer">&#x1F329;</div>
+      <h2>ITM 雷雨パターン</h2>
+      <span class="tag tag-orange">7-8月</span>
+    </div>
+    <div class="svg-container">
+      <svg width="520" height="140" viewBox="0 0 520 140" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background -->
+        <rect width="520" height="140" rx="6" fill="#0d1820"/>
+        <!-- Tanba Taro pattern -->
+        <rect x="10" y="10" width="240" height="120" rx="5" fill="#1a2836" stroke="#ff6b3544" stroke-width="1"/>
+        <text x="130" y="30" text-anchor="middle" fill="#ff6b35" font-family="Poppins, Noto Sans CJK JP" font-size="10" font-weight="500">丹波太郎 TANBA TARO</text>
+        <text x="130" y="45" text-anchor="middle" fill="#7a8fa6" font-family="Poppins, Noto Sans CJK JP" font-size="7">六甲方面から南下するパターン</text>
+        <!-- Mountain -->
+        <polygon points="40,100 80,55 120,100" fill="#1e3448" stroke="#ff6b3555" stroke-width="1"/>
+        <text x="80" y="95" text-anchor="middle" fill="#7a8fa6" font-family="Noto Sans CJK JP" font-size="7">六甲山</text>
+        <!-- CB cloud -->
+        <ellipse cx="100" cy="50" rx="25" ry="12" fill="#ff6b3522" stroke="#ff6b35" stroke-width="0.5"/>
+        <text x="100" y="53" text-anchor="middle" fill="#ff6b35" font-family="Poppins" font-size="7">CB</text>
+        <!-- Arrow down to ITM -->
+        <line x1="120" y1="60" x2="180" y2="95" stroke="#ff6b35" stroke-width="1.5" marker-end="url(#arrowOrange)"/>
+        <!-- ITM -->
+        <rect x="165" y="88" width="50" height="18" rx="3" fill="#0d1820" stroke="#fbbf24" stroke-width="1"/>
+        <text x="190" y="100" text-anchor="middle" fill="#fbbf24" font-family="Poppins" font-size="8" font-weight="500">ITM</text>
+
+        <!-- Yamashiro Jiro pattern -->
+        <rect x="270" y="10" width="240" height="120" rx="5" fill="#1a2836" stroke="#a78bfa44" stroke-width="1"/>
+        <text x="390" y="30" text-anchor="middle" fill="#a78bfa" font-family="Poppins, Noto Sans CJK JP" font-size="10" font-weight="500">山城次郎 YAMASHIRO JIRO</text>
+        <text x="390" y="45" text-anchor="middle" fill="#7a8fa6" font-family="Poppins, Noto Sans CJK JP" font-size="7">大阪平野・奈良方面から北上するパターン</text>
+        <!-- City area -->
+        <rect x="360" y="78" width="70" height="30" rx="3" fill="#1e3448" stroke="#a78bfa33" stroke-width="1"/>
+        <text x="395" y="97" text-anchor="middle" fill="#7a8fa6" font-family="Noto Sans CJK JP" font-size="7">大阪平野/奈良</text>
+        <!-- CB cloud -->
+        <ellipse cx="395" cy="70" rx="25" ry="12" fill="#a78bfa22" stroke="#a78bfa" stroke-width="0.5"/>
+        <text x="395" y="73" text-anchor="middle" fill="#a78bfa" font-family="Poppins" font-size="7">CB</text>
+        <!-- Arrow up to ITM -->
+        <line x1="365" y1="75" x2="310" y2="55" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+        <!-- ITM -->
+        <rect x="285" y="42" width="50" height="18" rx="3" fill="#0d1820" stroke="#fbbf24" stroke-width="1"/>
+        <text x="310" y="54" text-anchor="middle" fill="#fbbf24" font-family="Poppins" font-size="8" font-weight="500">ITM</text>
+        <!-- Caution -->
+        <text x="390" y="125" text-anchor="middle" fill="#f43658" font-family="Noto Sans CJK JP" font-size="7">&#x26A0; 予想が難しい</text>
+        <!-- Arrow markers -->
+        <defs>
+          <marker id="arrowOrange" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ff6b35"/></marker>
+          <marker id="arrowPurple" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a78bfa"/></marker>
+        </defs>
+      </svg>
+    </div>
+    <ul class="bullet-list">
+      <li><span class="highlight">丹波太郎</span>: 陰暦6月(新暦6月下旬~8月上旬)、丹波方面の山から出る夕立雲が六甲方面→ITMへ南下</li>
+      <li><span class="highlight">山城次郎</span>: 大阪平野~奈良で発生する雷雲が北上。京都から見て南から来る雷雲。<span class="warn-text">予想が難しい</span></li>
+      <li>近年、<span class="warn-text">淀川河口周辺でエコーが急発生</span>する事例が増加（2017年7月事例）</li>
+    </ul>
+  </div>
+
+  <!-- ITM DVT Cases -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-case">&#x1F6AB;</div>
+      <h2>ITM 雷雨 DVT事例</h2>
+      <span class="tag tag-red">運航影響大</span>
+    </div>
+    <table>
+      <tr><th>日付</th><th>影響</th><th>最大強度</th><th>主因</th></tr>
+      <tr>
+        <td style="color:#fbbf24">2014/7/20</td>
+        <td><span class="danger-text">7便 DVT</span></td>
+        <td>+TSRA (約2時間)</td>
+        <td>RWY32着陸側にMBA頻発 → 進入不可</td>
+      </tr>
+      <tr>
+        <td style="color:#fbbf24">2015/8/8</td>
+        <td><span class="danger-text">6便 DVT / 15便 欠航</span></td>
+        <td>+TSRA / HVY TS OHD</td>
+        <td>W/S・MBA + 進入経路上CB輻輳</td>
+      </tr>
+      <tr>
+        <td style="color:#fbbf24">2016/8/14</td>
+        <td><span class="danger-text">6便 DVT / 1便 RTN / 13便 欠航</span></td>
+        <td>+TSRA / SEV TS OHD</td>
+        <td>上空待機輻輳、RVR 0700m</td>
+      </tr>
+      <tr>
+        <td style="color:#fbbf24">2017/7/9</td>
+        <td>上空混雑（DVT数不明）</td>
+        <td>+SHRA → CB接近</td>
+        <td>淀川河口エコー急発生 → 到着経路影響</td>
+      </tr>
+    </table>
+    <div class="caution-box">
+      <strong>ITM DVT原因:</strong> ウィンドシア・MBAの発出、および進入コース上のCBによる上空混雑。8月のITMは雷雨影響を受ける可能性が高い。
+    </div>
+  </div>
+
+  <!-- METAR TS Interpretation -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-info">&#x1F4DD;</div>
+        <h2>METAR TS通報の読み方</h2>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="highlight">+TSRA</span> の「+:Heavy」は<span class="highlight">降水強度</span>がHeavyであることを示す（雷の強度ではない）</li>
+        <li>RMKS部の<span class="highlight">FBL / MOD / HVY</span> TS は、LIDENの電流値をもとに通報者が<span class="warn-text">推定情報</span>として追記</li>
+        <li class="warn"><span class="warn-text">HVY TS OHD</span> = 空港内で雷電現象観測。実質的に地上作業中止・離着陸不可の状況が多い</li>
+        <li>ただし RMKS のみから「強度の雷雨 → 離着陸禁止」と<span class="danger-text">直接判断すべきではない</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-tool">&#x1F4C4;</div>
+        <h2>狭域悪天予想図 vs TAF</h2>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="highlight">狭域悪天予想図</span>: LFMベース。TS予報域に注目</li>
+        <li><span class="highlight">TAF</span>: 基本的にMSMベース</li>
+        <li class="warn"><span class="warn-text">LFMによる予報はTAFに反映されない</span>ことがあるため、狭域悪天予想図を別途確認することが重要</li>
+        <li>2016/8/14事例: 雷発生確度「A」であったが、TAFには-TSRAの表現のみ</li>
+        <li>2017/7/9事例: TAFではSHRAのみ予想 → 実際は雷雨に発展</li>
+      </ul>
+      <div class="info-box">時系列予報(雷発生確度) + 狭域悪天予想図(TS域) → イントラ気象サイトから参照可能</div>
+    </div>
+  </div>
+
+  <!-- Example METAR -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-case">&#x1F4CB;</div>
+      <h2>ITM METAR 典型例（2016/8/14 激しい雷雨）</h2>
+    </div>
+    <code class="metar-code">RJOO 140849Z <span style="color:#f43658">36023KT</span> <span style="color:#ff6b35">1600</span> R32R/0750VP1800D R32L/1400VP1800D <span style="color:#f43658">+TSRA</span>
+FEW015 <span style="color:#fbbf24">BKN025CB</span> BKN050 25/23 Q1003 RMK ... <span style="color:#f43658">SEV TS OHD</span> MOV SE</code>
+    <div style="font-size:7pt;color:#7a8fa6;margin-top:2px">風向急変(36023G) + VIS 1600m + BKN CB + SEV TS OHD → 離着陸実質不可状態</div>
+  </div>
+
+  <div class="footer">
+    <span>LIGHTNING BRIEFING ─ PAGE 3 / 5</span>
+    <span>SOURCE: MET INFO 2016-2018 / ITM DVT統計 / OCC企画部</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 4: 被雷統計・空港別事例 STRIKE STATISTICS                 -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1><span class="accent">&#x26A1;</span> 被雷統計 <span class="accent">STRIKE DATA</span></h1>
+      <div class="subtitle">HND / KMQ / AXT / FUK / IZO ─ 連続被雷事例 / 複合材損傷</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 4 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- Top-level stats -->
+  <div class="metrics-row">
+    <div class="metric"><div class="val">HND</div><div class="label">被雷件数最多</div></div>
+    <div class="metric"><div class="val">KMQ</div><div class="label">1000便あたり最多</div></div>
+    <div class="metric"><div class="val">21機</div><div class="label">2023/2/20 集中被雷</div></div>
+    <div class="metric"><div class="val">&#xD7;2</div><div class="label">複合材 修理期間比</div></div>
+  </div>
+
+  <!-- HND Cases -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-region">&#x26A1;</div>
+      <h2>HND/NRT 連続被雷事例</h2>
+      <span class="tag tag-red">CRITICAL</span>
+    </div>
+    <table>
+      <tr><th>日付</th><th>被雷機数</th><th>影響</th><th>備考</th></tr>
+      <tr>
+        <td style="color:#fbbf24">2019/4/1</td>
+        <td style="color:#f43658;font-weight:500">11機</td>
+        <td>5便欠航 / 475名影響 / 10,082名遅延</td>
+        <td>復旧費 ~1,000万円</td>
+      </tr>
+      <tr>
+        <td style="color:#fbbf24">2020/5/6</td>
+        <td style="color:#ff6b35;font-weight:500">5機</td>
+        <td>複数便遅延</td>
+        <td>春季雷 被雷層8,000-12,000ft</td>
+      </tr>
+      <tr>
+        <td style="color:#fbbf24">2023/2/20</td>
+        <td style="color:#f43658;font-weight:500">13機(JAL) / 21機(全社)</td>
+        <td>大規模連続被雷</td>
+        <td>冬季雷 南岸低気圧</td>
+      </tr>
+    </table>
+    <div class="caution-box">
+      <strong>HND統計 (FY2010-12):</strong> 56件で全社最多。ただし1000便あたりではKMQ(3.5件)が突出。<strong>Lightning Hit通報</strong>は後続機の被雷回避に極めて有効 → APT INFO(QQA)を積極活用。
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- AXT Cases -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-winter">&#x2744;</div>
+        <h2>AXT 秋田空港 被雷事例</h2>
+      </div>
+      <div class="case-header">
+        <div class="case-date">2020/1/3 1400L</div>
+        <span class="tag tag-red">冬季雷</span>
+      </div>
+      <ul class="bullet-list">
+        <li>降下中 <span class="highlight">8,000ft</span> 付近で被雷</li>
+        <li>アンテナ、<span class="danger-text">垂直尾翼の一部損傷</span> → 当日AXT STAY</li>
+        <li>冬型気圧配置、エコートップ 20,000ft前後</li>
+        <li>OAT 0&#x2103;~-5&#x2103;の高度: 1,500-4,000ft</li>
+      </ul>
+      <div class="case-header" style="margin-top:6px">
+        <div class="case-date">2020/12 1130L</div>
+        <span class="tag tag-red">冬季雷</span>
+      </div>
+      <ul class="bullet-list">
+        <li>降下中 <span class="highlight">3,500ft</span> で被雷</li>
+        <li><span class="danger-text">前方貨物室ドア + 昇降舵損傷</span> → AXT STAY</li>
+        <li>寒冷前線通過エコー、トップ15,000ft</li>
+        <li>空港SOアドバイスでHOLD実施 → 後続便JL163はRWY10 APPで回避成功</li>
+      </ul>
+      <div class="info-box">AXT冬季: 山地付近の飛行を極力回避 + 被雷層(0~-5&#x2103;)をBRICに入力 → Vertical/Lateralに回避。</div>
+    </div>
+
+    <!-- FUK & IZO Cases -->
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <div class="icon icon-summer">&#x26A1;</div>
+          <h2>FUK 福岡空港 被雷事例</h2>
+        </div>
+        <ul class="bullet-list">
+          <li>FUKの特徴: <span class="warn-text">出発便の被雷が多い</span></li>
+          <li>SID/TRANS中の回避は難しい → エコー状況・LILAC情報を利用</li>
+          <li>被雷高度: 夏季は<span class="highlight">10,000ft前後</span>（GND OAT 20&#x2103;台）</li>
+          <li class="danger">2022/6/25: FUK発着3便が被雷（STOUT/KOHZA/YANKS付近）</li>
+        </ul>
+        <table>
+          <tr><th>日付</th><th>便</th><th>高度</th><th>PHASE</th></tr>
+          <tr><td>2022/6/25</td><td>FUK到着</td><td>13,000ft</td><td>DES</td></tr>
+          <tr><td>2022/6/25</td><td>FUK出発</td><td style="color:#fbbf24">10,000ft</td><td>CLM</td></tr>
+          <tr><td>2022/6/25</td><td>FUK出発</td><td>16,000ft</td><td>CLM</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="icon icon-winter">&#x26A1;</div>
+          <h2>IZO / 日本海側空港</h2>
+        </div>
+        <table>
+          <tr><th>空港</th><th>FY13被雷</th><th>特徴</th></tr>
+          <tr><td style="color:#fbbf24">IZO (出雲)</td><td style="color:#f43658">13件</td><td>JEC(美保VOR)付近に集中</td></tr>
+          <tr><td>AXT (秋田)</td><td>7件</td><td>冬季雷 山岳地帯で発生</td></tr>
+          <tr><td>KIJ (新潟)</td><td>4件</td><td>JAR便含む</td></tr>
+          <tr><td>AOJ (青森)</td><td>1件</td><td>12月のみ</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Composite Material Impact -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-warn">&#x1F6E9;</div>
+      <h2>複合材機体の被雷リスク</h2>
+      <span class="tag tag-orange">787 / A350</span>
+    </div>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <ul class="bullet-list">
+          <li>複合材(CFRP)機体(787/A350)は金属機体と比較して<span class="danger-text">修理期間が約2倍</span></li>
+          <li>被雷による損傷範囲が広くなりやすく、目視確認が困難な内部損傷リスク</li>
+          <li>AOGとなった場合の運航・経済的影響が甚大</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="bullet-list">
+          <li>FY2010-12: HND 56件の被雷報告（全社最多）</li>
+          <li>1000便あたり被雷率上位: <span class="highlight">KMQ 3.5</span> / SDJ / AXT / IZO / AOJ</li>
+          <li class="warn">日本海側空港（冬季雷）が上位を独占</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>LIGHTNING BRIEFING ─ PAGE 4 / 5</span>
+    <span>SOURCE: 被雷統計 FY10-22 / JALEC / JAIR / MET INFO</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 5: 監視ツール・回避策 TOOLS & COUNTERMEASURES             -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1><span class="accent">&#x26A1;</span> 監視・回避 <span class="accent">TOOLS</span></h1>
+      <div class="subtitle">LIDEN / FOSTER / LILAC / ナウキャスト / ダウンバースト / QUICK REFERENCE</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 5 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- Monitoring Tools -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-tool">&#x1F4E1;</div>
+        <h2>監視ツール一覧</h2>
+      </div>
+      <table>
+        <tr><th>ツール</th><th>概要</th><th>更新</th></tr>
+        <tr><td style="color:#fbbf24;font-weight:500">LIDEN</td><td>気象庁雷監視システム。全国30空港。VHF+LF帯電波受信で雷放電を検出</td><td>リアルタイム</td></tr>
+        <tr><td style="color:#fbbf24;font-weight:500">FOSTER</td><td>エコートップ高度・降水強度表示。Japanレーダーのみ</td><td>10分毎</td></tr>
+        <tr><td style="color:#00d4ff;font-weight:500">雷ナウキャスト</td><td>活動度1-4表示。活動度3以上で雷雨発生の可能性高</td><td>10分毎</td></tr>
+        <tr><td style="color:#a78bfa;font-weight:500">LILAC</td><td>被雷対策ソフト（試用中）。エコー・LIDEN情報を統合表示</td><td>─</td></tr>
+        <tr><td style="color:#34d399;font-weight:500">狭域悪天予想図</td><td>LFMベース。TS予報域表示。TAF(MSM)に反映されない情報あり</td><td>定時</td></tr>
+        <tr><td style="color:#34d399;font-weight:500">MetAir</td><td>気象庁データ閲覧。小松ドップラーレーダー情報も表示可能</td><td>─</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-warn">&#x1F32A;</div>
+        <h2>ダウンバースト / MBA</h2>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="highlight">ダウンバースト</span>: CBからの強烈な下降気流が地上付近で水平に拡散</li>
+        <li>水平影響範囲 <span class="highlight">4km未満 = マイクロバースト</span></li>
+        <li class="danger"><span class="danger-text">MBA (Microburst Alert)</span>検出基準:<br>最大風速差 <span class="danger-text">15kt以上</span> + 影響面積 <span class="danger-text">3km&#xB2;以上</span></li>
+        <li>ITM事例: RWY32着陸側にMBA頻発 → 進入不可状態が継続</li>
+      </ul>
+      <div class="caution-box">
+        <strong>雷ナウキャスト活動度:</strong><br>
+        1 = 雷可能性あり / 2 = 雷あり / <strong>3 = やや激しい雷</strong> / <strong style="color:#f43658">4 = 激しい雷</strong><br>
+        活動度3以上では積極的な回避行動を。
+      </div>
+    </div>
+  </div>
+
+  <!-- Avoidance Strategies -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-shield">&#x1F6E1;</div>
+      <h2>被雷回避策 AVOIDANCE STRATEGIES</h2>
+      <span class="tag tag-green">ESSENTIAL</span>
+    </div>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <ul class="bullet-list">
+          <li class="danger"><span class="danger-text">エコー + 風下側CLDの-10&#x2103;~0&#x2103;層</span>では十分な距離を確保</li>
+          <li><span class="highlight">Lightning Hit通報</span>は後続機の被雷回避に極めて有効</li>
+          <li><span class="highlight">APT INFO(QQA)</span>の活用 ─ 被雷情報を共有</li>
+          <li>エコーを回避した後も<span class="warn-text">薄い雲に電荷が蓄積</span>している可能性に留意</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="bullet-list">
+          <li>冬季: <span class="highlight">Vertical + Lateral</span>に雷を回避（被雷層0~-5&#x2103;をBRIC入力）</li>
+          <li>KMQ: 小松管制隊に<span class="highlight">積極的にリクエスト</span>（LIDAS情報豊富）</li>
+          <li>AXT: 最終進入前の低高度で<span class="highlight">山地付近飛行を回避</span></li>
+          <li class="warn">性能が許せば<span class="warn-text">RWY変更・DVTも選択肢</span>（被雷AOG回避）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Megaflash & Other Knowledge -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-bolt">&#x26A1;</div>
+        <h2>メガフラッシュ MEGAFLASH</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>WMO世界記録: 距離 <span class="highlight">709 km</span> / 継続時間 <span class="highlight">16.73秒</span></li>
+        <li>広域に渡る単一放電現象。通常の雷の概念を超えた距離に到達</li>
+        <li>CBから大きく離れた場所でも被雷リスクが存在する根拠</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-stat">&#x1F4CA;</div>
+        <h2>被雷空港ランキング</h2>
+      </div>
+      <table>
+        <tr><th>順位</th><th>空港</th><th>件数/1000便</th><th>季節</th></tr>
+        <tr><td>1</td><td style="color:#f43658;font-weight:500">KMQ</td><td style="color:#f43658">3.5</td><td>冬季雷</td></tr>
+        <tr><td>2</td><td style="color:#ff6b35">AXT</td><td>─</td><td>冬季雷</td></tr>
+        <tr><td>3</td><td style="color:#ff6b35">IZO</td><td>─</td><td>冬季雷</td></tr>
+        <tr><td>4</td><td>AOJ</td><td>─</td><td>冬季雷</td></tr>
+        <tr><td>─</td><td style="color:#fbbf24">HND</td><td>最多件数</td><td>通年</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-shield">&#x1F4CB;</div>
+      <h2>QUICK REFERENCE</h2>
+    </div>
+    <table class="qr-table">
+      <tr><th>項目</th><th>内容</th></tr>
+      <tr><td>被雷危険層</td><td>-10&#x2103; ~ 0&#x2103;（冬:2,000-8,000ft / 春秋:8,000-12,000ft / 夏:12,000-18,000ft）</td></tr>
+      <tr><td>冬季被雷帯</td><td>OAT 0&#x2103; ~ -5&#x2103;（低層 1,500-4,000ft）</td></tr>
+      <tr><td>KMQ 500hPa閾値</td><td>11月/-20&#x2103;, 12月/-27&#x2103;, 1月/-30&#x2103;（輪島上空）</td></tr>
+      <tr><td>KMQ 地上風</td><td>SSW~SW 10kt前後 (190&#xB0;~230&#xB0;) で発雷しやすい</td></tr>
+      <tr><td>FOSTER注目値</td><td>エコートップ【16】(4-6km) + LIDEN表示</td></tr>
+      <tr><td>エコー頂温度</td><td>-15&#x2103;=誘発雷 / -20&#x2103;=自然発雷（小松管制隊基準）</td></tr>
+      <tr><td>雷ナウキャスト</td><td>活動度3以上で積極的回避</td></tr>
+      <tr><td>回避の原則</td><td>エコー + 風下CLDの被雷層で距離確保 / LT HIT通報 / QQA活用</td></tr>
+      <tr><td>MBA検出基準</td><td>風速差 &#x2265;15kt + 面積 &#x2265;3km&#xB2;</td></tr>
+      <tr><td>冬季雷継続</td><td>1時間以内(50%) / 残り平均4-5時間</td></tr>
+      <tr><td>GS注意</td><td>あられ(GS)を伴う場合は特に発雷しやすい</td></tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    <span>LIGHTNING BRIEFING ─ PAGE 5 / 5</span>
+    <span>SOURCE: 57 PDFs / JAL B737 WEATHER MANUAL / MET INFO / OCC企画部</span>
+  </div>
+</div>
+
+</body>
+</html>

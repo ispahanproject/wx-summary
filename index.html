@@ -288,6 +288,33 @@
     font-size: 8.5pt;
     letter-spacing: 1px;
   }
+
+  /* ===== LIGHTNING CARD ACCENT ===== */
+  .card.lightning-accent:hover {
+    border-color: #fbbf2455;
+  }
+  .card.lightning-accent .airport-name .icao {
+    color: #fbbf24;
+  }
+  .card.lightning-accent .metric-val {
+    color: #fbbf24;
+  }
+  .card.lightning-accent .card-links a:not(.disabled) {
+    color: #fbbf24;
+    border-color: #fbbf2444;
+  }
+  .card.lightning-accent .card-links a:not(.disabled):hover {
+    background: #fbbf2415;
+  }
+  .info-badge-yellow {
+    background: #fbbf2422;
+    color: #fbbf24;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 8.5pt;
+    letter-spacing: 1px;
+  }
 </style>
 </head>
 <body>
@@ -298,7 +325,7 @@
   <div class="sub">B737 OPERATIONS — WEATHER SUMMARY DASHBOARD</div>
   <div class="header-meta">
     <span class="badge">7 AIRPORTS</span>
-    <span class="badge" style="background:#a78bfa15;color:#a78bfa;">1 ADVERSE WX</span>
+    <span class="badge" style="background:#a78bfa15;color:#a78bfa;">2 ADVERSE WX</span>
     <span>7 / 7 COMPLETED</span>
     <span>Last updated: 2026-03-04</span>
   </div>
@@ -663,6 +690,53 @@
     </div>
     <div class="card-links">
       <a href="霧/Fog_Briefing.html">HTML Briefing</a>
+      <a class="disabled">PDF Download</a>
+    </div>
+  </div>
+
+  <!-- ===== LIGHTNING BRIEFING ===== -->
+  <div class="card ready lightning-accent" onclick="window.location.href='雷/Lightning_Briefing.html'">
+    <div class="card-top">
+      <div>
+        <div class="airport-name">雷 <span class="icao">LIGHTNING BRIEFING</span></div>
+        <div class="airport-code">基礎知識・冬季雷・ITM事例・被雷統計・回避策</div>
+      </div>
+      <div class="status-badge status-ready">READY</div>
+    </div>
+    <div class="rwy-row">
+      <span class="info-badge-yellow">5 PAGES</span>
+      <span>57 source PDFs</span>
+      <span class="rwy-detail">HND・KMQ・ITM・AXT・FUK・IZO</span>
+    </div>
+    <div class="metrics">
+      <div class="metric-box">
+        <div class="metric-val" style="color:#fbbf24;">3+1<span>型</span></div>
+        <div class="metric-label">雷タイプ(夏+冬)</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#fbbf24;">20+<span>件</span></div>
+        <div class="metric-label">被雷事例</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#fbbf24;">6<span>空港</span></div>
+        <div class="metric-label">事例対象</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#fbbf24;">6<span>ツール</span></div>
+        <div class="metric-label">監視システム</div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag tag-thunder">夏季雷</span>
+      <span class="tag tag-thunder">冬季雷</span>
+      <span class="tag tag-thunder">誘発雷</span>
+      <span class="tag tag-turb">MBA</span>
+      <span class="tag tag-general">LIDEN</span>
+      <span class="tag tag-general">FOSTER</span>
+      <span class="tag tag-general">被雷回避</span>
+    </div>
+    <div class="card-links">
+      <a href="雷/Lightning_Briefing.html">HTML Briefing</a>
       <a class="disabled">PDF Download</a>
     </div>
   </div>
