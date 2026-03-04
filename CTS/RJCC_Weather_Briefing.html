@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923;
+    color: #e0e6ed;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 14mm 16mm 12mm 16mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    background: #0f1923;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid #00d4ff;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .header-left h1 {
+    font-size: 20pt;
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: 4px;
+  }
+  .header-left h1 span.icao { color: #00d4ff; font-weight: 300; }
+  .header-left .subtitle {
+    font-size: 8pt;
+    color: #7a8fa6;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 7.5pt;
+    color: #7a8fa6;
+  }
+  .header-right .rwy-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #00d4ff22, #00d4ff11);
+    border: 1px solid #00d4ff55;
+    border-radius: 4px;
+    padding: 3px 10px;
+    color: #00d4ff;
+    font-weight: 500;
+    font-size: 9pt;
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+  }
+
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+
+  .card {
+    background: linear-gradient(160deg, #1a2836, #152230);
+    border: 1px solid #1e3448;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 7px;
+    gap: 6px;
+  }
+  .card-header .icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .icon-wind { background: #00d4ff22; color: #00d4ff; }
+  .icon-turb { background: #ff6b3522; color: #ff6b35; }
+  .icon-vis { background: #a78bfa22; color: #a78bfa; }
+  .icon-thunder { background: #fbbf2422; color: #fbbf24; }
+  .icon-info { background: #34d39922; color: #34d399; }
+  .icon-fog { background: #818cf822; color: #818cf8; }
+  .icon-snow { background: #e2e8f022; color: #e2e8f0; }
+  .icon-rain { background: #60a5fa22; color: #60a5fa; }
+  .icon-deice { background: #fbbf2422; color: #fbbf24; }
+
+  .card-header h2 {
+    font-size: 9.5pt;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 7pt;
+    font-weight: 500;
+    margin-right: 3px;
+    letter-spacing: 0.5px;
+  }
+  .tag-blue { background: #00d4ff18; color: #00d4ff; border: 1px solid #00d4ff44; }
+  .tag-orange { background: #ff6b3518; color: #ff6b35; border: 1px solid #ff6b3544; }
+  .tag-red { background: #f4365818; color: #f43658; border: 1px solid #f4365844; }
+  .tag-yellow { background: #fbbf2418; color: #fbbf24; border: 1px solid #fbbf2444; }
+  .tag-green { background: #34d39918; color: #34d399; border: 1px solid #34d39944; }
+  .tag-purple { background: #a78bfa18; color: #a78bfa; border: 1px solid #a78bfa44; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th {
+    background: #0d1820; color: #7a8fa6; font-weight: 400;
+    padding: 4px 6px; text-align: left; font-size: 7pt;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448;
+  }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
+  table tr:last-child td { border-bottom: none; }
+
+  .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
+  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; text-align: center; }
+  .metric .val { font-size: 14pt; font-weight: 300; color: #00d4ff; line-height: 1.2; letter-spacing: 0.5px; }
+  .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li {
+    position: relative; padding-left: 12px; margin-bottom: 3px;
+    color: #b0c0d0; font-size: 7.8pt;
+  }
+  .bullet-list li::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 4px; height: 4px; border-radius: 50%; background: #00d4ff;
+  }
+  .bullet-list li.warn::before { background: #ff6b35; }
+  .bullet-list li.danger::before { background: #f43658; }
+
+  .highlight { color: #00d4ff; font-weight: 500; }
+  .warn-text { color: #ff6b35; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+
+  .caution-box {
+    background: linear-gradient(135deg, #ff6b3512, #ff6b3508);
+    border: 1px solid #ff6b3533;
+    border-left: 3px solid #ff6b35;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #ffcba4;
+  }
+  .caution-box strong { color: #ff6b35; }
+
+  .danger-box {
+    background: linear-gradient(135deg, #f4365812, #f4365808);
+    border: 1px solid #f4365833;
+    border-left: 3px solid #f43658;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #ffa0b4;
+  }
+  .danger-box strong { color: #f43658; }
+
+  .footer {
+    position: absolute;
+    bottom: 10mm;
+    left: 16mm;
+    right: 16mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 6pt;
+    color: #3a4f63;
+    border-top: 1px solid #1a2836;
+    padding-top: 4px;
+  }
+
+  .quick-ref {
+    background: linear-gradient(135deg, #0d1820, #0a1219);
+    border: 1px solid #00d4ff22;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 6px;
+  }
+  .quick-ref-title {
+    font-size: 7.5pt;
+    color: #00d4ff;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 ============ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>新千歳空港 <span class="icao">RJCC</span></h1>
+      <div class="subtitle">CTS — PRE-FLIGHT WEATHER BRIEFING — B737 OPERATIONS</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">RWY 01L/19R・01R/19L</div>
+      <div>3,000 × 45 m / 3,000 × 60 m</div>
+      <div>ELEV 82 ft ｜ H24 OPS</div>
+    </div>
+  </div>
+
+  <!-- AIRPORT OVERVIEW -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-info">◆</div>
+      <h2>AIRPORT OVERVIEW</h2>
+      <span class="tag tag-blue">太平洋式気候</span>
+    </div>
+    <div class="grid-2">
+      <div>
+        <svg viewBox="0 0 280 150" style="width:100%;height:auto;">
+          <defs>
+            <linearGradient id="terrain" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#1a2836"/>
+              <stop offset="100%" stop-color="#0a1219"/>
+            </linearGradient>
+          </defs>
+          <rect width="280" height="150" fill="url(#terrain)" rx="4"/>
+          <!-- Sea of Japan / Ishikari Bay (NW) -->
+          <rect x="0" y="5" width="70" height="35" rx="4" fill="#1e344811"/>
+          <path d="M0,35 Q20,30 40,33 Q55,28 70,32" stroke="#60a5fa" fill="none" stroke-width="0.8"/>
+          <text x="35" y="18" text-anchor="middle" font-size="5.5" fill="#60a5fa" font-family="Poppins, Noto Sans CJK JP">石狩湾</text>
+          <text x="35" y="28" text-anchor="middle" font-size="4.5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">日本海側 ~60km</text>
+          <!-- Sapporo -->
+          <circle cx="85" cy="38" r="4" fill="#fbbf24" opacity="0.3"/>
+          <text x="85" y="48" text-anchor="middle" font-size="5" fill="#fbbf24" font-family="Poppins, Noto Sans CJK JP">札幌 ~40km</text>
+          <!-- Mountains west (1000ft class) -->
+          <path d="M50,70 Q65,50 80,65 Q95,48 110,62" stroke="#3a4f63" fill="none" stroke-width="1.2"/>
+          <text x="80" y="58" text-anchor="middle" font-size="4.5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">西側山岳1000ft</text>
+          <!-- Lowland corridor -->
+          <rect x="90" y="68" width="100" height="35" rx="6" fill="#1e3448" opacity="0.3"/>
+          <text x="140" y="78" text-anchor="middle" font-size="5" fill="#7a8fa6" font-family="Poppins, Noto Sans CJK JP">低地帯（霧・雪の通り道）</text>
+          <!-- RWY (parallel) -->
+          <line x1="120" y1="88" x2="165" y2="88" stroke="#00d4ff" stroke-width="2"/>
+          <line x1="125" y1="93" x2="170" y2="93" stroke="#00d4ff" stroke-width="1.5" opacity="0.6"/>
+          <text x="115" y="92" text-anchor="end" font-size="5" fill="#00d4ff" font-family="Poppins, Noto Sans CJK JP">01</text>
+          <text x="175" y="88" font-size="5" fill="#00d4ff" font-family="Poppins, Noto Sans CJK JP">19</text>
+          <circle cx="143" cy="90" r="2.5" fill="#ff6b35" opacity="0.8"/>
+          <!-- Pacific / Tomakomai (south) -->
+          <rect x="60" y="115" width="160" height="30" rx="4" fill="#0d1820" opacity="0.6"/>
+          <path d="M60,115 Q100,120 140,115 Q180,118 220,115" stroke="#60a5fa" fill="none" stroke-width="0.6"/>
+          <text x="140" y="130" text-anchor="middle" font-size="5.5" fill="#60a5fa" font-family="Poppins, Noto Sans CJK JP">太平洋（苫小牧 ~25km）</text>
+          <!-- Snow arrow NW -->
+          <path d="M55,30 Q80,50 115,80" stroke="#e2e8f0" stroke-width="1" fill="none" stroke-dasharray="3,2" marker-end="url(#arrowW)"/>
+          <defs><marker id="arrowW" markerWidth="5" markerHeight="4" refX="5" refY="2" orient="auto"><path d="M0,0 L5,2 L0,4" fill="#e2e8f0"/></marker></defs>
+          <text x="62" y="62" font-size="4.5" fill="#e2e8f0" font-family="Poppins, Noto Sans CJK JP">冬:NW降雪</text>
+          <!-- Fog arrow S -->
+          <path d="M140,125 Q140,115 143,100" stroke="#a78bfa" stroke-width="1" fill="none" stroke-dasharray="3,2" marker-end="url(#arrowF)"/>
+          <defs><marker id="arrowF" markerWidth="5" markerHeight="4" refX="5" refY="2" orient="auto"><path d="M0,0 L5,2 L0,4" fill="#a78bfa"/></marker></defs>
+          <text x="158" y="115" font-size="4.5" fill="#a78bfa" font-family="Poppins, Noto Sans CJK JP">夏:海霧流入</text>
+          <!-- Yotei -->
+          <path d="M30,85 Q42,65 55,80" stroke="#3a4f63" fill="none" stroke-width="1"/>
+          <text x="42" y="82" text-anchor="middle" font-size="4" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">羊蹄山</text>
+        </svg>
+      </div>
+      <div>
+        <ul class="bullet-list">
+          <li>太平洋岸の苫小牧から<span class="highlight">25km</span>、日本海の石狩湾から<span class="highlight">約60km</span></li>
+          <li>太平洋式気候に近く、代表的悪天候は<span class="warn-text">夏の海霧</span>と<span class="warn-text">冬の降雪</span></li>
+          <li>南風で太平洋の海霧が低地帯を通り空港に流入</li>
+          <li>冬期はNW季節風が札幌方面から低地帯を通り降雪</li>
+          <li>空港西側に1000ft級の南北山岳 → 西風時に山岳波</li>
+        </ul>
+        <div class="metrics-row">
+          <div class="metric"><div class="val">82<span style="font-size:8pt;">ft</span></div><div class="label">ELEV</div></div>
+          <div class="metric"><div class="val">2<span style="font-size:8pt;">本</span></div><div class="label">並行滑走路</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 視程障害・霧 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-fog">☁</div>
+      <h2>視程障害・霧 — 夏季の主要ハザード</h2>
+      <span class="tag tag-purple">4-8月</span>
+    </div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:7pt;color:#5a7288;margin-bottom:4px;">霧のパターン（3種類）:</p>
+        <table>
+          <tr><th>種類</th><th>条件</th><th>時間帯</th></tr>
+          <tr><td style="color:#a78bfa;font-weight:500;">海霧（移流霧）</td><td>S~SE風≤12kt / SST≤20℃ / 気温-海水温差≤4℃</td><td>19時~朝方（24時ピーク）</td></tr>
+          <tr><td style="color:#a78bfa;font-weight:500;">層雲→霧</td><td>層雲侵入後、地表面冷却で霧化</td><td>夜間～早朝</td></tr>
+          <tr><td style="color:#a78bfa;font-weight:500;">放射霧</td><td>快晴 / Calm / 高気圧圏内</td><td>夜間（通年発生）</td></tr>
+        </table>
+        <div class="caution-box" style="margin-top:5px;">
+          <strong>⚠ 霧流入条件:</strong> S〜SSE風<span class="warn-text">10kt前後</span>で地形に沿って霧が流入。苫小牧のVIS/CIGが千歳の先行指標となる。
+        </div>
+      </div>
+      <div>
+        <p style="font-size:7pt;color:#5a7288;margin-bottom:4px;">霧の消散目安:</p>
+        <table>
+          <tr><th>霧の厚さ</th><th>消散時刻</th></tr>
+          <tr><td>2,000ft以上</td><td style="color:#f43658;font-weight:500;">日中も継続</td></tr>
+          <tr><td>2,000ft</td><td style="color:#ff6b35;">11時</td></tr>
+          <tr><td>1,000ft</td><td style="color:#fbbf24;">9〜10時</td></tr>
+          <tr><td>500ft以下</td><td style="color:#34d399;">8〜9時</td></tr>
+        </table>
+        <ul class="bullet-list" style="margin-top:5px;">
+          <li>天気図パターンが変わらなければ、前日と同時刻に発生・消散</li>
+          <li>オホーツク海高気圧の吹き出しが強い時は霧雨を伴う</li>
+          <li>浦河で03-06時に層雲観測 → 夕方海霧発生の可能性高い</li>
+          <li class="warn">苫小牧のVISが良好なら、南風でもCTS悪化は少ない</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- タービュランス・低層乱気流 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-turb">↕</div>
+      <h2>TURBULENCE・低層ウィンドシアー</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:7pt;color:#5a7288;margin-bottom:4px;">風向別 TURB特性:</p>
+        <table>
+          <tr><th>風向</th><th>特徴</th><th>注意点</th></tr>
+          <tr><td style="color:#00d4ff;">北風系<br>(NNW-N)</td><td>LLWS最多30%<br>60%が15kt+</td><td>RWY01ショートファイナルでRough Air。寒冷前線通過直後が最危険（地上N風 vs 上空S風）</td></tr>
+          <tr><td style="color:#ff6b35;">南風系<br>(SE 150°)</td><td>2000ft 50kt+<br>でLLWS/MBA</td><td>LOW北東進時、突風性でVWS 8-15kt/1000ft。850hPa前線に5-6℃不連続帯</td></tr>
+          <tr><td style="color:#fbbf24;">西風系</td><td>山岳波</td><td>西側1000ft山岳の風下側で乱気流。逆転層と西風の組み合わせで伝播</td></tr>
+        </table>
+      </div>
+      <div>
+        <ul class="bullet-list">
+          <li class="danger">SE風150°方向が強い時Rough Air、<span class="danger-text">2000ftで50kt以上</span>ならLLWS/MBAの可能性</li>
+          <li class="warn">7-8月に前線接近 → 3,000ft以下で強いTURB</li>
+          <li>春は地上南風でもAPCH中300ft付近で北風のことあり</li>
+          <li>夏場: 25kt超でGust発生しやすい</li>
+          <li>冬場: 西風は息が発生しやすく風向変化も</li>
+          <li>風向変化は朝夕の交換期、風が弱い時に起きやすい</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>PRE-FLIGHT WX BRIEFING — CTS / RJCC — 新千歳空港</span>
+    <span>PAGE 1 / 3</span>
+  </div>
+</div>
+
+<!-- ============ PAGE 2 ============ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>新千歳空港 <span class="icao">RJCC</span></h1>
+      <div class="subtitle">CTS — PRE-FLIGHT WEATHER BRIEFING — PAGE 2 — 降雪</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">RWY 01L/19R・01R/19L</div>
+      <div>ELEV 82 ft</div>
+    </div>
+  </div>
+
+  <!-- 降雪概要 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-snow">❄</div>
+      <h2>降雪 — 冬季の主要ハザード</h2>
+      <span class="tag tag-red">最重要ハザード</span>
+    </div>
+    <div class="metrics-row">
+      <div class="metric"><div class="val" style="color:#e2e8f0;">200<span style="font-size:7pt;">cm</span></div><div class="label">年間降雪量</div></div>
+      <div class="metric"><div class="val" style="color:#e2e8f0;">12-3<span style="font-size:7pt;">月</span></div><div class="label">本格降雪期</div></div>
+      <div class="metric"><div class="val" style="color:#e2e8f0;">10+<span style="font-size:7pt;">日/月</span></div><div class="label">11-3月雪日数</div></div>
+      <div class="metric"><div class="val" style="color:#ff6b35;">2℃</div><div class="label">降雪閾値(地上)</div></div>
+      <div class="metric"><div class="val" style="color:#60a5fa;">-9℃</div><div class="label">降雪閾値(850hPa)</div></div>
+    </div>
+    <ul class="bullet-list">
+      <li>日本海地方より降雪量は少ないが、じょう乱や冬型時に<span class="danger-text">20cm超の大雪</span>となることがある</li>
+      <li>降雪の目安: 地上気温<span class="highlight">2℃以下</span> + 850hPa <span class="highlight">-9℃以下</span></li>
+      <li class="warn">850hPa風が<span class="warn-text">310-350° / 20kt以上</span>で石狩湾CBが札幌方面から低地を通り流入 → しゅう雪</li>
+      <li>比較的早朝の降雪は少なく、日中にかけて多い</li>
+    </ul>
+  </div>
+
+  <!-- 大雪3パターン -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-snow">⚡</div>
+      <h2>大雪パターン — 3つの代表的気圧配置</h2>
+    </div>
+    <div class="grid-3">
+      <div style="background:#0d1820;border-radius:4px;padding:8px;">
+        <div style="font-size:7.5pt;color:#00d4ff;font-weight:500;margin-bottom:4px;">① 強いNW冬型</div>
+        <ul class="bullet-list">
+          <li>西高東低の冬型気圧配置</li>
+          <li><span class="highlight">北西風タイプ</span>: 石狩湾からの流入で強い降雪</li>
+          <li>西風タイプ: 山越えで弱い降雪</li>
+          <li>地上気圧傾度が急 → 筋状雲 → 千歳流入</li>
+        </ul>
+      </div>
+      <div style="background:#0d1820;border-radius:4px;padding:8px;">
+        <div style="font-size:7.5pt;color:#ff6b35;font-weight:500;margin-bottom:4px;">② 南岸低気圧</div>
+        <ul class="bullet-list">
+          <li>津軽海峡南を通過 → 一般に雪</li>
+          <li>発達時: E〜NE寒気移流で風雪強い</li>
+          <li class="warn">千歳近傍通過＋発達 → <span class="warn-text">雨転</span>リスク</li>
+          <li>弱い低気圧の方が雪になりやすい</li>
+        </ul>
+      </div>
+      <div style="background:#0d1820;border-radius:4px;padding:8px;border:1px solid #f4365833;">
+        <div style="font-size:7.5pt;color:#f43658;font-weight:500;margin-bottom:4px;">③ 石狩湾小低気圧 ⚠</div>
+        <ul class="bullet-list">
+          <li class="danger"><span class="danger-text">短時間に大雪</span>の最危険パターン</li>
+          <li>NW季節風弱化 → 西岸でNW+NE気流収束 → 小LOW発生</li>
+          <li>700hPaのNW風に乗って南下</li>
+          <li class="danger">渦巻きレーダーエコーに<span class="danger-text">要注意</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="danger-box">
+      <strong>⚠ 石狩湾小低気圧:</strong> 等圧線の間隔が広くても注意。雪雲が札幌経由でCTSに南下すると<span class="danger-text">両RWY閉鎖</span>に至る。コースがわずかにずれると降らない場合も（東側: 長沼～夕張方面 / 西側: 積丹～洞爺湖方面にそれる）。
+    </div>
+  </div>
+
+  <!-- その他の降雪パターン -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-snow">◈</div>
+        <h2>シヤーライン降雪</h2>
+        <span class="tag tag-yellow">1月末〜2月</span>
+      </div>
+      <ul class="bullet-list">
+        <li>500hPa: 満州寒冷低気圧とオホーツク海寒冷低気圧の間に東西シヤーライン</li>
+        <li>地上のオホーツク海LOW中心からもシヤーラインが延びる</li>
+        <li class="warn">シヤーライン付近の収束が激しく、ゆっくり南下して千歳で<span class="warn-text">大雪</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-snow">◈</div>
+        <h2>西海岸小低気圧</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>冬型でNW季節風が弱まり始めた頃に発生</li>
+        <li>北西季節風 + 内陸NE気流が西岸で収束 → 切離低気圧</li>
+        <li>700hPaのNW風に乗って南〜SE〜E方向へ移動</li>
+        <li class="warn">千歳に降雪をもたらす（石狩湾小低気圧と類似メカニズム）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 雪あられ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-snow">●</div>
+      <h2>雪あられ・氷あられ (GS)</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <ul class="bullet-list">
+          <li><span class="highlight">60%以上</span>が地上気温<span class="highlight">-2℃〜+2℃</span>で発生</li>
+          <li>局地性が強く予想困難</li>
+          <li class="warn">TAFで<span class="warn-text">TSSN</span>表記時はGS発生の可能性を含む</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="bullet-list">
+          <li>特別観測期間: <span class="highlight">10/25〜4/30</span></li>
+          <li>期間外はSPECIに表示されないため、整備担当者・PICの報告が重要</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>PRE-FLIGHT WX BRIEFING — CTS / RJCC — 新千歳空港</span>
+    <span>PAGE 2 / 3</span>
+  </div>
+</div>
+
+<!-- ============ PAGE 3 ============ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>新千歳空港 <span class="icao">RJCC</span></h1>
+      <div class="subtitle">CTS — PRE-FLIGHT WEATHER BRIEFING — PAGE 3</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">RWY 01L/19R・01R/19L</div>
+      <div>ELEV 82 ft</div>
+    </div>
+  </div>
+
+  <!-- 除雪体制 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-deice">🔧</div>
+      <h2>除雪体制</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <table>
+          <tr><th>項目</th><th>詳細</th></tr>
+          <tr><td>除雪基準</td><td>積雪<span class="highlight">1cm</span>（航空会社RQSTも可）</td></tr>
+          <tr><td>RWY除雪時間</td><td>名目30分 / <span class="warn-text">実際~50分</span></td></tr>
+          <tr><td>APRON除雪</td><td>約60分</td></tr>
+          <tr><td>S/I測定車</td><td>SAAB車 2台配備</td></tr>
+          <tr><td>運用方式</td><td>01L/19R と 01R/19L を<span class="highlight">交互除雪</span></td></tr>
+        </table>
+      </div>
+      <div>
+        <table>
+          <tr><th>担当区域</th><th>担当</th></tr>
+          <tr><td>東側（M TWY含む）</td><td>北海道エアポート(株)</td></tr>
+          <tr><td>西側</td><td>JSDF（自衛隊）</td></tr>
+        </table>
+        <div class="caution-box" style="margin-top:6px;">
+          <strong>⚠ 運航注意:</strong> 除雪時間＋着陸順番待ちを考慮した<span class="warn-text">十分な燃料搭載</span>が必要。本格降雪時はTWY/APRON除雪が後回し → TWCLが見えない中のTAXIの可能性あり。FOLLOW ME CARは到着便のみ。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 雷雨 + 降雨 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-thunder">⚡</div>
+        <h2>雷雨 (TS)</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>西側の丘陵・羊蹄山で強制上昇 → CB発生</li>
+        <li>700hPaの<span class="highlight">西風</span>でCTSに流入しやすい</li>
+        <li class="warn">発生目安: 850-500hPa温度差<span class="warn-text">25℃以上</span> + 500hPaトラフ + 高湿数</li>
+        <li>850hPa南風 → SW丘陵で発達したエコーが空港接近</li>
+        <li class="warn">TAFに<span class="warn-text">CB付記</span>の場合もTS可能性大 → 気象台に確認</li>
+        <li>ピーク: 7-8月、10月</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-rain">☂</div>
+        <h2>降水（雨）</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>降水量: 8月最多 / 2月最少（4-5倍の差）</li>
+      </ul>
+      <p style="font-size:7pt;color:#5a7288;margin:5px 0 3px;">降水パターン:</p>
+      <table>
+        <tr><th>パターン</th><th>メカニズム</th></tr>
+        <tr><td style="color:#60a5fa;font-weight:500;">えぞつゆ</td><td>梅雨前線が北上＋低気圧東進・北東進</td></tr>
+        <tr><td style="color:#60a5fa;font-weight:500;">小笠原・オホーツク前線</td><td>小笠原高気圧 vs オホーツク海高気圧の境界前線</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- その他特記事項 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-info">✦</div>
+      <h2>その他特記事項</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <ul class="bullet-list">
+          <li>年間を通じ<span class="highlight">南風</span>の卓越比率が大きい</li>
+          <li>観測計4個（地上7-8m高）で風を観測 — 地上と上層の風向差がMETARに反映されるのに時間差あり</li>
+          <li>Tailwind → Touchdown直前の風向変化に注意</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="bullet-list">
+          <li>低層5,000ft以下で地形起因のTURBが特徴的</li>
+          <li>空港南側の湿地帯の凸凹地形が乱気流の一因</li>
+          <li>北方LOW型: 暖気移流が強まるとみぞれ・雨に変化</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Reference Bar -->
+  <div class="quick-ref">
+    <div class="quick-ref-title">■ QUICK REFERENCE — CTS / RJCC</div>
+    <div style="display:flex;gap:8px;">
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;">S</div><div class="label">年間卓越風向</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;color:#a78bfa;">海霧</div><div class="label">夏季ハザード</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;color:#e2e8f0;">降雪</div><div class="label">冬季ハザード</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;">200<span style="font-size:7pt;">cm</span></div><div class="label">年間降雪量</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;color:#ff6b35;">~50<span style="font-size:7pt;">分</span></div><div class="label">RWY除雪時間</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;">82<span style="font-size:7pt;">ft</span></div><div class="label">ELEV</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>PRE-FLIGHT WX BRIEFING — CTS / RJCC — 新千歳空港</span>
+    <span>PAGE 3 / 3</span>
+  </div>
+</div>
+
+</body>
+</html>
