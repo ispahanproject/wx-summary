@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923; color: #e0e6ed; font-size: 8.5pt; line-height: 1.45;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page { width: 210mm; min-height: 297mm; padding: 14mm 16mm 12mm 16mm; position: relative; overflow: hidden; page-break-after: always; background: #0f1923; }
+  .page:last-child { page-break-after: avoid; }
+  .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #00d4ff; padding-bottom: 8px; margin-bottom: 12px; }
+  .header-left h1 { font-size: 20pt; font-weight: 300; color: #ffffff; letter-spacing: 4px; }
+  .header-left h1 span.icao { color: #00d4ff; font-weight: 300; }
+  .header-left .subtitle { font-size: 8pt; color: #7a8fa6; letter-spacing: 1px; margin-top: 2px; }
+  .header-right { text-align: right; font-size: 7.5pt; color: #7a8fa6; }
+  .header-right .rwy-badge { display: inline-block; background: linear-gradient(135deg, #00d4ff22, #00d4ff11); border: 1px solid #00d4ff55; border-radius: 4px; padding: 3px 10px; color: #00d4ff; font-weight: 500; font-size: 9pt; letter-spacing: 2px; margin-bottom: 3px; }
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+  .card { background: linear-gradient(160deg, #1a2836, #152230); border: 1px solid #1e3448; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; }
+  .card-header { display: flex; align-items: center; margin-bottom: 7px; gap: 6px; }
+  .card-header .icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .icon-wind { background: #00d4ff22; color: #00d4ff; }
+  .icon-turb { background: #ff6b3522; color: #ff6b35; }
+  .icon-vis  { background: #a78bfa22; color: #a78bfa; }
+  .icon-snow { background: #e2e8f022; color: #e2e8f0; }
+  .icon-ts   { background: #fbbf2422; color: #fbbf24; }
+  .icon-info { background: #00d4ff22; color: #00d4ff; }
+  .card-header h2 { font-size: 9.5pt; font-weight: 500; color: #ffffff; letter-spacing: 1.5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th { background: #0d1820; color: #7a8fa6; font-weight: 400; padding: 4px 6px; text-align: center; font-size: 7pt; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448; }
+  table th:first-child { text-align: left; }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; text-align: center; }
+  table td:first-child { text-align: left; }
+  table tr:last-child td { border-bottom: none; }
+  .td-peak { color: #ff6b35; font-weight: 600; }
+  .td-high { color: #fbbf24; font-weight: 500; }
+  .td-low  { color: #5a7288; }
+  .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
+  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; text-align: center; }
+  .metric .val { font-size: 14pt; font-weight: 300; color: #00d4ff; line-height: 1.2; letter-spacing: 0.5px; }
+  .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li { position: relative; padding-left: 12px; margin-bottom: 3px; color: #b0c0d0; font-size: 7.8pt; }
+  .bullet-list li::before { content: ''; position: absolute; left: 0; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: #00d4ff; }
+  .bullet-list li.warn::before { background: #ff6b35; }
+  .bullet-list li.danger::before { background: #f43658; }
+  .highlight { color: #00d4ff; font-weight: 500; }
+  .warn-text { color: #ff6b35; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+  .green-text { color: #34d399; font-weight: 500; }
+  .purple-text { color: #a78bfa; font-weight: 500; }
+  .warn-box { background: linear-gradient(135deg, #ff6b3512, #ff6b3508); border: 1px solid #ff6b3533; border-left: 3px solid #ff6b35; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #fdba74; }
+  .warn-box strong { color: #ff6b35; }
+  .info-box { background: linear-gradient(135deg, #00d4ff12, #00d4ff08); border: 1px solid #00d4ff33; border-left: 3px solid #00d4ff; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #7dd3fc; }
+  .info-box strong { color: #00d4ff; }
+  .terrain-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0; }
+  .terrain-item { background: #0d1820; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; border: 1px solid #1e3448; }
+  .terrain-item .name { color: #7a8fa6; }
+  .terrain-item .elev { color: #ff6b35; font-weight: 600; }
+  .msa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 6px 0; }
+  .msa-item { background: #0d1820; border-radius: 4px; padding: 5px 8px; text-align: center; border: 1px solid #1e3448; }
+  .msa-item .dir { font-size: 7pt; color: #7a8fa6; }
+  .msa-item .alt { font-size: 11pt; font-weight: 300; color: #ff6b35; }
+  .footer-ref { position: absolute; bottom: 10mm; left: 16mm; right: 16mm; font-size: 6.5pt; color: #3a4f63; border-top: 1px solid #1a2836; padding-top: 4px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- ========== PAGE 1/2: AIRPORT OVERVIEW, WIND, TURBULENCE ========== -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>RJFU <span class="icao">NGS</span></h1>
+      <div class="subtitle">長崎空港 ── 海上空港・海陸風・地形性乱気流・LLWS</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">PAGE 1 / 2</div>
+      <div>8 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric"><div class="val">8<span style="font-size:7pt;color:#5a7288;">ft</span></div><div class="label">ELEV</div></div>
+    <div class="metric"><div class="val" style="font-size:10pt;">0700-2200L</div><div class="label">OPS HR</div></div>
+    <div class="metric"><div class="val" style="color:#ff6b35;">3530<span style="font-size:7pt;color:#5a7288;">ft</span></div><div class="label">経ヶ岳(E・17km)</div></div>
+    <div class="metric"><div class="val" style="color:#ff6b35;">4462<span style="font-size:7pt;color:#5a7288;">ft</span></div><div class="label">雲仙岳(SE)</div></div>
+    <div class="metric"><div class="val">N/SE</div><div class="label">卓越風向</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>空港諸元 ── RJFU</h2></div>
+      <ul class="bullet-list">
+        <li>大村湾内南東部の<span class="highlight">海上空港</span></li>
+        <li>RWY<span class="highlight">14/32</span>（3,000 × 60 m）、ELEV 8ft</li>
+        <li>OPS: 0700-2200L（非H24）</li>
+        <li>代表風: <span class="highlight">RWY14</span>（2020/10/8変更）</li>
+        <li>気候: 九州西海型気候区</li>
+      </ul>
+      <p style="font-size:7.5pt;color:#00d4ff;margin-top:6px;margin-bottom:4px;">&#9654; 周辺地形</p>
+      <div class="terrain-row">
+        <div class="terrain-item"><div class="name">経ヶ岳(E 17km)</div><div class="elev">3530ft</div></div>
+        <div class="terrain-item"><div class="name">五ヶ原岳(E 15km)</div><div class="elev">3470ft</div></div>
+        <div class="terrain-item"><div class="name">雲仙岳(SE)</div><div class="elev">4462ft</div></div>
+        <div class="terrain-item"><div class="name">遠目山(14km)</div><div class="elev">2800ft</div></div>
+        <div class="terrain-item"><div class="name">南〜西側山岳</div><div class="elev">600-1800ft</div></div>
+        <div class="terrain-item"><div class="name">NW/SE方向</div><div class="elev">比較的平坦</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>MSA ── 障害物クリアランス高度</h2></div>
+      <div class="msa-grid">
+        <div class="msa-item"><div class="dir">NW方面</div><div class="alt">3700ft</div></div>
+        <div class="msa-item"><div class="dir">N〜NE方面</div><div class="alt">4600ft</div></div>
+        <div class="msa-item"><div class="dir">SW〜W方面</div><div class="alt">3100ft</div></div>
+        <div class="msa-item"><div class="dir">E〜SE方面</div><div class="alt" style="color:#f43658;">6000ft</div></div>
+      </div>
+      <div class="warn-box"><strong>E-SE方面:</strong> 経ヶ岳・五ヶ原岳・雲仙岳が存在し、MSA最大 <strong>6000ft</strong>。東側からのアプローチ時は地形障害に特に注意。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-wind">&#9778;</div><h2>風の特徴 ── 海陸風が顕著</h2></div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <p style="font-size:7.5pt;color:#00d4ff;margin-bottom:4px;">&#9654; 海陸風パターン</p>
+        <ul class="bullet-list">
+          <li>年間卓越: <span class="highlight">NW〜N</span>（海風）および <span class="highlight">ESE〜SSE</span>（陸風）</li>
+          <li>夜間〜午前中: <span class="highlight">SE</span>（陸風）が卓越</li>
+          <li>日中: <span class="highlight">N</span>（海風）が卓越</li>
+          <li>海上空港のため障害物による風の減速なし → <span class="warn-text">他空港より風が強い</span></li>
+          <li>30KT+の出現は全体の<span class="green-text">0.1%程度</span>のみ</li>
+          <li>GUSTとして<span class="highlight">通報されにくい</span>傾向あり</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#00d4ff;margin-bottom:4px;">&#9654; Gusty条件と代表風の注意</p>
+        <ul class="bullet-list">
+          <li class="warn">冬: <span class="warn-text">大陸性高気圧</span>張り出し時のNW風でGusty</li>
+          <li class="warn">低気圧の<span class="warn-text">対馬海峡東進</span>時のSW風でGusty</li>
+          <li class="danger">南西風時: TAFの予想値とMETARの観測値に<span class="danger-text">差がある</span>場合あり</li>
+          <li>RWY32旧測器は南西風時に丘の影響 → RWY14が代表点</li>
+        </ul>
+        <div class="info-box"><strong>TAF注意:</strong> 南西風時はTAFとMETARに差が生じることがある（福岡航空地方気象台コメント）。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>タービュランス・LLWS ── RWY32特有の地形影響</h2></div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:4px;">&#9654; NE強風時</p>
+        <ul class="bullet-list">
+          <li class="warn">空港NE側の<span class="warn-text">山岳地帯</span>の影響</li>
+          <li class="warn"><span class="warn-text">5,000ft以下</span>でTurbulenceとなる事が多い</li>
+        </ul>
+        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:4px;margin-top:6px;">&#9654; RWY32 進入時（西風成分大）</p>
+        <ul class="bullet-list">
+          <li class="warn">地形の影響で<span class="warn-text">Rough Air</span>が低高度まで続く</li>
+          <li class="danger">Short Final: 花文字山（空港内丘）の影響で<span class="danger-text">XW成分大</span></li>
+          <li class="danger">時にTail成分も含まれる → <span class="danger-text">要注意</span></li>
+          <li>接地帯付近と滑走路中央部で風速差（中央部で強まる）</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#00d4ff;margin-bottom:4px;">&#9654; RWY選択の考え方</p>
+        <ul class="bullet-list">
+          <li>西風成分が大きい場合: <span class="highlight">RWY14進入</span>の方がTURBが少ない</li>
+        </ul>
+        <div class="warn-box" style="margin-top:8px;"><strong>梅雨期の注意:</strong> 東シナ海方面から発達したエコーが接近し、<strong>強雨・低視程</strong>をもたらすことがある。南西側の地形も相まって乱気流に注意。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJFU NGS Weather Briefing</span><span>Page 1 ─ Airport Overview, Wind & Turbulence</span></div>
+</div>
+
+<!-- ========== PAGE 2/2: VISIBILITY / CEILING / SNOW / THUNDER ========== -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>RJFU <span class="icao">NGS</span></h1>
+      <div class="subtitle">視程・シーリング・雪・雷 ── 月別統計・判断基準</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">PAGE 2 / 2</div>
+      <div>8 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>視程 ── 月平均悪視程出現日数</h2></div>
+    <table>
+      <tr>
+        <th>閾値</th>
+        <th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th>
+      </tr>
+      <tr>
+        <td>5000m未満</td>
+        <td class="td-high">5.8</td><td class="td-high">6.0</td><td class="td-high">7.1</td><td class="td-high">5.8</td><td class="td-high">5.6</td><td class="td-peak">8.2</td><td class="td-high">6.7</td><td>4.1</td><td>4.1</td><td class="td-low">2.5</td><td>4.0</td><td class="td-low">3.0</td>
+      </tr>
+      <tr>
+        <td>3200m未満</td>
+        <td>3.6</td><td>3.7</td><td>4.2</td><td>3.5</td><td>3.2</td><td class="td-peak">4.8</td><td class="td-peak">4.9</td><td>3.0</td><td>2.3</td><td class="td-low">1.1</td><td>1.8</td><td>1.7</td>
+      </tr>
+      <tr>
+        <td>1600m未満</td>
+        <td class="td-high">1.5</td><td class="td-peak">1.7</td><td>1.1</td><td class="td-low">0.3</td><td>1.0</td><td>1.0</td><td class="td-peak">1.8</td><td>0.8</td><td>0.8</td><td class="td-low">0.1</td><td>0.5</td><td class="td-low">0.2</td>
+      </tr>
+    </table>
+    <div class="grid-2" style="margin-top:6px;margin-bottom:0;">
+      <ul class="bullet-list">
+        <li>悪視程は<span class="highlight">1〜7月</span>に多い。6〜7月が最多</li>
+        <li>6〜7月: <span class="warn-text">梅雨前線</span>の強雨・もや</li>
+        <li>1600m未満: 冬=<span class="highlight">雪・霧</span>、春=霧、夏秋=降水</li>
+      </ul>
+      <ul class="bullet-list">
+        <li>冬季の雪による低視程は<span class="green-text">短時間で回復</span>することが多い</li>
+        <li>霧: 1〜3月に多い。2〜4月の<span class="highlight">夕方</span>に発生するものが多い</li>
+        <li>霧はほとんど<span class="green-text">2時間以内</span>で解消</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>シーリング ── 月平均低シーリング出現日数</h2></div>
+    <table>
+      <tr>
+        <th>閾値</th>
+        <th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th>
+      </tr>
+      <tr>
+        <td>1000ft未満</td>
+        <td>1.7</td><td>1.3</td><td>1.6</td><td class="td-high">2.7</td><td class="td-high">2.6</td><td class="td-peak">4.0</td><td class="td-high">2.5</td><td class="td-low">0.2</td><td class="td-low">0.2</td><td class="td-low">0.5</td><td class="td-low">0.5</td><td class="td-low">0.6</td>
+      </tr>
+      <tr>
+        <td>500ft未満</td>
+        <td>0.6</td><td>0.3</td><td>0.6</td><td>0.7</td><td class="td-low">0.2</td><td class="td-low">0.2</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0.1</td><td>0.3</td>
+      </tr>
+      <tr>
+        <td>200ft未満</td>
+        <td class="td-low">0.1</td><td class="td-low">0.1</td><td class="td-high">0.5</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0</td><td class="td-low">0.1</td>
+      </tr>
+    </table>
+    <ul class="bullet-list" style="margin-top:5px;">
+      <li>1000ft未満: <span class="highlight">4〜7月</span>に多い。6月最多（4.0日）</li>
+      <li>200ft未満の発生は<span class="danger-text">すべて霧</span>によるもの（12〜3月のみ）</li>
+      <li>低シーリング時は降水を伴う割合が高く、<span class="warn-text">悪視程と複合</span>することが多い</li>
+    </ul>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-snow">&#10052;</div><h2>雪 ── 月平均出現日数</h2></div>
+      <table>
+        <tr>
+          <th>12月</th><th>1月</th><th>2月</th><th>3月</th>
+        </tr>
+        <tr>
+          <td>1.8</td><td class="td-peak">2.8</td><td>1.6</td><td>1.0</td>
+        </tr>
+      </table>
+      <ul class="bullet-list" style="margin-top:6px;">
+        <li>12〜3月に観測、年間合計約<span class="highlight">7日</span></li>
+        <li>積雪: 過去10年で<span class="highlight">1〜2cm</span>（2005年以降1cm未満）</li>
+        <li>2010年1月に<span class="danger-text">10cm</span>を観測</li>
+        <li class="warn">山間部で積雪でも<span class="warn-text">空港では積雪に至らない</span>場合あり</li>
+        <li class="warn"><span class="warn-text">夜間積雪</span>は観測記録に残らないことがある → <span class="danger-text">早朝便注意</span></li>
+        <li>2016年1月: 九州大雪事例あり</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-ts">&#9889;</div><h2>雷 ── 月平均出現日数</h2></div>
+      <table>
+        <tr>
+          <th>1月</th><th>3月</th><th>4月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>11月</th>
+        </tr>
+        <tr>
+          <td>0.6</td><td>0.9</td><td class="td-high">1.2</td><td>1.1</td><td class="td-high">4.1</td><td class="td-peak">5.4</td><td>2.0</td><td>1.2</td>
+        </tr>
+      </table>
+      <ul class="bullet-list" style="margin-top:6px;">
+        <li>7〜8月が全体の<span class="danger-text">半数</span>（梅雨期前線 + 太平洋高気圧周辺不安定）</li>
+        <li>島原半島・天草付近で発生・発達 → <span class="warn-text">空港に接近</span></li>
+        <li>冬季: 五島灘・西彼杵半島で発生 → 接近（件数は少ない）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>QUICK REFERENCE ── NGS 判断基準サマリー</h2></div>
+    <table>
+      <tr><th style="text-align:left;">現象</th><th style="text-align:left;">監視指標</th><th style="text-align:left;">閾値 / トリガー</th><th style="text-align:left;">影響</th></tr>
+      <tr><td><span class="warn-text">NE強風TURB</span></td><td>NE風＋NE側山岳</td><td class="warn-text">5,000ft以下</td><td>Turbulence多発</td></tr>
+      <tr><td><span class="warn-text">RWY32 LLWS</span></td><td>西風成分大</td><td class="danger-text">Short Final花文字山影響</td><td>XW↑ / Tail成分混入</td></tr>
+      <tr><td><span style="color:#00d4ff;font-weight:500;">海陸風TAF差</span></td><td>南西風時</td><td class="warn-text">TAF≠METAR</td><td>風向風速の過小評価注意</td></tr>
+      <tr><td><span class="purple-text">低視程・低雲高</span></td><td>1〜7月 / 梅雨期</td><td class="warn-text">6〜7月最多(5km未満8.2日/月)</td><td>Approach制限、G/A</td></tr>
+      <tr><td><span class="highlight">雪</span></td><td>12〜3月</td><td>1月最多(2.8日)</td><td>積雪まれだが早朝便注意</td></tr>
+      <tr><td><span style="color:#fbbf24;font-weight:500;">雷</span></td><td>7〜8月 / 島原・天草</td><td class="danger-text">8月5.4日/月</td><td>TS COND、被雷</td></tr>
+    </table>
+  </div>
+
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJFU NGS Weather Briefing</span><span>Page 2 ─ Visibility / Ceiling / Snow / Thunder</span></div>
+</div>
+
+</body>
+</html>
