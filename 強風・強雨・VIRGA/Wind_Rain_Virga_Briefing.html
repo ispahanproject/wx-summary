@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923;
+    color: #e0e6ed;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 14mm 16mm 12mm 16mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    background: #0f1923;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid #ef4444;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .header-left h1 {
+    font-size: 20pt;
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: 4px;
+  }
+  .header-left h1 span.accent { color: #ef4444; font-weight: 300; }
+  .header-left .subtitle {
+    font-size: 8pt;
+    color: #7a8fa6;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 7.5pt;
+    color: #7a8fa6;
+  }
+  .header-right .page-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ef444422, #ef444411);
+    border: 1px solid #ef444455;
+    border-radius: 4px;
+    padding: 3px 10px;
+    color: #ef4444;
+    font-weight: 500;
+    font-size: 9pt;
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+  }
+
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+
+  .card {
+    background: linear-gradient(160deg, #1a2836, #152230);
+    border: 1px solid #1e3448;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 7px;
+    gap: 6px;
+  }
+  .card-header .icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .icon-wind { background: #ef444422; color: #ef4444; }
+  .icon-info { background: #34d39922; color: #34d399; }
+  .icon-warn { background: #ff6b3522; color: #ff6b35; }
+  .icon-rain { background: #3b82f622; color: #60a5fa; }
+  .icon-tool { background: #22d3ee22; color: #22d3ee; }
+  .icon-case { background: #ef444422; color: #ef4444; }
+  .icon-region { background: #f4365822; color: #f43658; }
+  .icon-shield { background: #34d39922; color: #34d399; }
+  .icon-virga { background: #a78bfa22; color: #a78bfa; }
+  .icon-airport { background: #fbbf2422; color: #fbbf24; }
+  .icon-cyclone { background: #ef444422; color: #ef4444; }
+
+  .card-header h2 {
+    font-size: 9.5pt;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 7pt;
+    font-weight: 500;
+    margin-right: 3px;
+    letter-spacing: 0.5px;
+  }
+  .tag-red { background: #ef444418; color: #ef4444; border: 1px solid #ef444444; }
+  .tag-blue { background: #3b82f618; color: #60a5fa; border: 1px solid #60a5fa44; }
+  .tag-orange { background: #ff6b3518; color: #ff6b35; border: 1px solid #ff6b3544; }
+  .tag-yellow { background: #fbbf2418; color: #fbbf24; border: 1px solid #fbbf2444; }
+  .tag-purple { background: #a78bfa18; color: #a78bfa; border: 1px solid #a78bfa44; }
+  .tag-green { background: #34d39918; color: #34d399; border: 1px solid #34d39944; }
+  .tag-cyan { background: #22d3ee18; color: #22d3ee; border: 1px solid #22d3ee44; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th {
+    background: #0d1820; color: #7a8fa6; font-weight: 400;
+    padding: 4px 6px; text-align: left; font-size: 7pt;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448;
+  }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
+  table tr:last-child td { border-bottom: none; }
+
+  .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
+  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; text-align: center; }
+  .metric .val { font-size: 14pt; font-weight: 300; color: #ef4444; line-height: 1.2; letter-spacing: 0.5px; }
+  .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li {
+    position: relative; padding-left: 12px; margin-bottom: 3px;
+    color: #b0c0d0; font-size: 7.8pt;
+  }
+  .bullet-list li::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 4px; height: 4px; border-radius: 50%; background: #ef4444;
+  }
+  .bullet-list li.warn::before { background: #ff6b35; }
+  .bullet-list li.danger::before { background: #f43658; }
+
+  .highlight { color: #ef4444; font-weight: 500; }
+  .warn-text { color: #ff6b35; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+  .blue-text { color: #60a5fa; font-weight: 500; }
+  .cyan-text { color: #22d3ee; font-weight: 500; }
+
+  .caution-box {
+    background: linear-gradient(135deg, #ff6b3512, #ff6b3508);
+    border: 1px solid #ff6b3533;
+    border-left: 3px solid #ff6b35;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #ffcba4;
+  }
+  .caution-box strong { color: #ff6b35; }
+
+  .danger-box {
+    background: linear-gradient(135deg, #ef444412, #ef444408);
+    border: 1px solid #ef444433;
+    border-left: 3px solid #ef4444;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #fca5a5;
+  }
+  .danger-box strong { color: #ef4444; }
+
+  .info-box {
+    background: linear-gradient(135deg, #3b82f612, #3b82f608);
+    border: 1px solid #3b82f633;
+    border-left: 3px solid #3b82f6;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #93c5fd;
+  }
+
+  .type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 6px 0;
+  }
+  .type-item {
+    background: #0d1820;
+    border-radius: 5px;
+    padding: 7px 9px;
+    border: 1px solid #1e3448;
+  }
+  .type-item .name {
+    font-weight: 500;
+    font-size: 8pt;
+    margin-bottom: 3px;
+  }
+  .type-item .desc {
+    font-size: 7pt;
+    color: #7a8fa6;
+    line-height: 1.35;
+  }
+
+  .pattern-box {
+    background: #0d1820;
+    border-radius: 5px;
+    padding: 8px 10px;
+    border: 1px solid #1e3448;
+    margin-bottom: 8px;
+  }
+  .pattern-box .pattern-title {
+    font-weight: 500;
+    font-size: 8.5pt;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pattern-box .pattern-title .num {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ef444422;
+    color: #ef4444;
+    align-items: center;
+    justify-content: center;
+    font-size: 8pt;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .alwin-table {
+    background: #0d1820;
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin: 4px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 7pt;
+    color: #7a8fa6;
+    line-height: 1.5;
+  }
+  .alwin-table .val-high { color: #ef4444; font-weight: 500; }
+  .alwin-table .val-mid { color: #fbbf24; }
+  .alwin-table .val-info { color: #22d3ee; }
+
+  .footer-ref {
+    position: absolute;
+    bottom: 10mm;
+    left: 16mm;
+    right: 16mm;
+    font-size: 6.5pt;
+    color: #3a4f63;
+    border-top: 1px solid #1a2836;
+    padding-top: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<!-- ========================================= -->
+<!-- PAGE 1: 強風の基礎知識                     -->
+<!-- ========================================= -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>STRONG <span class="accent">WIND</span> BRIEFING</h1>
+      <div class="subtitle">強風・強雨・VIRGA ─ B737 OPERATIONAL WEATHER GUIDE</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 1 / 5</div>
+      <div>55 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics-row">
+    <div class="metric">
+      <div class="val">3</div>
+      <div class="label">SW Wind Patterns</div>
+    </div>
+    <div class="metric">
+      <div class="val" style="color:#ff6b35;">50+</div>
+      <div class="label">Max DIV/Day (NRT)</div>
+    </div>
+    <div class="metric">
+      <div class="val" style="color:#60a5fa;">70<span style="font-size:8pt;color:#5a7288;">kt</span></div>
+      <div class="label">850hPa Trigger</div>
+    </div>
+    <div class="metric">
+      <div class="val" style="color:#fbbf24;">6</div>
+      <div class="label">Case Study Years</div>
+    </div>
+    <div class="metric">
+      <div class="val" style="color:#34d399;">10+</div>
+      <div class="label">Target Airports</div>
+    </div>
+  </div>
+
+  <!-- SW Wind 3 Patterns -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-wind">&#9888;</div>
+      <h2>関東南西強風（SW STRONG WIND）── 3つのパターン</h2>
+    </div>
+    <p style="font-size:7.5pt;color:#7a8fa6;margin-bottom:8px;">日本海低気圧の経路により、関東地方の南西強風は3パターンに分類される。NRT/HND運航に最も影響するパターンを理解することが重要。</p>
+
+    <div class="pattern-box">
+      <div class="pattern-title"><span class="num">1</span> <span style="color:#fbbf24;">低気圧が北海道の北を通過</span></div>
+      <ul class="bullet-list">
+        <li>気圧傾度が緩やかで、地上風は比較的弱い</li>
+        <li>NRTでの影響は限定的。G/A・DIVは少数にとどまる</li>
+        <li>850hPa風速は40-50kt程度</li>
+      </ul>
+    </div>
+
+    <div class="pattern-box" style="border-color:#ef444444;">
+      <div class="pattern-title"><span class="num" style="background:#f4365822;color:#f43658;">2</span> <span class="danger-text">低気圧が日本海中部を通過 ── 最危険パターン</span></div>
+      <ul class="bullet-list">
+        <li class="danger">関東平野全域で<span class="danger-text">SW 40-50kt</span>の地上風。NRT DIV多発パターン</li>
+        <li class="danger">2013/3/13: NRTで<span class="danger-text">1日50便以上のDIV</span>を記録。G52kt観測</li>
+        <li class="danger">850hPa: <span class="danger-text">70-80kt</span>の下層ジェット → 地上換算で40-50kt</li>
+        <li>低気圧中心と寒冷前線の位置関係がSW風を最大化</li>
+      </ul>
+    </div>
+
+    <div class="pattern-box">
+      <div class="pattern-title"><span class="num">3</span> <span style="color:#34d399;">低気圧が北陸沿岸を通過</span></div>
+      <ul class="bullet-list">
+        <li>風向がSSW寄りになり、NRT RWY16のXW成分が減少</li>
+        <li>パターン2に比べ運航影響は軽微だが、HND RWY22/23ではLLWSリスク残存</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Bomb Cyclone Definition -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-cyclone">&#127744;</div>
+        <h2>爆弾低気圧（BOMB CYCLONE）</h2>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="highlight">WMO定義</span>: 24時間で中心気圧が24hPa以上低下する温帯低気圧</li>
+        <li>緯度補正: 24hPa &times; sin(&phi;)/sin(60&deg;) → 北緯40&deg;なら<span class="highlight">17.8hPa/24h</span>が基準</li>
+        <li>気象庁は「急速に発達する低気圧」と表現。JAL OCCでは社内慣例として「爆弾低気圧」を使用</li>
+        <li>日本海で低気圧が発達 → 強い冬型気圧配置 → 全国的暴風</li>
+      </ul>
+      <div class="danger-box" style="margin-top:6px;">
+        <strong>KEY INDICATOR:</strong> 850hPa面の風速<strong>50kt以上</strong> → 地上は70%換算で<strong>35kt+G45kt</strong>を想定。850hPaで<strong>70kt</strong>超なら地上50kt級の暴風を覚悟。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-info">&#9670;</div>
+        <h2>寒冷渦（COLD VORTEX）& ドライスロット</h2>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="cyan-text">寒冷渦</span>: ジェット気流トラフが切離 → 独立した低気圧性渦。500hPa天気図で最も顕著</li>
+        <li><span class="highlight">南東象限</span>で悪天発生 → 地上低気圧がこの位置で急発達</li>
+        <li>500hPa上空に<span class="highlight">-24&#8451;以下</span>の強い寒気を伴うケースが多い</li>
+        <li><span class="warn-text">コンマ雲</span>: 発達中の温帯低気圧の典型的雲パターン（,形）</li>
+        <li><span class="warn-text">ドライスロット</span>: 乾燥寒気の貫入。出現すると低気圧は衰退期へ。ただし暗域付近で対流雲が急発達し局所的悪天をもたらす</li>
+      </ul>
+      <div class="caution-box" style="margin-top:4px;">
+        <strong>注意:</strong> 寒冷渦は動きが遅いため、荒天が<strong>長時間持続</strong>する特徴あり。
+      </div>
+    </div>
+  </div>
+
+  <!-- ALWIN Basics -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-tool">&#9881;</div>
+      <h2>ALWIN（空港低層風情報）── 活用のポイント</h2>
+    </div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <ul class="bullet-list">
+          <li><span class="cyan-text">APT MODE</span>: 空港5NM以内の代表風。GND~3000ftの風向風速・GUST</li>
+          <li><span class="cyan-text">RWY MODE</span>: 各滑走路の経路風。正対風(HW)・横風(XW)・GUST・Wind Shear情報</li>
+          <li>データ更新: 約<span class="highlight">3分</span>ごと。ACARS版ではGUST時のみテキスト情報表示</li>
+          <li><span class="warn-text">SPD CHG</span>表示 = 風速急変。<span class="warn-text">MB</span> = Microburst検出</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="bullet-list">
+          <li><span class="highlight">GUST通報基準</span>: 風速最大値と2分間平均値の差が<span class="highlight">10kt以上</span></li>
+          <li><span class="highlight">HW GAIN/LOSS</span>: 経路上の正対風変化量 → WS警戒の指標</li>
+          <li>GPWS Windshear Warning前に、ALWINで<span class="warn-text">HW GUST・XW GUST</span>の出現を確認可能</li>
+          <li>Warning作動の<span class="highlight">10分前</span>からGUST出現 → 事前察知に活用</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-ref">
+    <span>B737 OCC MET INFO / 強風・強雨・VIRGA Briefing</span>
+    <span>55 PDFs ─ 2011-2024 Compiled</span>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- PAGE 2: NRT・HND 南西強風 事例             -->
+<!-- ========================================= -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>NRT・HND <span class="accent">SW WIND CASES</span></h1>
+      <div class="subtitle">関東南西強風 ─ 事例分析・ALWIN DATA・RWY特性</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 2 / 5</div>
+      <div>爆弾低気圧 & 南西強風事例</div>
+    </div>
+  </div>
+
+  <!-- Major Case Studies Table -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-case">&#9888;</div>
+      <h2>主要事例一覧 ── NRT/HND 南西強風</h2>
+    </div>
+    <table>
+      <tr>
+        <th>日付</th>
+        <th>気象概要</th>
+        <th>最大風速</th>
+        <th>影響</th>
+        <th>パターン</th>
+      </tr>
+      <tr>
+        <td><span class="highlight">2012/4/3</span></td>
+        <td>日本海L急発達 964hPa。全国暴風</td>
+        <td class="danger-text">HND G68kt / NRT G65kt</td>
+        <td>全国広域で暴風警報。JR・私鉄運休</td>
+        <td><span class="tag tag-red">Pattern 2</span></td>
+      </tr>
+      <tr>
+        <td><span class="highlight">2013/3/13</span></td>
+        <td>日本海中部L通過。NRTでDIV頻発</td>
+        <td class="danger-text">NRT G52kt (220&deg;)</td>
+        <td class="danger-text">NRT 50便以上DIV（1日最多記録）</td>
+        <td><span class="tag tag-red">Pattern 2</span></td>
+      </tr>
+      <tr>
+        <td><span class="highlight">2013/4/6-7</span></td>
+        <td>爆弾低気圧 986→962hPa (-24hPa/24h)</td>
+        <td class="warn-text">HND G45kt / NRT G41kt</td>
+        <td>HND 欠航81便 / NRT 4便DIV+多数G/A</td>
+        <td><span class="tag tag-red">Pattern 2</span></td>
+      </tr>
+      <tr>
+        <td>2014/12/17</td>
+        <td>L北海道東で急発達 948hPa。強冬型</td>
+        <td class="warn-text">NGO G47kt / CTS G44kt</td>
+        <td>国内線欠航124便。暴風雪(MMB VIS200m)</td>
+        <td><span class="tag tag-yellow">Pattern 1</span></td>
+      </tr>
+      <tr>
+        <td>2015/10/1-2</td>
+        <td>日本海L猛発達 (-36hPa/24h)</td>
+        <td class="warn-text">AKJ G51kt / CTS G44kt</td>
+        <td>2日間で40便以上欠航</td>
+        <td><span class="tag tag-red">Pattern 2</span></td>
+      </tr>
+      <tr>
+        <td>2017/2/20</td>
+        <td>南西強風パターン (パターン2型)</td>
+        <td class="warn-text">NRT G40kt+</td>
+        <td>NRT 12便DIV</td>
+        <td><span class="tag tag-red">Pattern 2</span></td>
+      </tr>
+      <tr>
+        <td>2021/3/13</td>
+        <td>関東付近でL発達。激しい雷雨伴う</td>
+        <td class="warn-text">HND G43kt</td>
+        <td>HND 4便DIV + SQ観測</td>
+        <td><span class="tag tag-orange">複合型</span></td>
+      </tr>
+      <tr>
+        <td>2023/5/6</td>
+        <td>前線+高気圧 気圧傾度大。晴れ+乾燥</td>
+        <td class="warn-text">HND G52kt / NRT G39kt</td>
+        <td>HND G/A 10便+DIV 1便 / NRT DIV 2便</td>
+        <td><span class="tag tag-green">非爆弾型</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- HND RWY Characteristics -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-airport">&#9992;</div>
+        <h2>HND 南西強風時のRWY特性</h2>
+      </div>
+      <p style="font-size:7.5pt;color:#7a8fa6;margin-bottom:6px;">SW風 210-240&deg; / 30-50kt時のRWY別リスク比較</p>
+      <table>
+        <tr><th>RWY</th><th>HW/XW</th><th>LLWS</th><th>特記事項</th></tr>
+        <tr>
+          <td><span class="highlight">22</span></td>
+          <td>HW+40kt / XW &lt;10kt</td>
+          <td style="color:#34d399;">Low</td>
+          <td>ほぼHW成分。XW小さく安定。<span class="cyan-text">推奨</span></td>
+        </tr>
+        <tr>
+          <td><span class="highlight">23</span></td>
+          <td>HW+42kt / XW L12-16kt</td>
+          <td style="color:#fbbf24;">Medium</td>
+          <td>HW LOSS -11kt観測例あり。140-30ftでSPD CHG</td>
+        </tr>
+        <tr>
+          <td><span class="warn-text">16L</span></td>
+          <td>HW+12-16kt / XW R23-28kt</td>
+          <td class="danger-text">High</td>
+          <td>大井ふ頭建物影響。風向変動大。<span class="danger-text">XW GUST多発</span></td>
+        </tr>
+        <tr>
+          <td><span class="warn-text">16R</span></td>
+          <td>HW+15-18kt / XW R19-24kt</td>
+          <td class="danger-text">High</td>
+          <td>16Lより風速変化頻度が高い。HW/XW GUST</td>
+        </tr>
+      </table>
+      <div class="caution-box" style="margin-top:4px;">
+        <strong>BUILDING EFFECT:</strong> 大井ふ頭の大型建物がRWY16L/R APP経路の風を乱す。SW強風時は<strong>RWY22/23使用</strong>が原則だが、横風制限超過時はRWY16切替でさらにリスク増大。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-tool">&#9881;</div>
+        <h2>NRT ALWIN DATA例（2023/5/6）</h2>
+      </div>
+      <p style="font-size:7pt;color:#7a8fa6;margin-bottom:4px;">RWY16L/R ─ 0330Z ─ SW強風時</p>
+      <div class="alwin-table">
+AGL&nbsp;&nbsp;&nbsp;DIR/SPD<br>
+3000&nbsp;&nbsp;250/<span class="val-mid">44</span><br>
+2500&nbsp;&nbsp;240/<span class="val-high">48</span><br>
+2000&nbsp;&nbsp;240/<span class="val-high">48</span><br>
+1500&nbsp;&nbsp;240/<span class="val-high">45</span><span class="val-high">G056</span><br>
+1000&nbsp;&nbsp;230/<span class="val-mid">40</span><span class="val-high">G055</span><br>
+&nbsp;500&nbsp;&nbsp;230/36<span class="val-high">G052</span>&nbsp;<span class="val-info">SPD CHG</span><br>
+&nbsp;GND&nbsp;&nbsp;250/13<span class="val-mid">G041</span>&nbsp;<span class="val-info">SPD CHG</span><br>
+<br>
+MB Alert: <span class="val-high">20KT</span> 2NM 16R FNA<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="val-high">20KT</span> 1NM 16L FNA
+      </div>
+      <div class="info-box" style="margin-top:6px;">
+        <strong>読み方:</strong> 2000ftで48kt → GND 13ktへ急減。500ft以下SPD CHG。GND-1000ft間で<strong>27ktの風速差</strong> → 顕著なLLWS。MB 20kt検出。
+      </div>
+    </div>
+  </div>
+
+  <!-- OCC Decision Making -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-shield">&#9670;</div>
+      <h2>OCC運航方針決定 ── 2013/4/6-7 爆弾低気圧事例</h2>
+    </div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <p style="font-size:7.5pt;color:#22d3ee;margin-bottom:3px;">&#9654; 前日(4/5) 1800L方針決定</p>
+        <ul class="bullet-list">
+          <li>TAF: HND 14025G35KT → 12Z以降 14035G45KT TEMPO</li>
+          <li>HND 12Z以降の国際線到着便: 欠航・DLY SET決定</li>
+          <li>国内線: 1130Z以降の到着便+接続発便 欠航決定</li>
+          <li>結果: <span class="highlight">国内線79便+国際線2便 欠航</span></li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#22d3ee;margin-bottom:3px;">&#9654; NRT事前調整（翌4/7）</p>
+        <ul class="bullet-list">
+          <li>3/13事例(50便DIV)を踏まえ、事前にDIV先振分け実施</li>
+          <li>03Zまでの到着便: ALTN=KIX, EXTRA FUEL 1-1.5h搭載</li>
+          <li>実際: 06Z頃までSW強風継続、4便DIV+多数G/A</li>
+          <li><span class="highlight">迅速な方針決定</span>により翌日運航への影響最小化</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-ref">
+    <span>B737 OCC MET INFO / 強風・強雨・VIRGA Briefing</span>
+    <span>NRT/HND Southwest Strong Wind Cases</span>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- PAGE 3: 地方空港の強風特性                 -->
+<!-- ========================================= -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>REGIONAL <span class="accent">AIRPORT WINDS</span></h1>
+      <div class="subtitle">地方空港の強風特性 ─ CTS・KMJ・KOJ・ITM・OKA・TKS</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 3 / 5</div>
+      <div>空港個別の風特性と運航リスク</div>
+    </div>
+  </div>
+
+  <!-- CTS -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-airport">&#9992;</div>
+        <h2>CTS 新千歳 ── SE風パターン</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>風向<span class="highlight">150&deg;(SE)</span>、2000ft <span class="highlight">50kt以上</span>でLLWS/MBAリスク</li>
+        <li>太平洋側低気圧の接近時に発生。春〜秋に多い</li>
+        <li>2015/10/1: <span class="danger-text">G44kt(150&deg;)</span> → RWY01方向へのXW・TW増大</li>
+        <li>ALWIN RWY01L/Rの経路風とAPT MODEの代表風で差異が生じやすい → RWY MODEを優先確認</li>
+      </ul>
+      <div class="caution-box">
+        <strong>CTS SE風閾値:</strong> 2000ft 50kt以上 → LLWS/MBA警戒。ALWIN SPD CHG出現で即G/A検討。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-airport">&#9992;</div>
+        <h2>ITM 伊丹 ── 北風パターン</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>台風・低気圧通過後の<span class="highlight">北風</span>で強風発生</li>
+        <li>六甲山系の風下側 → <span class="warn-text">山岳波・乱気流</span></li>
+        <li>RWY32L/R APP時: N風で2000ft付近にWS発生</li>
+        <li>夏季の南風パターンとは異なるLLWSメカニズム</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- KMJ & KOJ -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-warn">&#9888;</div>
+        <h2>KMJ 熊本 ── 東風 + 山岳波</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>東風<span class="highlight">50kt / 2000ft</span>で<span class="danger-text">MT.WAVE + LLWS</span>発生</li>
+        <li>阿蘇<span class="highlight">外輪山</span>（標高800-1000m）を越えた東風が山岳波を形成</li>
+        <li>RWY07 APP時: 外輪山の風下でダウンドラフト → 急激な対気速度低下</li>
+        <li>外輪山の上空通過時にMOD-SEV TURB報告多数</li>
+      </ul>
+      <div class="danger-box">
+        <strong>KMJ CRITICAL:</strong> 東風(080-100&deg;) 2000ft <strong>50kt以上</strong> → 外輪山MT.WAVE + LLWS。RWY07 APP経路が直接影響を受ける。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-warn">&#9888;</div>
+        <h2>KOJ 鹿児島 ── 東風 + 台地 + 谷</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>空港東側の<span class="highlight">標高270mの台地</span>と谷地形がLLWSを発生</li>
+        <li>東風が台地を越える際にダウンドラフト → <span class="warn-text">MBA/WSA</span></li>
+        <li>谷を抜ける風がRWY34 APP経路で<span class="danger-text">急激な風向変化</span>を起こす</li>
+        <li>地形性LLWS → ALWINでは捕捉困難な場合あり。PIREP活用</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- OKA & TKS -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-airport">&#9992;</div>
+        <h2>OKA 那覇 ── 台風時の南東風 + RWY差異</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>台風接近時: 風向130&deg; → 次第に160&deg;に変化。経路風と代表風に乖離</li>
+        <li><span class="highlight">RWY18L ALWIN</span>: 750ft 120&deg;/31G42kt → GND 170&deg;/22kt。上空と地上で<span class="danger-text">50&deg;の風向差</span></li>
+        <li><span class="warn-text">A-RWY vs B-RWY</span>: B-RWYがA-RWYより<span class="highlight">2-4kt大きい</span>風速を観測（台風5号事例）</li>
+        <li>台風非暴風域でも<span class="highlight">3000ft G68kt</span>を記録 → LLWS/XW SHEAR発生</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-airport">&#9992;</div>
+        <h2>TKS 徳島 ── 南東風 + 低視程サークリング</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>南東風パターンで「<span class="highlight">人</span>」字型前線が形成される特殊気象</li>
+        <li>サークリングAPP中の<span class="warn-text">急激な視程低下</span> → DVT多発</li>
+        <li>VOR/DME RWY29 Circling to RWY11 → SE風時にXW成分増大</li>
+        <li>低視程+横風の複合リスク。ATIS/TAFの視程変化に要注意</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-info">&#9670;</div>
+      <h2>地方空港 強風リスク サマリー</h2>
+    </div>
+    <table>
+      <tr><th>空港</th><th>危険風向</th><th>閾値</th><th>主リスク</th><th>地形要因</th></tr>
+      <tr><td>CTS</td><td>SE (150&deg;)</td><td>2000ft 50kt+</td><td>LLWS / MBA</td><td>なし（平野）</td></tr>
+      <tr><td>ITM</td><td>N</td><td>2000ft WS発生</td><td>山岳波 / TURB</td><td>六甲山系</td></tr>
+      <tr><td class="danger-text">KMJ</td><td class="danger-text">E (080-100&deg;)</td><td class="danger-text">2000ft 50kt+</td><td class="danger-text">MT.WAVE / LLWS</td><td class="danger-text">阿蘇外輪山</td></tr>
+      <tr><td>KOJ</td><td>E</td><td>台地越え風</td><td>MBA / WSA</td><td>270m台地+谷</td></tr>
+      <tr><td>OKA</td><td>SE (120-160&deg;)</td><td>3000ft G60kt+</td><td>XW SHEAR</td><td>なし（海上）</td></tr>
+      <tr><td>TKS</td><td>SE</td><td>視程低下時</td><td>低視程DVT</td><td>紀伊水道</td></tr>
+    </table>
+  </div>
+
+  <div class="footer-ref">
+    <span>B737 OCC MET INFO / 強風・強雨・VIRGA Briefing</span>
+    <span>Regional Airport Wind Characteristics</span>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- PAGE 4: 強雨・線状降水帯                   -->
+<!-- ========================================= -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>HEAVY <span class="accent" style="color:#3b82f6;">RAIN</span> & <span class="accent" style="color:#3b82f6;">SENJO-KOSUITAI</span></h1>
+      <div class="subtitle">強雨・線状降水帯 ─ メカニズム・予測指標・事例分析</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge" style="background:linear-gradient(135deg,#3b82f622,#3b82f611);border-color:#3b82f655;color:#3b82f6;">PAGE 4 / 5</div>
+      <div>線状降水帯 & 集中豪雨</div>
+    </div>
+  </div>
+
+  <!-- Definition & Metrics -->
+  <div class="metrics-row">
+    <div class="metric">
+      <div class="val" style="color:#3b82f6;">50-300<span style="font-size:7pt;color:#5a7288;">km</span></div>
+      <div class="label">線状降水帯 長さ</div>
+    </div>
+    <div class="metric">
+      <div class="val" style="color:#3b82f6;">20-50<span style="font-size:7pt;color:#5a7288;">km</span></div>
+      <div class="label">幅</div>
+    </div>
+    <div class="metric">
+      <div class="val" style="color:#ff6b35;">345<span style="font-size:7pt;color:#5a7288;">K+</span></div>
+      <div class="label">相当温位(850hPa)</div>
+    </div>
+    <div class="metric">
+      <div class="val" style="color:#ff6b35;">40<span style="font-size:7pt;color:#5a7288;">kt+</span></div>
+      <div class="label">下層ジェット(850hPa)</div>
+    </div>
+    <div class="metric">
+      <div class="val" style="color:#fbbf24;">-6<span style="font-size:7pt;color:#5a7288;">&deg;C</span></div>
+      <div class="label">上空寒気(500hPa)</div>
+    </div>
+  </div>
+
+  <!-- Mechanism -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-rain">&#9748;</div>
+      <h2>線状降水帯の発生メカニズム ── 3要素</h2>
+    </div>
+    <div class="type-grid">
+      <div class="type-item">
+        <div class="name" style="color:#ef4444;">&#9312; 暖湿気 + 下層ジェット</div>
+        <div class="desc">
+          850hPa相当温位<span style="color:#ef4444;">345K以上</span>の暖湿気流入。下層ジェット(850hPa 40kt+)が水蒸気を大量輸送。南西方向からの流入が多い。
+        </div>
+      </div>
+      <div class="type-item">
+        <div class="name" style="color:#3b82f6;">&#9313; 上空寒気の流入</div>
+        <div class="desc">
+          500hPa面で<span style="color:#3b82f6;">-6&deg;C以下</span>の寒気。下層暖湿気との温度差が対流不安定を強化。トラフ接近時に顕著。
+        </div>
+      </div>
+      <div class="type-item">
+        <div class="name" style="color:#fbbf24;">&#9314; 冷気滞留 / 収束線</div>
+        <div class="desc">
+          地上付近の冷気プールが暖湿気を持ち上げるトリガーとなる。前線・収束線の位置が線状降水帯の発生位置を決定。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back-building & Tapering Cloud -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-rain">&#9748;</div>
+        <h2>バックビルディング現象</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>積乱雲が風上側で次々と発生し、風下に流されながら列を形成</li>
+        <li>個々の積乱雲の寿命は短い（30-60分）が、<span class="danger-text">同じ場所に連続発生</span></li>
+        <li>結果: 同一地点で<span class="danger-text">数時間にわたる猛烈な降雨</span></li>
+        <li>レーダーでは: 風上端で新セルが次々出現 → 線状エコーが維持される</li>
+        <li><span class="warn-text">移動せずに停滞</span>するため、総降水量が極端に増大</li>
+      </ul>
+      <div class="danger-box">
+        <strong>運航影響:</strong> バックビルディング型の線状降水帯が空港付近に停滞すると、<strong>TS COND</strong>が数時間継続し、離着陸不能となる。TAF TEMPOでは対応困難。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-warn">&#9888;</div>
+        <h2>テーパリングクラウド（にんじん状雲）</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>衛星画像で「にんじん」型に広がる雲域。先端（尖った側）が風上</li>
+        <li><span class="danger-text">大気の強い不安定</span>を示す指標。集中豪雨・突風の前兆</li>
+        <li>テーパリング雲の先端付近で最も激しい対流活動</li>
+        <li>HND/NRT 2019/10/25事例: <span class="warn-text">テーパリング状エコー</span>が関東を覆い、豪雨+横風オーバー</li>
+        <li>気象衛星の赤外画像で確認。雲頂温度が極めて低い(CB発達の証拠)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Case Studies -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-case">&#9888;</div>
+      <h2>強雨・線状降水帯 事例</h2>
+    </div>
+    <table>
+      <tr><th>日付</th><th>場所</th><th>降水量</th><th>気象現象</th><th>運航影響</th></tr>
+      <tr>
+        <td>2014/9</td>
+        <td>CTS</td>
+        <td class="danger-text">92mm/h</td>
+        <td>大雨特別警報発表</td>
+        <td>TS COND 2 が3時間以上継続</td>
+      </tr>
+      <tr>
+        <td>2017/7</td>
+        <td>九州北部</td>
+        <td class="danger-text">129.5mm/h (朝倉)</td>
+        <td>線状降水帯+大雨特別警報</td>
+        <td>FUK含む九州空港に広域影響</td>
+      </tr>
+      <tr>
+        <td>2019/10/25</td>
+        <td>HND/NRT</td>
+        <td class="warn-text">猛烈な降雨</td>
+        <td>テーパリング状エコー+横風超過</td>
+        <td>豪雨+横風の複合影響</td>
+      </tr>
+      <tr>
+        <td>2021/3/13</td>
+        <td>HND</td>
+        <td class="warn-text">強雨</td>
+        <td>急速発達L(6h/13hPa)+SQ観測</td>
+        <td>4便DIV + 多数G/A</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Prediction Tools -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-tool">&#9881;</div>
+      <h2>線状降水帯の予測ツール & 閾値</h2>
+    </div>
+    <div class="grid-3" style="margin-bottom:0;">
+      <div>
+        <p style="font-size:7.5pt;color:#3b82f6;margin-bottom:4px;">&#9654; JMA発表情報</p>
+        <ul class="bullet-list">
+          <li>2022/6〜: 線状降水帯<span class="highlight">半日前予測</span>開始</li>
+          <li>「顕著な大雨に関する情報」で線状降水帯の発生を通知</li>
+          <li>大雨特別警報: 50年に一度レベル</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#3b82f6;margin-bottom:4px;">&#9654; 予測指標チェック</p>
+        <ul class="bullet-list">
+          <li>850hPa相当温位: <span class="highlight">345K以上</span></li>
+          <li>850hPa風速: <span class="highlight">40kt以上</span>（下層JET）</li>
+          <li>500hPa気温: <span class="highlight">-6&deg;C以下</span></li>
+          <li>SSI(ショワルター): <span class="highlight">0以下</span></li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#3b82f6;margin-bottom:4px;">&#9654; レーダー監視</p>
+        <ul class="bullet-list">
+          <li>エコー頂高度: 10km以上で活発なCB</li>
+          <li>線状エコーの停滞: 同一地点1h以上 → 集中豪雨</li>
+          <li>バックビルディング: 風上端の新セル発生を監視</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-ref">
+    <span>B737 OCC MET INFO / 強風・強雨・VIRGA Briefing</span>
+    <span>Heavy Rain & Senjo-Kosuitai</span>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- PAGE 5: VIRGA & QUICK REFERENCE           -->
+<!-- ========================================= -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1><span class="accent" style="color:#a78bfa;">VIRGA</span> & QUICK <span class="accent">REFERENCE</span></h1>
+      <div class="subtitle">VIRGA（尾流雲）── HND冬季ドライマイクロバースト & 総合まとめ</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge" style="background:linear-gradient(135deg,#a78bfa22,#a78bfa11);border-color:#a78bfa55;color:#a78bfa;">PAGE 5 / 5</div>
+      <div>VIRGA + Summary Reference</div>
+    </div>
+  </div>
+
+  <!-- VIRGA Section -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-virga">&#10052;</div>
+      <h2>VIRGA（尾流雲）── HND冬季特有の現象</h2>
+    </div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;">&#9654; 発生メカニズム</p>
+        <ul class="bullet-list">
+          <li>降水粒子が<span class="highlight">地上に到達せず蒸発</span> → 蒸発冷却でドライマイクロバースト(MBA)発生</li>
+          <li>TAFでは<span class="danger-text">予報されない</span>。地上ではVMCのまま突然のWS/MBA</li>
+          <li>VIRGA → ドライマイクロバースト → <span class="danger-text">MBA/WSA</span></li>
+        </ul>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;margin-top:6px;">&#9654; 発生条件（3要素）</p>
+        <ul class="bullet-list">
+          <li><span class="highlight">&#9312;</span> 冬型気圧配置 + 上空寒気の残留</li>
+          <li><span class="highlight">&#9313;</span> JPCZ → 北陸で降雪 → 関東は冬晴れ</li>
+          <li><span class="highlight">&#9314;</span> 丹沢山系で雲発生 → HND/房総半島方面へ流入</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;">&#9654; 典型的パターン</p>
+        <ul class="bullet-list">
+          <li>冬型 → 翌日<span class="highlight">晴れ</span> → <span class="highlight">昼過ぎ</span>にVIRGA発生</li>
+          <li>地上: CAVOK/SKC。上空にちぎれ雲 → VIRGA</li>
+          <li>ALWINで低高度に<span class="warn-text">G40kt</span>が突然出現</li>
+        </ul>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;margin-top:6px;">&#9654; 確認方法</p>
+        <ul class="bullet-list">
+          <li>気象解説情報の<span class="highlight">VIRGAコメント</span>を確認</li>
+          <li>時系列予想の<span class="highlight">-SHSN</span>表記に注目</li>
+          <li>LFM(局地数値予報) <span class="highlight">10000ft湿域</span>チェック</li>
+          <li>レーダーで降水エコーが地上に達していない領域</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIRGA Case Studies -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-case">&#9888;</div>
+        <h2>HND VIRGA事例 &#9312; 2011/1/26</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>冬型気圧配置 → HND晴れ → 昼過ぎVIRGA発生</li>
+        <li><span class="danger-text">DVT 11便</span>（JALグループ8便 + 欠航10便）</li>
+        <li>TAFでは全く予報されておらず、<span class="danger-text">突発的</span>に発生</li>
+        <li>ドライマイクロバーストにより着陸困難 → 大量G/A → DIV</li>
+      </ul>
+      <div class="danger-box">
+        <strong>IMPACT:</strong> TAF予報なし・地上VMCの中で<strong>11便DVT</strong>。VIRGA起源のドライMBAの危険性を示す典型事例。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-case">&#9888;</div>
+        <h2>HND VIRGA事例 &#9313; 2015/2/13</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>同様の冬型→晴れ→昼過ぎVIRGAパターン</li>
+        <li><span class="warn-text">4便G/A</span>。ALWIN低高度に<span class="danger-text">G40kt</span>を検出</li>
+        <li>2011年事例の教訓から、ALWINデータの早期監視を実施</li>
+        <li>VIRGA発生を早期に検知し、2011年よりDIV数を抑制</li>
+      </ul>
+      <div class="info-box" style="background:linear-gradient(135deg,#a78bfa12,#a78bfa08);border-color:#a78bfa33;border-left-color:#a78bfa;color:#c4b5fd;">
+        <strong>LESSON:</strong> ALWINの低高度GUST出現をトリガーに、VIRGA警戒態勢を早期発動することで影響を軽減可能。
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-shield">&#9670;</div>
+      <h2>QUICK REFERENCE ── 強風・強雨・VIRGA 判断基準</h2>
+    </div>
+    <table>
+      <tr>
+        <th>現象</th>
+        <th>監視指標</th>
+        <th>閾値</th>
+        <th>主な影響</th>
+        <th>確認ツール</th>
+      </tr>
+      <tr>
+        <td><span class="highlight">南西強風</span></td>
+        <td>850hPa風速</td>
+        <td class="danger-text">70kt+ → 地上50kt級</td>
+        <td>NRT DIV多発, HND欠航</td>
+        <td>FXJP854, ALWIN, WINDY</td>
+      </tr>
+      <tr>
+        <td><span class="highlight">爆弾低気圧</span></td>
+        <td>中心気圧低下率</td>
+        <td class="danger-text">24hPa/24h以上</td>
+        <td>全国暴風, 大量欠航</td>
+        <td>ASAS, FSAS24/48</td>
+      </tr>
+      <tr>
+        <td><span class="blue-text">線状降水帯</span></td>
+        <td>相当温位 + 下層JET</td>
+        <td class="warn-text">345K + 40kt</td>
+        <td>長時間TS COND, DIV</td>
+        <td>JMA予測, レーダー</td>
+      </tr>
+      <tr>
+        <td><span style="color:#a78bfa;font-weight:500;">VIRGA</span></td>
+        <td>冬型→晴れ→昼過ぎ</td>
+        <td class="warn-text">ALWIN低高度GUST</td>
+        <td>ドライMBA, WS</td>
+        <td>気象解説, LFM 10000ft</td>
+      </tr>
+      <tr>
+        <td><span class="highlight">山岳波</span></td>
+        <td>山越え風向・風速</td>
+        <td class="warn-text">2000ft 50kt+</td>
+        <td>MOD-SEV TURB, LLWS</td>
+        <td>ALWIN, PIREP, WINDY</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ALWIN Decision Flow -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-tool">&#9881;</div>
+      <h2>ALWIN活用フロー ── 強風判断</h2>
+    </div>
+    <div class="grid-3" style="margin-bottom:0;">
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num" style="background:#22d3ee22;color:#22d3ee;">1</span> <span style="color:#22d3ee;">APT MODE確認</span></div>
+        <ul class="bullet-list">
+          <li>GND-3000ft風向風速の全体像を把握</li>
+          <li>SPD CHG / GUST表示の有無</li>
+          <li>MB Alert（Microburst検出）の確認</li>
+        </ul>
+      </div>
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num" style="background:#fbbf2422;color:#fbbf24;">2</span> <span style="color:#fbbf24;">RWY MODE確認</span></div>
+        <ul class="bullet-list">
+          <li>使用RWYの経路風(HW/XW)を確認</li>
+          <li>HW GAIN/LOSS量でWS強度を判定</li>
+          <li>XW GUST/SHEAR表示 → 横風急変警戒</li>
+        </ul>
+      </div>
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num" style="background:#34d39922;color:#34d399;">3</span> <span style="color:#34d399;">意思決定</span></div>
+        <ul class="bullet-list">
+          <li>HW GUST + XW GUST同時 → <span class="danger-text">WS Warning高確率</span></li>
+          <li>10分間のトレンド変化を監視</li>
+          <li>PIREP・先行機情報と照合し最終判断</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-ref">
+    <span>B737 OCC MET INFO / 強風・強雨・VIRGA Briefing</span>
+    <span>VIRGA & Quick Reference ─ 55 PDFs Compiled</span>
+  </div>
+</div>
+
+</body>
+</html>
