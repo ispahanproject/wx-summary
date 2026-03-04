@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923;
+    color: #e0e6ed;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 14mm 16mm 12mm 16mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    background: #0f1923;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid #00d4ff;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .header-left h1 {
+    font-size: 20pt;
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: 4px;
+  }
+  .header-left h1 span.icao { color: #00d4ff; font-weight: 300; }
+  .header-left .subtitle {
+    font-size: 8pt;
+    color: #7a8fa6;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 7.5pt;
+    color: #7a8fa6;
+  }
+  .header-right .rwy-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #00d4ff22, #00d4ff11);
+    border: 1px solid #00d4ff55;
+    border-radius: 4px;
+    padding: 3px 10px;
+    color: #00d4ff;
+    font-weight: 500;
+    font-size: 9pt;
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+  }
+
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+
+  .card {
+    background: linear-gradient(160deg, #1a2836, #152230);
+    border: 1px solid #1e3448;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 7px;
+    gap: 6px;
+  }
+  .card-header .icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .icon-wind { background: #00d4ff22; color: #00d4ff; }
+  .icon-turb { background: #ff6b3522; color: #ff6b35; }
+  .icon-vis { background: #a78bfa22; color: #a78bfa; }
+  .icon-thunder { background: #fbbf2422; color: #fbbf24; }
+  .icon-typhoon { background: #f4365822; color: #f43658; }
+  .icon-info { background: #34d39922; color: #34d399; }
+  .icon-fog { background: #818cf822; color: #818cf8; }
+  .icon-snow { background: #e2e8f022; color: #e2e8f0; }
+  .icon-rain { background: #60a5fa22; color: #60a5fa; }
+
+  .card-header h2 {
+    font-size: 9.5pt;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 7pt;
+    font-weight: 500;
+    margin-right: 3px;
+    letter-spacing: 0.5px;
+  }
+  .tag-blue { background: #00d4ff18; color: #00d4ff; border: 1px solid #00d4ff44; }
+  .tag-orange { background: #ff6b3518; color: #ff6b35; border: 1px solid #ff6b3544; }
+  .tag-red { background: #f4365818; color: #f43658; border: 1px solid #f4365844; }
+  .tag-yellow { background: #fbbf2418; color: #fbbf24; border: 1px solid #fbbf2444; }
+  .tag-green { background: #34d39918; color: #34d399; border: 1px solid #34d39944; }
+  .tag-purple { background: #a78bfa18; color: #a78bfa; border: 1px solid #a78bfa44; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th {
+    background: #0d1820; color: #7a8fa6; font-weight: 400;
+    padding: 4px 6px; text-align: left; font-size: 7pt;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448;
+  }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
+  table tr:last-child td { border-bottom: none; }
+
+  .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
+  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; text-align: center; }
+  .metric .val { font-size: 14pt; font-weight: 300; color: #00d4ff; line-height: 1.2; letter-spacing: 0.5px; }
+  .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li {
+    position: relative; padding-left: 12px; margin-bottom: 3px;
+    color: #b0c0d0; font-size: 7.8pt;
+  }
+  .bullet-list li::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 4px; height: 4px; border-radius: 50%; background: #00d4ff;
+  }
+  .bullet-list li.warn::before { background: #ff6b35; }
+  .bullet-list li.danger::before { background: #f43658; }
+
+  .highlight { color: #00d4ff; font-weight: 500; }
+  .warn-text { color: #ff6b35; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+
+  .caution-box {
+    background: linear-gradient(135deg, #ff6b3512, #ff6b3508);
+    border: 1px solid #ff6b3533;
+    border-left: 3px solid #ff6b35;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #ffcba4;
+  }
+  .caution-box strong { color: #ff6b35; }
+
+  .footer {
+    position: absolute;
+    bottom: 10mm;
+    left: 16mm;
+    right: 16mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 6pt;
+    color: #3a4f63;
+    border-top: 1px solid #1a2836;
+    padding-top: 4px;
+  }
+
+  .quick-ref {
+    background: linear-gradient(135deg, #0d1820, #0a1219);
+    border: 1px solid #00d4ff22;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 6px;
+  }
+  .quick-ref-title {
+    font-size: 7.5pt;
+    color: #00d4ff;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 ============ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>岡山空港 <span class="icao">RJOB</span></h1>
+      <div class="subtitle">OKJ — PRE-FLIGHT WEATHER BRIEFING — B737 OPERATIONS</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">RWY 07 / 25</div>
+      <div>3,000 × 45 m ｜ ELEV <strong style="color:#ff6b35;">785 ft</strong></div>
+      <div>OPS 0700–2130L</div>
+    </div>
+  </div>
+
+  <!-- AIRPORT OVERVIEW -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-info">◆</div>
+      <h2>AIRPORT OVERVIEW</h2>
+      <span class="tag tag-orange">高標高空港</span>
+    </div>
+    <div class="grid-2">
+      <div>
+        <svg viewBox="0 0 280 165" style="width:100%;height:auto;">
+          <defs>
+            <linearGradient id="terrain" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#1a2836"/>
+              <stop offset="100%" stop-color="#0a1219"/>
+            </linearGradient>
+          </defs>
+          <rect width="280" height="165" fill="url(#terrain)" rx="4"/>
+          <!-- 中国山地 (north) -->
+          <path d="M0,30 Q40,10 80,25 Q120,8 160,20 Q200,5 240,22 Q260,12 280,28" stroke="#3a4f63" fill="none" stroke-width="1.5"/>
+          <text x="140" y="18" text-anchor="middle" font-size="6" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">中国山地 1,200m</text>
+          <!-- 吉備高原 -->
+          <rect x="60" y="60" width="160" height="50" rx="6" fill="#1e3448" opacity="0.5"/>
+          <text x="140" y="72" text-anchor="middle" font-size="6.5" fill="#7a8fa6" font-family="Poppins, Noto Sans CJK JP">吉備高原 200-300m</text>
+          <!-- RWY -->
+          <line x1="85" y1="88" x2="195" y2="88" stroke="#00d4ff" stroke-width="2.5"/>
+          <text x="80" y="92" text-anchor="end" font-size="6" fill="#00d4ff" font-weight="500" font-family="Poppins, Noto Sans CJK JP">07</text>
+          <text x="200" y="92" font-size="6" fill="#00d4ff" font-weight="500" font-family="Poppins, Noto Sans CJK JP">25</text>
+          <text x="76" y="100" text-anchor="end" font-size="5" fill="#34d399" font-family="Poppins, Noto Sans CJK JP">ILS</text>
+          <!-- Airport marker -->
+          <circle cx="140" cy="88" r="3" fill="#ff6b35" opacity="0.8"/>
+          <text x="140" y="80" text-anchor="middle" font-size="5.5" fill="#ff6b35" font-family="Poppins, Noto Sans CJK JP">ELEV 785ft</text>
+          <!-- 岡山平野 (south) -->
+          <rect x="40" y="120" width="200" height="35" rx="4" fill="#0d1820" opacity="0.6"/>
+          <text x="140" y="138" text-anchor="middle" font-size="6.5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">岡山平野 ～30km南に海岸線</text>
+          <!-- 東側の山 -->
+          <path d="M230,55 Q240,40 255,50 Q265,38 275,48" stroke="#3a4f63" fill="none" stroke-width="1"/>
+          <text x="252" y="58" text-anchor="middle" font-size="5" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">300-500m</text>
+          <!-- Fog arrows (滑昇霧) -->
+          <path d="M140,145 L140,130 Q140,120 130,105" stroke="#a78bfa" stroke-width="0.8" fill="none" stroke-dasharray="3,2" marker-end="url(#arrowPurple)"/>
+          <path d="M160,145 L160,130 Q160,120 155,105" stroke="#a78bfa" stroke-width="0.8" fill="none" stroke-dasharray="3,2"/>
+          <defs><marker id="arrowPurple" markerWidth="5" markerHeight="4" refX="5" refY="2" orient="auto"><path d="M0,0 L5,2 L0,4" fill="#a78bfa"/></marker></defs>
+          <text x="175" y="128" font-size="5" fill="#a78bfa" font-family="Poppins, Noto Sans CJK JP">滑昇霧↑</text>
+          <!-- Wind arrows -->
+          <path d="M10,88 L50,88" stroke="#fbbf24" stroke-width="0.8" marker-end="url(#arrowY)"/>
+          <text x="30" y="82" text-anchor="middle" font-size="5" fill="#fbbf24" font-family="Poppins, Noto Sans CJK JP">冬NW強風</text>
+          <defs><marker id="arrowY" markerWidth="5" markerHeight="4" refX="5" refY="2" orient="auto"><path d="M0,0 L5,2 L0,4" fill="#fbbf24"/></marker></defs>
+          <!-- 紀伊水道 moisture -->
+          <text x="80" y="160" font-size="5" fill="#60a5fa" font-family="Poppins, Noto Sans CJK JP">← 紀伊水道暖湿気</text>
+        </svg>
+      </div>
+      <div>
+        <ul class="bullet-list">
+          <li>吉備高原南部の丘陵性台地に位置する<span class="warn-text">高標高空港（785ft）</span></li>
+          <li>広島空港（HIJ）と類似した気候特性</li>
+          <li>南東〜南西方向は岡山平野が開けて標高が低い</li>
+          <li>北〜北東に300-500mの山、北方60kmに中国山地</li>
+          <li class="warn">平野部が霧にならなくても、RWY面より下の高度で発生した雲が滑走路上に広がり霧となる</li>
+          <li class="danger">降水時のESE風（120-130°）で滑昇霧の確率が最も高い</li>
+        </ul>
+        <div class="metrics-row">
+          <div class="metric"><div class="val" style="color:#ff6b35;">785<span style="font-size:8pt;">ft</span></div><div class="label">ELEV</div></div>
+          <div class="metric"><div class="val">20+<span style="font-size:8pt;">日</span></div><div class="label">年間霧日数</div></div>
+          <div class="metric"><div class="val">25<span style="font-size:8pt;">日</span></div><div class="label">年間降雪日</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIND SUMMARY -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-wind">↗</div>
+      <h2>WIND SUMMARY</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <table>
+          <tr><th>季節</th><th>朝 (0900L)</th><th>午後 (1500L)</th><th>特記</th></tr>
+          <tr><td>春</td><td>E寄り卓越</td><td>SE〜SW卓越</td><td>日本海低気圧時SW強風</td></tr>
+          <tr><td>夏</td><td>ESE+SW</td><td>ESE+SW</td><td>南寄り日変化あり</td></tr>
+          <tr><td>秋</td><td>N・E寄り（弱）</td><td>NNE+SW</td><td>風速弱く視程良好</td></tr>
+          <tr><td>冬</td><td>W寄り（弱）</td><td>WSW〜NW</td><td>NNW-N→積雪確率高</td></tr>
+        </table>
+        <p style="font-size:7pt;color:#5a7288;margin-top:5px;">15kt以上 強風パターン:</p>
+        <table>
+          <tr><th>気圧型</th><th>時期</th><th>年間日数</th></tr>
+          <tr><td>西高東低</td><td>9-5月（11-3月多）</td><td>約20日</td></tr>
+          <tr><td>台風・熱低</td><td>7-11月（8-9月多）</td><td>約7日</td></tr>
+          <tr><td>南高北低・日本海低</td><td>2-5月,11-12月</td><td>約6日</td></tr>
+          <tr><td>南岸低気圧</td><td>11-6月（4月多）</td><td>約4日</td></tr>
+          <tr><td>寒冷前線</td><td>通年</td><td>約4日</td></tr>
+        </table>
+      </div>
+      <div>
+        <svg viewBox="0 0 170 170" style="width:100%;height:auto;">
+          <rect width="170" height="170" fill="#0a1219" rx="4"/>
+          <circle cx="85" cy="85" r="60" fill="none" stroke="#1e3448" stroke-width="0.5"/>
+          <circle cx="85" cy="85" r="40" fill="none" stroke="#1e3448" stroke-width="0.5"/>
+          <circle cx="85" cy="85" r="20" fill="none" stroke="#1e3448" stroke-width="0.5"/>
+          <line x1="85" y1="25" x2="85" y2="145" stroke="#1e3448" stroke-width="0.3"/>
+          <line x1="25" y1="85" x2="145" y2="85" stroke="#1e3448" stroke-width="0.3"/>
+          <!-- RWY line (07/25 = ~070/250 = ENE-WSW) -->
+          <line x1="40" y1="80" x2="130" y2="90" stroke="#00d4ff" stroke-width="1.5" opacity="0.3"/>
+          <!-- Wind bars: W most frequent strong, then ESE -->
+          <!-- N --> <line x1="85" y1="85" x2="85" y2="65" stroke="#00d4ff" stroke-width="2" opacity="0.4"/>
+          <!-- NNE --> <line x1="85" y1="85" x2="93" y2="67" stroke="#00d4ff" stroke-width="2" opacity="0.3"/>
+          <!-- E --> <line x1="85" y1="85" x2="105" y2="85" stroke="#00d4ff" stroke-width="2" opacity="0.5"/>
+          <!-- ESE --> <line x1="85" y1="85" x2="103" y2="93" stroke="#a78bfa" stroke-width="3" opacity="0.7"/>
+          <!-- S --> <line x1="85" y1="85" x2="85" y2="105" stroke="#00d4ff" stroke-width="2" opacity="0.3"/>
+          <!-- SW --> <line x1="85" y1="85" x2="65" y2="105" stroke="#00d4ff" stroke-width="2.5" opacity="0.6"/>
+          <!-- WSW --> <line x1="85" y1="85" x2="55" y2="95" stroke="#fbbf24" stroke-width="3" opacity="0.6"/>
+          <!-- W --> <line x1="85" y1="85" x2="45" y2="85" stroke="#ff6b35" stroke-width="4" opacity="0.8"/>
+          <!-- WNW --> <line x1="85" y1="85" x2="50" y2="72" stroke="#fbbf24" stroke-width="3" opacity="0.6"/>
+          <!-- NW --> <line x1="85" y1="85" x2="58" y2="58" stroke="#fbbf24" stroke-width="2.5" opacity="0.5"/>
+          <!-- Labels -->
+          <text x="85" y="20" text-anchor="middle" font-size="7" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">N</text>
+          <text x="150" y="88" text-anchor="middle" font-size="7" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">E</text>
+          <text x="85" y="158" text-anchor="middle" font-size="7" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">S</text>
+          <text x="20" y="88" text-anchor="middle" font-size="7" fill="#5a7288" font-family="Poppins, Noto Sans CJK JP">W</text>
+          <text x="85" y="168" text-anchor="middle" font-size="5.5" fill="#00d4ff" font-family="Poppins, Noto Sans CJK JP">RWY 07/25</text>
+          <!-- Legend -->
+          <rect x="4" y="4" width="6" height="3" fill="#ff6b35" rx="1"/><text x="13" y="7" font-size="4.5" fill="#ff6b35" font-family="Poppins, Noto Sans CJK JP">強風最多(W)</text>
+          <rect x="4" y="10" width="6" height="3" fill="#a78bfa" rx="1"/><text x="13" y="13" font-size="4.5" fill="#a78bfa" font-family="Poppins, Noto Sans CJK JP">霧最多(ESE)</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- 視程障害・霧 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-fog">☁</div>
+      <h2>視程障害・霧 — 高標高空港の特性</h2>
+      <span class="tag tag-red">最重要ハザード</span>
+    </div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:7.5pt;color:#8a9ab0;margin-bottom:4px;">
+          年間<span class="highlight">20日以上</span>霧発生。<span class="warn-text">滑昇霧</span>（SE風+降水時）と<span class="warn-text">放射霧</span>（夜間冷却）が主要因。降雪による視程低下で霧となる場合も。
+        </p>
+        <ul class="bullet-list">
+          <li class="danger">風向120-130°（ESE）が最低気象条件未満に最もなりやすい</li>
+          <li class="warn">6月: VIS 5,000m未満が<span class="danger-text">41%</span>、1,600m未満が<span class="danger-text">24%</span></li>
+          <li class="warn">6月: CIG 1,000ft未満が<span class="danger-text">31%</span>、600ft未満が<span class="danger-text">20%</span></li>
+          <li>6月の約1/4の日数で霧もしくは霧に近い気象状態</li>
+          <li>高気圧圏内でも西側では紀伊水道から暖湿気が流入し視程悪化</li>
+        </ul>
+      </div>
+      <div>
+        <!-- 滑昇霧メカニズム SVG -->
+        <svg viewBox="0 0 200 120" style="width:100%;height:auto;">
+          <rect width="200" height="120" fill="#0a1219" rx="4"/>
+          <!-- Terrain profile -->
+          <path d="M0,110 L30,110 Q60,108 80,95 Q100,82 120,75 Q140,70 160,68 L200,68" fill="#1e3448" stroke="#3a4f63" stroke-width="0.8"/>
+          <!-- Sea/Plain label -->
+          <text x="25" y="105" font-size="5" fill="#60a5fa" font-family="Poppins, Noto Sans CJK JP">岡山平野</text>
+          <!-- RWY on hilltop -->
+          <line x1="135" y1="68" x2="175" y2="68" stroke="#00d4ff" stroke-width="2"/>
+          <text x="155" y="64" text-anchor="middle" font-size="5" fill="#00d4ff" font-family="Poppins, Noto Sans CJK JP">RWY 785ft</text>
+          <!-- Cloud/fog layer below RWY -->
+          <ellipse cx="100" cy="85" rx="45" ry="8" fill="#a78bfa" opacity="0.15" stroke="#a78bfa" stroke-width="0.5"/>
+          <ellipse cx="140" cy="72" rx="30" ry="6" fill="#a78bfa" opacity="0.2" stroke="#a78bfa" stroke-width="0.5"/>
+          <text x="100" y="88" text-anchor="middle" font-size="5" fill="#a78bfa" font-family="Poppins, Noto Sans CJK JP">雲が滑走路面に広がる</text>
+          <!-- SE wind arrows -->
+          <path d="M15,95 Q40,90 65,82" stroke="#ff6b35" stroke-width="1" fill="none" marker-end="url(#arrowO)"/>
+          <path d="M20,100 Q50,95 75,88" stroke="#ff6b35" stroke-width="1" fill="none" marker-end="url(#arrowO)"/>
+          <defs><marker id="arrowO" markerWidth="5" markerHeight="4" refX="5" refY="2" orient="auto"><path d="M0,0 L5,2 L0,4" fill="#ff6b35"/></marker></defs>
+          <text x="12" y="90" font-size="5" fill="#ff6b35" font-family="Poppins, Noto Sans CJK JP">SE暖湿気</text>
+          <!-- Rain drops -->
+          <line x1="90" y1="15" x2="90" y2="25" stroke="#60a5fa" stroke-width="0.5"/>
+          <line x1="110" y1="10" x2="110" y2="20" stroke="#60a5fa" stroke-width="0.5"/>
+          <line x1="130" y1="12" x2="130" y2="22" stroke="#60a5fa" stroke-width="0.5"/>
+          <line x1="150" y1="15" x2="150" y2="25" stroke="#60a5fa" stroke-width="0.5"/>
+          <text x="120" y="35" text-anchor="middle" font-size="5" fill="#60a5fa" font-family="Poppins, Noto Sans CJK JP">降水</text>
+          <!-- Title -->
+          <text x="100" y="10" text-anchor="middle" font-size="6" fill="#a78bfa" font-weight="500" font-family="Poppins, Noto Sans CJK JP">滑昇霧発生メカニズム</text>
+        </svg>
+        <div class="caution-box" style="margin-top:5px;">
+          <strong>⚠ 6月気圧配置別 VIS&lt;5000m:</strong><br>
+          前線近傍 43% ｜ 高気圧圏内+縁辺流 38% ｜ 日本海低 5% ｜ 南岸低 2%
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>PRE-FLIGHT WX BRIEFING — OKJ / RJOB — 岡山空港</span>
+    <span>PAGE 1 / 2</span>
+  </div>
+</div>
+
+<!-- ============ PAGE 2 ============ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>岡山空港 <span class="icao">RJOB</span></h1>
+      <div class="subtitle">OKJ — PRE-FLIGHT WEATHER BRIEFING — PAGE 2</div>
+    </div>
+    <div class="header-right">
+      <div class="rwy-badge">RWY 07 / 25</div>
+      <div>3,000 × 45 m ｜ ELEV 785 ft</div>
+    </div>
+  </div>
+
+  <!-- 降雪 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-snow">❄</div>
+        <h2>降雪</h2>
+      </div>
+      <div class="metrics-row">
+        <div class="metric"><div class="val">25<span style="font-size:8pt;">日</span></div><div class="label">年間降雪日数</div></div>
+        <div class="metric"><div class="val">4<span style="font-size:8pt;">日</span></div><div class="label">積雪日数</div></div>
+        <div class="metric"><div class="val">25<span style="font-size:8pt;">cm</span></div><div class="label">最深積雪(1994/2)</div></div>
+      </div>
+      <ul class="bullet-list">
+        <li>降雪期: 11月下旬〜4月上旬（約4.5ヶ月）</li>
+        <li>1-2月が全体の<span class="highlight">2/3</span>を占める</li>
+        <li><span class="highlight">冬型気圧配置</span>: 積雪確率低・積雪量少</li>
+        <li class="warn"><span class="warn-text">南岸低気圧</span>: 積雪確率高・積雪量多</li>
+        <li>降雪による視程悪化: 年間約10日</li>
+        <li>NNW〜N風で雪雲が中国山地を越えて南下</li>
+      </ul>
+    </div>
+
+    <!-- 雷雨 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-thunder">⚡</div>
+        <h2>雷雨</h2>
+        <span class="tag tag-green">冬季雷なし</span>
+      </div>
+      <div class="metrics-row">
+        <div class="metric"><div class="val">15<span style="font-size:8pt;">日</span></div><div class="label">年間発雷日数</div></div>
+        <div class="metric"><div class="val">7-8<span style="font-size:8pt;">月</span></div><div class="label">ピーク</div></div>
+      </div>
+      <ul class="bullet-list">
+        <li>5〜10月の暖候期のみ（熱雷・界雷）</li>
+        <li>7月（梅雨末期）が最多、次いで8月</li>
+        <li>年間15日の半分が7-8月に集中</li>
+        <li>中国山地・吉備高原でCB形成 → <span class="highlight">SE進して空港に接近</span></li>
+        <li>空港北東側のCBは東へ移動し接近は少ない</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 台風 + 降雨 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-typhoon">🌀</div>
+        <h2>台風</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>年平均<span class="highlight">約4個</span>が300km以内に接近</li>
+        <li>強風開始: 台風中心が強風域半径の<span class="highlight">80%</span>以内に入った時</li>
+        <li>突風率: <span class="warn-text">1.6〜1.7</span></li>
+        <li class="warn">RWY25側がRWY07側より<span class="warn-text">約5kt強い</span>傾向</li>
+        <li>NE進の場合: N31°超で21kt+開始、N37°超で急速に弱まる</li>
+        <li>台風接近時は10時間以上の強風継続</li>
+        <li>夏台風: 九州/四国西部からNE〜ENE進が主</li>
+        <li>秋台風: 比較的被害が少ないことが多い</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-rain">☂</div>
+        <h2>降雨</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>年間降水量: 約1,200mm（多くはない）</li>
+        <li>年間190日に降雨、うち90日が1mm/日以上</li>
+        <li>月間降水量は4〜9月（暖候期）に集中</li>
+        <li>6月: 比較的弱い雨 / 7月: 強い雨が多い</li>
+        <li class="warn">降雨時の視程障害が最も多いのは<span class="warn-text">7月</span>、次いで6月</li>
+      </ul>
+      <p style="font-size:7pt;color:#5a7288;margin-top:6px;">季節別 視程障害発生傾向</p>
+      <table>
+        <tr><th>月</th><th>主因</th><th>頻度</th></tr>
+        <tr><td>6月</td><td>梅雨降雨+滑昇霧</td><td style="color:#f43658;">◎ 最多</td></tr>
+        <tr><td>7月</td><td>強雨+雷雨</td><td style="color:#ff6b35;">◎ 多</td></tr>
+        <tr><td>9月</td><td>秋雨前線</td><td style="color:#fbbf24;">○ やや多</td></tr>
+        <tr><td>10月</td><td>—</td><td style="color:#34d399;">◇ 年間最良</td></tr>
+        <tr><td>冬季</td><td>降雪</td><td style="color:#fbbf24;">○</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- その他特記事項 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-info">✦</div>
+      <h2>その他特記事項</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <ul class="bullet-list">
+          <li>広島空港（HIJ）と気候特性が類似</li>
+          <li>強風は0900-1600L（日昼帯）に70%以上集中、特に1100-1400L</li>
+          <li class="warn">W風の強風が最多（全体の1/3）、次いでESE風</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="bullet-list">
+          <li>日本海低気圧時: 空港東側に温暖前線＋西側に寒冷前線 → 最も視程悪化</li>
+          <li>高気圧圏内でも紀伊水道からの暖湿気流入でVIS/CIG悪化あり</li>
+          <li>ENE〜SE風の最低気象条件未満が過半数</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Reference Bar -->
+  <div class="quick-ref">
+    <div class="quick-ref-title">■ QUICK REFERENCE — OKJ / RJOB</div>
+    <div style="display:flex;gap:8px;">
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;color:#ff6b35;">785ft</div><div class="label">ELEV（高標高）</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;">ESE</div><div class="label">霧最多風向</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;color:#a78bfa;">20+日</div><div class="label">年間霧日数</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;">25日</div><div class="label">年間降雪日</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;color:#fbbf24;">15日</div><div class="label">年間発雷日</div></div>
+      <div class="metric" style="flex:1;"><div class="val" style="font-size:10pt;">W</div><div class="label">強風最多風向</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>PRE-FLIGHT WX BRIEFING — OKJ / RJOB — 岡山空港</span>
+    <span>PAGE 2 / 2</span>
+  </div>
+</div>
+
+</body>
+</html>
