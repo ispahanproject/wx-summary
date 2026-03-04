@@ -10,7 +10,7 @@
     background: #0f1923; color: #e0e6ed; font-size: 8.5pt; line-height: 1.45;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  .page { width: 210mm; min-height: 297mm; padding: 14mm 15mm 12mm 15mm; position: relative; overflow: hidden; page-break-after: always; background: #0f1923; }
+  .page { width: 210mm; min-height: 297mm; padding: 14mm 13mm 12mm 13mm; position: relative; overflow: hidden; page-break-after: always; background: #0f1923; }
   .page:last-child { page-break-after: avoid; }
   .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #00d4ff; padding-bottom: 8px; margin-bottom: 12px; }
   .header-left h1 { font-size: 20pt; font-weight: 300; color: #ffffff; letter-spacing: 4px; }
@@ -20,8 +20,6 @@
   .header-right .rwy-badge { display: inline-block; background: linear-gradient(135deg, #00d4ff22, #00d4ff11); border: 1px solid #00d4ff55; border-radius: 4px; padding: 3px 10px; color: #00d4ff; font-weight: 500; font-size: 9pt; letter-spacing: 2px; margin-bottom: 3px; }
   .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
   .grid-2 > * { flex: 1; min-width: 0; }
-  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
-  .grid-3 > * { flex: 1; }
   .card { background: linear-gradient(160deg, #1a2836, #152230); border: 1px solid #1e3448; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; overflow: hidden; }
   .card-header { display: flex; align-items: center; margin-bottom: 7px; gap: 6px; }
   .card-header .icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
@@ -30,7 +28,6 @@
   .icon-vis  { background: #a78bfa22; color: #a78bfa; }
   .icon-snow { background: #e2e8f022; color: #e2e8f0; }
   .icon-ts   { background: #fbbf2422; color: #fbbf24; }
-  .icon-case { background: #f4365822; color: #f43658; }
   .icon-info { background: #00d4ff22; color: #00d4ff; }
   .card-header h2 { font-size: 9.5pt; font-weight: 500; color: #ffffff; letter-spacing: 1.5px; }
   table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
@@ -68,18 +65,13 @@
   .terrain-item { background: #0d1820; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; border: 1px solid #1e3448; }
   .terrain-item .name { color: #7a8fa6; }
   .terrain-item .elev { color: #ff6b35; font-weight: 600; }
-  /* Fog bar chart */
-  .fog-chart { display: flex; gap: 3px; align-items: flex-end; height: 44px; margin: 28px 0 6px 0; }
+  .fog-chart { display: flex; gap: 2px; align-items: flex-end; height: 44px; margin: 24px 0 6px 0; padding: 0 2px; }
   .fog-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; }
   .fog-bar { width: 100%; background: #00d4ff33; border-radius: 2px 2px 0 0; position: relative; }
   .fog-bar.peak { background: #00d4ff77; }
-  .fog-bar .bval { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); font-size: 5.5pt; color: #00d4ff; white-space: nowrap; font-weight: 600; }
-  .fog-bar-wrap .mo { font-size: 5.5pt; color: #5a7288; margin-top: 2px; }
-  .llws-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 7.8pt; }
-  .llws-cond { background: #0d1820; border-radius: 4px; padding: 3px 8px; color: #00d4ff; font-weight: 500; min-width: 110px; font-size: 7.5pt; text-align: center; }
-  .llws-arrow { color: #f43658; font-weight: 700; font-size: 10pt; }
-  .llws-effect { color: #fca5a5; }
-  .footer-ref { position: absolute; bottom: 10mm; left: 15mm; right: 15mm; font-size: 6.5pt; color: #3a4f63; border-top: 1px solid #1a2836; padding-top: 4px; display: flex; justify-content: space-between; }
+  .fog-bar .bval { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 5.5pt; color: #00d4ff; white-space: nowrap; font-weight: 600; }
+  .fog-bar-wrap .mo { font-size: 5pt; color: #5a7288; margin-top: 2px; }
+  .footer-ref { position: absolute; bottom: 10mm; left: 13mm; right: 13mm; font-size: 6.5pt; color: #3a4f63; border-top: 1px solid #1a2836; padding-top: 4px; display: flex; justify-content: space-between; }
 </style>
 </head>
 <body>
@@ -89,7 +81,7 @@
   <div class="header">
     <div class="header-left">
       <h1>RJFR <span class="icao">KKJ</span></h1>
-      <div class="subtitle">北九州空港 ── 周防灘海上空港・NW季節風・横風・LLWS/WS</div>
+      <div class="subtitle">北九州空港 ── 周防灘海上空港・NW季節風・横風・LLWS</div>
     </div>
     <div class="header-right">
       <div class="rwy-badge">PAGE 1 / 2</div>
@@ -101,96 +93,93 @@
     <div class="metric"><div class="val">21<span style="font-size:7pt;color:#5a7288;">ft</span></div><div class="label">ELEV（H24 OPS）</div></div>
     <div class="metric"><div class="val" style="color:#f43658;">25<span style="font-size:7pt;color:#5a7288;">kt</span></div><div class="label">NW冬型最大XW</div></div>
     <div class="metric"><div class="val" style="color:#a78bfa;">7<span style="font-size:7pt;color:#5a7288;">日</span></div><div class="label">年平均霧日数</div></div>
-    <div class="metric"><div class="val" style="color:#e2e8f0;">14<span style="font-size:7pt;color:#5a7288;">日</span></div><div class="label">年間降雪日数</div></div>
+    <div class="metric"><div class="val" style="color:#fbbf24;">23<span style="font-size:7pt;color:#5a7288;">日</span></div><div class="label">年平均雷日数</div></div>
   </div>
 
   <div class="grid-2">
     <div class="card">
       <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>空港諸元 ── RJFR</h2></div>
       <ul class="bullet-list">
-        <li>周防灘西部 <span class="highlight">海上人工島</span> 空港（瀬戸内海気候）</li>
-        <li>RWY<span class="highlight">18/36</span>（2,500 × 60m）、代表風: <span class="highlight">RWY18</span></li>
-        <li>ELEV 21ft：海面からわずかに高い低標高</li>
-        <li>H24 運航（夜間貨物・国際フライト対応）</li>
+        <li><span class="highlight">周防灘西部海上</span>に位置する海上空港</li>
+        <li>RWY<span class="highlight">18/36</span>（2,500 × 60m）</li>
+        <li>風通報代表点: <span class="highlight">RWY18</span></li>
+        <li>気候: 瀬戸内海気候（春〜夏は靄が発生しやすい）</li>
       </ul>
       <p style="font-size:7.5pt;color:#ff6b35;margin-top:7px;margin-bottom:4px;">&#9654; 周辺地形</p>
       <div class="terrain-row">
-        <div class="terrain-item"><div class="name">英彦山（NE方向）</div><div class="elev">3973ft</div></div>
-        <div class="terrain-item"><div class="name">三郡山（SE方向）</div><div class="elev">3074ft</div></div>
+        <div class="terrain-item"><div class="name">英彦山（NE）</div><div class="elev">3973ft</div></div>
+        <div class="terrain-item"><div class="name">三郡山（SE）</div><div class="elev">3074ft</div></div>
         <div class="terrain-item"><div class="name">福智山（W 15-20km）</div><div class="elev">2956ft</div></div>
-        <div class="terrain-item"><div class="name">華山（W方向）</div><div class="elev">2379ft</div></div>
-        <div class="terrain-item"><div class="name">貫山（W方向）</div><div class="elev">2335ft</div></div>
+        <div class="terrain-item"><div class="name">貫山（W）</div><div class="elev">2336ft</div></div>
+        <div class="terrain-item"><div class="name">華山（W）</div><div class="elev">2379ft</div></div>
+        <div class="terrain-item"><div class="name">皿倉山（NW）</div><div class="elev">2056ft</div></div>
         <div class="terrain-item"><div class="name">足立山（企救半島南端）</div><div class="elev">1962ft</div></div>
       </div>
-      <div class="info-box" style="margin-top:6px;"><strong>国東半島シェルタリング:</strong> 地上SW風でも国東半島の遮蔽効果により<strong>空港はE風になりやすい</strong>。METARと実際の進入風が異なる場合がある。</div>
+      <p style="font-size:7pt;color:#5a7288;margin-top:3px;">NW〜Nに企救半島(1000-2000ft)、北端に関門海峡。NE側に山口県沿岸・冠山山地(3000ft超)。</p>
+      <div class="danger-box" style="margin-top:5px;">
+        <strong>&#9888; Bird Strike多発:</strong> 特に<strong>RWY34のFINAL</strong>で鳥との衝突事例が多い。活動活発な時間帯は注意。
+      </div>
     </div>
     <div class="card">
-      <div class="card-header"><div class="icon icon-wind">&#9778;</div><h2>風の特徴 ── 季節風と海陸風</h2></div>
-      <p style="font-size:7.5pt;color:#00d4ff;margin-bottom:5px;">&#9654; 季節別風向</p>
-      <table>
-        <tr><th>季節</th><th>卓越風向</th><th>注意事項</th></tr>
-        <tr><td>冬（12-2月）</td><td class="warn-text">W〜NW 強風</td><td>GUST 240-320° 多発、XW大</td></tr>
-        <tr><td>春（3-5月）</td><td>NE〜E（海陸風）</td><td>海霧シーズン（4-6月）開始</td></tr>
-        <tr><td>夏（6-8月）</td><td>S〜SE</td><td>梅雨6-7月・雷雨7月下旬-8月</td></tr>
-        <tr><td>秋（9-11月）</td><td>E〜NE</td><td>台風シーズン（9-10月）</td></tr>
-      </table>
-      <p style="font-size:7.5pt;color:#00d4ff;margin-bottom:4px;margin-top:7px;">&#9654; ガスト・強風特性</p>
+      <div class="card-header"><div class="icon icon-wind">&#9778;</div><h2>風の特徴</h2></div>
       <ul class="bullet-list">
-        <li class="danger">ガスト多発帯: <span class="danger-text">240〜320°（NW系）</span></li>
-        <li class="danger">冬型NW強風: <span class="danger-text">XW成分 25kt超え</span>の場合あり</li>
-        <li class="warn">RWY18/36に対しほぼ直角 → <span class="warn-text">横風成分が大きくなりやすい</span></li>
-        <li>低気圧通過後: NW→N→NE と時計回りに変化</li>
+        <li>年間: <span class="highlight">海陸風</span>の影響で東寄りの風が卓越</li>
+        <li>秋〜冬: <span class="warn-text">関門海峡からの季節風</span>で西〜西北西が卓越</li>
+        <li class="warn">西北西風は<span class="warn-text">山越え気流</span>→ 風向変動大＋ガスト発生</li>
+        <li class="danger">ガスト多発風向: <span class="danger-text">240〜320°</span></li>
+        <li class="danger">冬型W〜NW: 高頻度ガスト、<span class="danger-text">横風25kt超え</span>あり</li>
+        <li>年間XW Operationが多く、冬期は横風制限超過も</li>
       </ul>
-      <div class="warn-box"><strong>冬型横風:</strong> 事前にXWリミット確認必須。25kt XW超えの場合、RWY制限・代替機場の事前選定を推奨。</div>
+      <div class="info-box" style="margin-top:6px;">
+        <strong>国東半島効果:</strong> 地上SW時、空港には<strong>国東半島から回る東寄りの風</strong>になりやすい。METAR風向と進入時の風向が異なる場合あり。
+      </div>
+      <div class="warn-box">
+        <strong>冬型横風:</strong> RWY18/36に対しNW風はほぼ直角。事前にXWリミット確認必須。
+      </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>ウィンドシアー・タービュランス ── W〜NW強風 / 上下シアー型WS</h2></div>
+    <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>タービュランス・ウィンドシアー</h2></div>
     <div class="grid-2" style="margin-bottom:0;">
       <div>
-        <p style="font-size:7.5pt;color:#f43658;margin-bottom:5px;">&#9654; W〜NW強風型 LLWS（最多発生パターン）</p>
-        <div class="llws-row">
-          <span class="llws-cond">W〜NW ≥ 20kt</span>
-          <span class="llws-arrow">&#8594;</span>
-          <span class="llws-effect">1000ft以下で TURB 多発</span>
-        </div>
+        <p style="font-size:7.5pt;color:#f43658;margin-bottom:5px;">&#9654; W〜WNW風型（主要パターン）</p>
         <ul class="bullet-list">
-          <li class="danger">周辺山岳（福智山・貫山）からの<span class="danger-text">吹き下ろし</span>効果</li>
-          <li class="danger">FINAL APCHで予期せぬ<span class="danger-text">Down Draft</span>リスク</li>
-          <li class="warn">RWY18 APCH が最も影響を受けやすい</li>
-          <li>ATIS の WS ALERT / PIREP を積極的に収集</li>
+          <li class="danger">空港<span class="danger-text">西〜北西の山岳</span>（福智山・貫山）の影響でTURB発生</li>
+          <li class="danger">特に冬場、風速<span class="danger-text">20kt以上</span>で多く発生</li>
+          <li class="warn">TURBは多くの場合<span class="warn-text">高度1000ft以下</span>で発生</li>
+          <li>FINAL APCHで予期せぬDown Draftリスク</li>
         </ul>
-        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:5px;margin-top:8px;">&#9654; 上下シアー型WS（前線・低気圧接近時）</p>
+        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:5px;margin-top:8px;">&#9654; 上下シアー型WS</p>
         <div class="pattern-box" style="margin-bottom:0;">
           <div class="pattern-title"><span class="num" style="background:#f4365822;color:#f43658;">!</span> <span style="color:#f43658;">発生条件</span></div>
           <ul class="bullet-list" style="margin-top:4px;">
-            <li>地上: <span class="highlight">E風 5〜10kt</span></li>
-            <li>+ 925〜850hPa: <span class="warn-text">SW風 15kt+</span>（上空低気圧・前線）</li>
-            <li class="danger">→ 低層に強い<span class="danger-text">鉛直風シアー</span>発生</li>
+            <li>地上: <span class="highlight">東風 5〜10kt</span>（比較的弱い）</li>
+            <li>+ 上空 925〜850hPa: <span class="warn-text">南西風</span></li>
+            <li class="danger">→ 低層に<span class="danger-text">ウィンドシアー</span>発生</li>
           </ul>
         </div>
       </div>
       <div>
-        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:5px;">&#9654; WS 事前監視指標</p>
+        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:5px;">&#9654; 監視指標</p>
         <table>
-          <tr><th>確認ツール</th><th>確認内容</th><th>トリガー</th></tr>
-          <tr><td>METAR / ATIS</td><td>地上風向・WS ALERT</td><td class="highlight">E 5kt+</td></tr>
-          <tr><td>ラジオゾンデ</td><td>925hPa 風向・風速</td><td class="warn-text">SW 15kt+</td></tr>
-          <tr><td>下層悪天予想図</td><td>低層ジェット・前線位置</td><td class="warn-text">接近時</td></tr>
-          <tr><td>PIREP / SIGMET</td><td>実況LLWSレポート</td><td class="danger-text">報告あり</td></tr>
+          <tr><th>確認ツール</th><th>確認内容</th></tr>
+          <tr><td>METAR / ATIS</td><td>地上風・WS ALERT</td></tr>
+          <tr><td>ゾンデ</td><td>925hPa風向風速</td></tr>
+          <tr><td>PIREP</td><td>LLWS報告</td></tr>
+          <tr><td>下層悪天図</td><td>前線・低気圧</td></tr>
         </table>
         <div class="warn-box" style="margin-top:6px;">
-          <strong>前線通過パターン:</strong> 地上がE系、上空が西系の時にWS最大。ACARS上空風プロファイルで鉛直シアーを事前確認。
+          <strong>注意:</strong> 地上E系+上空SW系の鉛直シアーが最大。ACARS風プロファイルで事前確認推奨。
         </div>
         <div class="info-box">
-          <strong>冬季特記:</strong> W〜NW季節風が20kt超えの場合、着陸前にATISでWS ALERT有無と最新RWY状態を必ず確認すること。
+          <strong>冬季:</strong> W〜NW 20kt超えの場合、ATISでWS ALERT有無・RWY状態を必ず確認。
         </div>
       </div>
     </div>
   </div>
 
-  <div class="footer-ref"><span>B737 OCC MET INFO / RJFR KKJ Weather Briefing</span><span>Page 1 ─ Airport Overview / Wind / Wind Shear & Turbulence</span></div>
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJFR KKJ Weather Briefing</span><span>Page 1 ─ Airport / Wind / Turbulence</span></div>
 </div>
 
 <!-- ========== PAGE 2/2: FOG / SNOW / RAIN / THUNDER / QUICK REF ========== -->
@@ -198,7 +187,7 @@
   <div class="header">
     <div class="header-left">
       <h1>RJFR <span class="icao">KKJ</span></h1>
-      <div class="subtitle">霧・降雪・降雨・雷 ── 視程障害・特記事項・判断基準</div>
+      <div class="subtitle">霧・降雪・降雨・雷 ── 判断基準</div>
     </div>
     <div class="header-right">
       <div class="rwy-badge">PAGE 2 / 2</div>
@@ -207,52 +196,50 @@
   </div>
 
   <div class="card">
-    <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>霧・視程障害 ── 冬の移流霧 / 春の瀬戸内海海霧</h2></div>
+    <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>霧・視程障害 ── 冬の移流霧 / 春〜梅雨の海霧</h2></div>
     <div class="grid-2" style="margin-bottom:0;">
       <div>
-        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:5px;">&#9654; 月別霧日数（年平均 約7日）</p>
-        <div style="padding: 0 2px;">
-          <div class="fog-chart">
-            <div class="fog-bar-wrap"><div class="fog-bar peak" style="height:44px;"><span class="bval">1.5</span></div><span class="mo">1月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar peak" style="height:41px;"><span class="bval">1.4</span></div><span class="mo">2月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar" style="height:15px;"></div><span class="mo">3月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar" style="height:17px;"></div><span class="mo">4月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar peak" style="height:37px;"><span class="bval">1.25</span></div><span class="mo">5月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar" style="height:20px;"></div><span class="mo">6月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar" style="height:5px;"></div><span class="mo">7月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar" style="height:3px;"></div><span class="mo">8月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar" style="height:5px;"></div><span class="mo">9月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar" style="height:5px;"></div><span class="mo">10月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar" style="height:12px;"></div><span class="mo">11月</span></div>
-            <div class="fog-bar-wrap"><div class="fog-bar" style="height:26px;"></div><span class="mo">12月</span></div>
-          </div>
-          <p style="font-size:5.5pt;color:#3a4f63;margin-top:3px;">★ 値表示は実測値（1月1.5日 / 2月1.4日 / 5月1.25日）、その他は気候的傾向より推定</p>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:5px;">&#9654; 月別平均霧日数（2006.4〜2010.3 / 年平均約7日）</p>
+        <div class="fog-chart">
+          <div class="fog-bar-wrap"><div class="fog-bar peak" style="height:44px;"><span class="bval">1.4</span></div><span class="mo">1</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar" style="height:31px;"><span class="bval">1.0</span></div><span class="mo">2</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar" style="height:16px;"></div><span class="mo">3</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar" style="height:13px;"></div><span class="mo">4</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar peak" style="height:38px;"><span class="bval">1.2</span></div><span class="mo">5</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar peak" style="height:41px;"><span class="bval">1.3</span></div><span class="mo">6</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar" style="height:6px;"></div><span class="mo">7</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar" style="height:25px;"><span class="bval" style="color:#5a7288;">0.8</span></div><span class="mo">8</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar" style="height:6px;"></div><span class="mo">9</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar" style="height:6px;"></div><span class="mo">10</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar" style="height:3px;"></div><span class="mo">11</span></div>
+          <div class="fog-bar-wrap"><div class="fog-bar" style="height:6px;"></div><span class="mo">12</span></div>
         </div>
-        <div class="info-box" style="margin-top:5px;">
-          <strong>浮遊微粒子による視程低下:</strong> 好天・弱風時でも大気中の微粒子により<strong>CIG/VIS低下</strong>あり。METARより実際の視程が悪い場合がある（特に西風系）。
-        </div>
+        <ul class="bullet-list" style="margin-top:5px;">
+          <li>悪視程原因: <span class="highlight">霧・靄・強雨</span>、冬期は降雪</li>
+          <li>放射冷却霧: 日照で回復。<span class="warn-text">海霧: 昼頃まで</span>要する</li>
+          <li class="warn">低気圧前面SE暖湿気流入 → <span class="warn-text">悪視程/低雲高</span></li>
+          <li class="warn">降水+E風 → 西側山地影響で<span class="warn-text">VIS/CIG低下</span></li>
+        </ul>
       </div>
       <div>
         <div class="pattern-box">
           <div class="pattern-title"><span class="num" style="background:#e2e8f022;color:#e2e8f0;">冬</span> <span style="color:#e2e8f0;">移流霧（12〜2月）</span></div>
           <ul class="bullet-list">
-            <li>山口県南岸で発生した<span class="highlight">移流霧</span>が周防灘を渡って流入</li>
-            <li>N〜E弱風（<span class="highlight">≤ 5kt</span>）の時に空港を覆いやすい</li>
-            <li class="warn">視程低下が<span class="warn-text">急速</span>で予測困難な場合あり</li>
-            <li>1月（1.5日）・2月（1.4日）が年間最多</li>
+            <li>山口県南岸で発生した<span class="highlight">移流霧</span>が流入</li>
+            <li>N〜E弱風（<span class="highlight">5kt程度</span>）で空港を覆う</li>
+            <li>1月が年間最多（約1.4日）</li>
           </ul>
         </div>
         <div class="pattern-box">
           <div class="pattern-title"><span class="num" style="background:#a78bfa22;color:#a78bfa;">春</span> <span style="color:#a78bfa;">海霧・前線霧（4〜6月）</span></div>
           <ul class="bullet-list">
-            <li>瀬戸内海・周防灘の<span class="purple-text">海霧</span>（海面水温と気温の差が最大）</li>
-            <li>前線通過前後に<span class="purple-text">前線霧</span>も発生</li>
-            <li class="warn"><span class="warn-text">E〜SE弱風時</span>に霧が流入しやすい</li>
-            <li>5月が最多（1.25日）</li>
+            <li>瀬戸内海からの<span class="purple-text">海霧</span>・<span class="purple-text">前線霧</span></li>
+            <li>6月最多（約1.3日）、5月も多い（約1.2日）</li>
+            <li class="warn">春〜梅雨期は<span class="warn-text">東寄りの風と共に海霧が侵入</span></li>
           </ul>
         </div>
         <div class="warn-box">
-          <strong>降水＋東風時の特記:</strong> 西側山地（福智山・貫山）の影響で<strong>VIS・CIGともに低下</strong>。降水と低視程・低シーリングが同時発生しやすい。
+          <strong>浮遊微粒子:</strong> 好天弱風日に大気中の微粒子で霞み、CIG/VIS低下。報じられた値より<strong>実際はさらに見えにくい</strong>。TAF予測は困難。<strong>築城(RJFZ)・山口宇部(RJDC)</strong>の情報が参考。
         </div>
       </div>
     </div>
@@ -260,67 +247,64 @@
 
   <div class="grid-2">
     <div class="card">
-      <div class="card-header"><div class="icon icon-snow">&#10052;</div><h2>降雪 ── 年平均14日・除雪最大4h</h2></div>
+      <div class="card-header"><div class="icon icon-snow">&#10052;</div><h2>降雪 ── 年平均14日</h2></div>
       <ul class="bullet-list">
-        <li>発生期間: <span class="highlight">12〜2月</span></li>
-        <li>年平均 <span class="warn-text">14日</span>（1月が最多 約6日）</li>
-        <li class="warn">悪視程継続: <span class="warn-text">1〜2時間が最多</span>、稀に5時間超</li>
+        <li>期間: <span class="highlight">12〜2月</span>（3月も約3日あり）</li>
+        <li>パターン: 冬型強化 → <span class="highlight">関門海峡から雪雲が流入</span></li>
+        <li>稀に積雪。強烈な寒気時に1〜2日残ることも</li>
+        <li class="warn">悪視程: 断続的。<span class="warn-text">1〜2h が最多</span>、稀に5h超</li>
       </ul>
-      <p style="font-size:7.5pt;color:#e2e8f0;margin-bottom:4px;margin-top:6px;">&#9654; 除雪基準・時間</p>
+      <p style="font-size:7.5pt;color:#e2e8f0;margin-bottom:3px;margin-top:5px;">&#9654; 月別降雪日数</p>
       <table>
-        <tr><th>種別</th><th>除雪開始基準</th><th>所要時間</th></tr>
-        <tr><td>SNOW（積雪）</td><td class="warn-text">30mm 以上</td><td>RWY: 3h</td></tr>
-        <tr><td>SLUSH（シャーベット）</td><td class="warn-text">13mm 以上</td><td>TWY: 1h</td></tr>
-        <tr><td colspan="2" style="color:#5a7288;">合計（最大閉鎖時間）</td><td class="danger-text">4h</td></tr>
+        <tr><th>月</th><th>1月</th><th>2月</th><th>3月</th><th>11月</th><th>12月</th></tr>
+        <tr><td>日数</td><td class="warn-text">~5.5</td><td>~4</td><td>~3</td><td>~0.5</td><td>~3</td></tr>
       </table>
-      <div class="danger-box" style="margin-top:6px;">
-        <strong>&#9888; 注意:</strong> 早朝から除雪開始の場合、RWY再開まで<strong>最大4時間</strong>の遅延が発生する場合あり。代替機場の事前選定・燃料計画を推奨。
-      </div>
+      <p style="font-size:7.5pt;color:#e2e8f0;margin-bottom:3px;margin-top:6px;">&#9654; 除雪基準</p>
+      <table>
+        <tr><th>種別</th><th>基準</th><th>時間</th></tr>
+        <tr><td>SNOW</td><td class="warn-text">30mm以上</td><td>RWY: 3h</td></tr>
+        <tr><td>SLUSH</td><td class="warn-text">13mm以上</td><td>TWY: 1h</td></tr>
+        <tr><td colspan="2" style="color:#5a7288;">合計（最大）</td><td class="danger-text">4h+</td></tr>
+      </table>
+      <p style="font-size:6.5pt;color:#5a7288;margin-top:3px;">※急な降雪・大雪時はさらに時間を要する</p>
     </div>
     <div class="card">
       <div class="card-header"><div class="icon icon-ts">&#9928;</div><h2>降雨・雷</h2></div>
       <p style="font-size:7.5pt;color:#00d4ff;margin-bottom:4px;">&#9654; 降雨</p>
       <ul class="bullet-list">
-        <li>年間最多: <span class="warn-text">6〜7月（梅雨期）</span></li>
-        <li class="warn">7月下旬〜8月: <span class="amber-text">雷雨</span>を伴う集中豪雨</li>
-        <li>降雨 + 東風 → 西側山地の影響でVIS・CIG低下</li>
+        <li>最多: <span class="warn-text">6〜7月（梅雨期）</span>、6月~300mm/7月~350mm</li>
+        <li class="warn">7月下旬〜8月: <span class="amber-text">雷を伴う</span>降水が多い</li>
       </ul>
-      <p style="font-size:7.5pt;color:#fbbf24;margin-bottom:4px;margin-top:7px;">&#9654; 雷（年平均 23日）</p>
+      <p style="font-size:7.5pt;color:#fbbf24;margin-bottom:4px;margin-top:6px;">&#9654; 雷（年平均23日）</p>
       <table>
-        <tr><th>月</th><th>雷日数</th><th>種別・特徴</th></tr>
-        <tr><td style="color:#fbbf24;font-weight:500;">7月</td><td style="color:#fbbf24;">6.5日</td><td>熱雷・積乱雲。1〜2hで終了が多い</td></tr>
-        <tr><td style="color:#fbbf24;font-weight:500;">8月</td><td style="color:#fbbf24;">6.0日</td><td>熱雷・夕立型</td></tr>
-        <tr><td style="color:#ff6b35;font-weight:500;">3月</td><td>—</td><td class="warn-text">界雷（寒冷前線通過型）</td></tr>
-        <tr><td style="color:#7a8fa6;">冬季</td><td>—</td><td style="color:#7a8fa6;">日本海低気圧→冬雷</td></tr>
+        <tr><th>月</th><th>日数</th><th>種別</th></tr>
+        <tr><td style="color:#fbbf24;font-weight:500;">7月</td><td style="color:#fbbf24;">~6.5</td><td>熱雷。1〜2hで終了</td></tr>
+        <tr><td style="color:#fbbf24;font-weight:500;">8月</td><td style="color:#fbbf24;">~6.0</td><td>熱雷</td></tr>
+        <tr><td style="color:#ff6b35;font-weight:500;">3月</td><td class="warn-text">~3.0</td><td class="warn-text">界雷（寒冷前線通過）</td></tr>
+        <tr><td>9月</td><td>~2.5</td><td>残暑期の雷雨</td></tr>
+        <tr><td>6月</td><td>~2.0</td><td>梅雨期の雷</td></tr>
       </table>
       <div class="amber-box" style="margin-top:5px;">
-        <strong>3月 界雷:</strong> 寒冷前線に伴う界雷は急速に発達・移動。夏季熱雷と異なり予測困難。SIGMET・前線予想を事前確認。
+        <strong>3月 界雷:</strong> 寒冷前線通過に伴い発生。夏季熱雷と異なり<strong>急速に発達・移動</strong>。月間~3日と頻度高い。SIGMET・前線予想を事前確認。
       </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>QUICK REFERENCE ── KKJ 判断基準サマリー</h2></div>
+    <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>QUICK REFERENCE ── KKJ 判断基準</h2></div>
     <table>
-      <tr><th>現象</th><th>監視指標</th><th>閾値 / トリガー</th><th>影響・対応</th></tr>
-      <tr><td><span class="danger-text">横風（XW）</span></td><td>地上風 240-320°（NW系）</td><td class="danger-text">XW 25kt超え</td><td>RWY制限・DIV要検討</td></tr>
-      <tr><td><span class="danger-text">LLWS / TURB</span></td><td>地上W〜NW風速</td><td class="danger-text">≥ 20kt</td><td>1000ft以下TURB・G/A</td></tr>
-      <tr><td><span class="warn-text">上下シアー型WS</span></td><td>地上E + 925-850hPa SW</td><td class="warn-text">E 5-10kt / SW 15kt+</td><td>低層WS・G/A</td></tr>
-      <tr><td><span class="purple-text">移流霧（冬）</span></td><td>N〜E弱風 ≤5kt + 山口南岸霧</td><td class="warn-text">12-2月 N〜E ≤5kt</td><td>VIS/RVR低下・DIV</td></tr>
-      <tr><td><span class="purple-text">海霧（春）</span></td><td>4-6月 瀬戸内海 + E〜SE弱風</td><td class="warn-text">E〜SE弱風 + BR/FG</td><td>VIS低下・GND DEL</td></tr>
-      <tr><td><span style="color:#e2e8f0;">降雪・除雪</span></td><td>積雪 / シャーベット量</td><td>SN 30mm / SL 13mm</td><td>RWY閉鎖 最大4h</td></tr>
-      <tr><td><span class="amber-text">界雷（3月）</span></td><td>寒冷前線位置・SIGMET</td><td class="warn-text">前線通過前後</td><td>GND STOP リスク</td></tr>
+      <tr><th>現象</th><th>監視指標</th><th>閾値 / トリガー</th><th>影響</th></tr>
+      <tr><td><span class="danger-text">横風(XW)</span></td><td>地上風 240-320°</td><td class="danger-text">XW 25kt超え</td><td>RWY制限・DIV</td></tr>
+      <tr><td><span class="danger-text">TURB</span></td><td>W〜WNW風速</td><td class="danger-text">20kt以上（冬場）</td><td>1000ft以下TURB</td></tr>
+      <tr><td><span class="warn-text">WS</span></td><td>地上E + 上空SW</td><td class="warn-text">E 5-10kt / 925hPa SW</td><td>低層WS・G/A</td></tr>
+      <tr><td><span class="purple-text">移流霧(冬)</span></td><td>山口県南岸霧 + N〜E弱風</td><td class="warn-text">12-2月 / 5kt程度</td><td>VIS低下・DIV</td></tr>
+      <tr><td><span class="purple-text">海霧(春)</span></td><td>瀬戸内海海霧 + E風</td><td class="warn-text">4-6月 / E〜SE弱風</td><td>昼頃まで継続</td></tr>
+      <tr><td><span style="color:#e2e8f0;">降雪</span></td><td>関門海峡から雪雲流入</td><td>SN 30mm / SL 13mm</td><td>除雪 最大4h+</td></tr>
+      <tr><td><span class="amber-text">界雷(3月)</span></td><td>寒冷前線位置</td><td class="warn-text">3月 ~3日/月</td><td>GND STOP</td></tr>
     </table>
-    <div class="danger-box" style="margin-top:7px; display:flex; align-items:center; gap:10px;">
-      <div style="font-size:18pt; flex-shrink:0;">🐦</div>
-      <div>
-        <strong>&#9888; バードストライク注意 ── RWY34 FINAL 多発:</strong>
-        <span style="color:#fca5a5;"> 特にRWY34（南向き着陸）のFINAL進入時に鳥との衝突事例が多い。夜間・早朝・夕方の鳥類活動が活発な時間帯は特に注意。BS発生時はATCに報告しエンジン点検手順に従うこと。</span>
-      </div>
-    </div>
   </div>
 
-  <div class="footer-ref"><span>B737 OCC MET INFO / RJFR KKJ Weather Briefing</span><span>Page 2 ─ Fog / Snow / Rain / Thunder / Quick Reference</span></div>
+  <div class="footer-ref"><span>B737 OCC MET INFO / RJFR KKJ Weather Briefing</span><span>Page 2 ─ Fog / Snow / Rain / Thunder</span></div>
 </div>
 
 </body>
