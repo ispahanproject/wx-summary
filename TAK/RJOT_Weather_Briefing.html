@@ -6,297 +6,477 @@
   @page { size: A4; margin: 0; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
-    background: #0f1923; color: #e0e6ed; font-size: 8.5pt; line-height: 1.45;
-    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif;
+    font-weight: 300;
+    background: #0f1923;
+    color: #e0e6ed;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
-  .page { width: 210mm; min-height: 297mm; padding: 14mm 13mm 12mm 13mm; position: relative; overflow: hidden; page-break-after: always; background: #0f1923; }
+
+  .page {
+    width: 210mm; min-height: 297mm;
+    padding: 14mm 13mm 12mm 13mm;
+    position: relative; overflow: hidden;
+    page-break-after: always; background: #0f1923;
+  }
   .page:last-child { page-break-after: avoid; }
-  .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #00d4ff; padding-bottom: 8px; margin-bottom: 12px; }
+
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-bottom: 2px solid #00d4ff; padding-bottom: 8px; margin-bottom: 12px;
+  }
   .header-left h1 { font-size: 20pt; font-weight: 300; color: #ffffff; letter-spacing: 4px; }
   .header-left h1 span.icao { color: #00d4ff; font-weight: 300; }
   .header-left .subtitle { font-size: 8pt; color: #7a8fa6; letter-spacing: 1px; margin-top: 2px; }
   .header-right { text-align: right; font-size: 7.5pt; color: #7a8fa6; }
-  .header-right .rwy-badge { display: inline-block; background: linear-gradient(135deg, #00d4ff22, #00d4ff11); border: 1px solid #00d4ff55; border-radius: 4px; padding: 3px 10px; color: #00d4ff; font-weight: 500; font-size: 9pt; letter-spacing: 2px; margin-bottom: 3px; }
+  .header-right .rwy-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #00d4ff22, #00d4ff11);
+    border: 1px solid #00d4ff55; border-radius: 4px;
+    padding: 3px 10px; color: #00d4ff; font-weight: 500;
+    font-size: 9pt; letter-spacing: 2px; margin-bottom: 3px;
+  }
+
   .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
   .grid-2 > * { flex: 1; min-width: 0; }
-  .card { background: linear-gradient(160deg, #1a2836, #152230); border: 1px solid #1e3448; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; overflow: hidden; }
+
+  .card {
+    background: linear-gradient(160deg, #1a2836, #152230);
+    border: 1px solid #1e3448; border-radius: 6px;
+    padding: 10px 12px; margin-bottom: 10px; overflow: hidden;
+    overflow-wrap: break-word; word-wrap: break-word;
+  }
   .card-header { display: flex; align-items: center; margin-bottom: 7px; gap: 6px; }
-  .card-header .icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .card-header .icon {
+    width: 20px; height: 20px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; flex-shrink: 0;
+  }
   .icon-wind { background: #00d4ff22; color: #00d4ff; }
   .icon-turb { background: #ff6b3522; color: #ff6b35; }
   .icon-vis  { background: #a78bfa22; color: #a78bfa; }
   .icon-snow { background: #e2e8f022; color: #e2e8f0; }
-  .icon-ts   { background: #fbbf2422; color: #fbbf24; }
-  .icon-info { background: #00d4ff22; color: #00d4ff; }
+  .icon-thunder { background: #fbbf2422; color: #fbbf24; }
+  .icon-info { background: #34d39922; color: #34d399; }
+  .icon-fog  { background: #818cf822; color: #818cf8; }
   .card-header h2 { font-size: 9.5pt; font-weight: 500; color: #ffffff; letter-spacing: 1.5px; }
+
+  .tag {
+    display: inline-block; padding: 1px 7px; border-radius: 3px;
+    font-size: 7pt; font-weight: 500; margin-right: 3px; letter-spacing: 0.5px;
+  }
+  .tag-blue   { background: #00d4ff18; color: #00d4ff; border: 1px solid #00d4ff44; }
+  .tag-orange { background: #ff6b3518; color: #ff6b35; border: 1px solid #ff6b3544; }
+  .tag-red    { background: #f4365818; color: #f43658; border: 1px solid #f4365844; }
+  .tag-yellow { background: #fbbf2418; color: #fbbf24; border: 1px solid #fbbf2444; }
+  .tag-green  { background: #34d39918; color: #34d399; border: 1px solid #34d39944; }
+  .tag-purple { background: #a78bfa18; color: #a78bfa; border: 1px solid #a78bfa44; }
+
   table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
   td, th { overflow-wrap: break-word; }
-  table th { background: #0d1820; color: #7a8fa6; font-weight: 400; padding: 4px 6px; text-align: left; font-size: 7pt; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448; }
+  table th {
+    background: #0d1820; color: #7a8fa6; font-weight: 400;
+    padding: 4px 6px; text-align: left; font-size: 7pt;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448;
+  }
   table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
   table tr:last-child td { border-bottom: none; }
+
   .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
-  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; min-width: 0; text-align: center; }
+  .metric {
+    background: #0d1820; border-radius: 4px; padding: 5px 8px;
+    flex: 1; min-width: 0; text-align: center;
+  }
   .metric .val { font-size: 14pt; font-weight: 300; color: #00d4ff; line-height: 1.2; letter-spacing: 0.5px; }
   .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+
   .bullet-list { padding-left: 0; list-style: none; }
-  .bullet-list li { position: relative; padding-left: 12px; margin-bottom: 3px; color: #b0c0d0; font-size: 7.8pt; }
-  .bullet-list li::before { content: ''; position: absolute; left: 0; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: #00d4ff; }
+  .bullet-list li {
+    position: relative; padding-left: 12px; margin-bottom: 3px;
+    color: #b0c0d0; font-size: 7.8pt;
+  }
+  .bullet-list li::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 4px; height: 4px; border-radius: 50%; background: #00d4ff;
+  }
   .bullet-list li.warn::before { background: #ff6b35; }
   .bullet-list li.danger::before { background: #f43658; }
+
   .highlight { color: #00d4ff; font-weight: 500; }
   .warn-text { color: #ff6b35; font-weight: 500; }
   .danger-text { color: #f43658; font-weight: 500; }
   .green-text { color: #34d399; font-weight: 500; }
   .purple-text { color: #a78bfa; font-weight: 500; }
   .amber-text { color: #fbbf24; font-weight: 500; }
-  .danger-box { background: linear-gradient(135deg, #ef444412, #ef444408); border: 1px solid #ef444433; border-left: 3px solid #ef4444; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #fca5a5; overflow-wrap: break-word; }
-  .danger-box strong { color: #ef4444; }
-  .info-box { background: linear-gradient(135deg, #00d4ff12, #00d4ff08); border: 1px solid #00d4ff33; border-left: 3px solid #00d4ff; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #7dd3fc; overflow-wrap: break-word; }
-  .info-box strong { color: #00d4ff; }
-  .warn-box { background: linear-gradient(135deg, #ff6b3512, #ff6b3508); border: 1px solid #ff6b3533; border-left: 3px solid #ff6b35; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #fdba74; overflow-wrap: break-word; }
-  .warn-box strong { color: #ff6b35; }
-  .amber-box { background: linear-gradient(135deg, #fbbf2412, #fbbf2408); border: 1px solid #fbbf2433; border-left: 3px solid #fbbf24; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #fde68a; overflow-wrap: break-word; }
-  .amber-box strong { color: #fbbf24; }
-  .pattern-box { background: #0d1820; border-radius: 5px; padding: 8px 10px; border: 1px solid #1e3448; margin-bottom: 7px; }
-  .pattern-box .pattern-title { font-weight: 500; font-size: 8.5pt; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
-  .pattern-box .num { display: inline-flex; width: 18px; height: 18px; border-radius: 50%; background: #00d4ff22; color: #00d4ff; align-items: center; justify-content: center; font-size: 8pt; font-weight: 600; flex-shrink: 0; }
+
+  .sep { height: 1px; background: linear-gradient(90deg, transparent, #1e3448, transparent); margin: 8px 0; }
+
+  .caution-box {
+    background: #ff6b3510; border: 1px solid #ff6b3533;
+    border-left: 3px solid #ff6b35; border-radius: 0 4px 4px 0;
+    padding: 6px 10px; margin-top: 5px; overflow-wrap: break-word;
+  }
+  .caution-box .caution-title {
+    font-size: 7pt; font-weight: 500; color: #ff6b35;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;
+  }
+  .info-box {
+    background: #34d39910; border: 1px solid #34d39933;
+    border-left: 3px solid #34d399; border-radius: 0 4px 4px 0;
+    padding: 6px 10px; margin-top: 5px;
+  }
+  .info-box .info-title {
+    font-size: 7pt; font-weight: 500; color: #34d399;
+    letter-spacing: 0.5px; margin-bottom: 2px;
+  }
+  .danger-box {
+    background: #f4365810; border: 1px solid #f4365833;
+    border-left: 3px solid #f43658; border-radius: 0 4px 4px 0;
+    padding: 6px 10px; margin-top: 5px;
+  }
+  .danger-box .danger-title {
+    font-size: 7pt; font-weight: 500; color: #f43658;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;
+  }
+  .amber-box {
+    background: #fbbf2410; border: 1px solid #fbbf2433;
+    border-left: 3px solid #fbbf24; border-radius: 0 4px 4px 0;
+    padding: 6px 10px; margin-top: 5px;
+  }
+
   .terrain-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 5px 0; }
   .terrain-item { background: #0d1820; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; border: 1px solid #1e3448; }
   .terrain-item .name { color: #7a8fa6; }
   .terrain-item .elev { color: #ff6b35; font-weight: 600; }
-  .div-chart { display: flex; gap: 2px; align-items: flex-end; height: 44px; margin: 20px 0 6px 0; padding: 0 2px; }
-  .div-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; }
-  .div-bar { width: 100%; background: #a78bfa33; border-radius: 2px 2px 0 0; position: relative; }
-  .div-bar.peak { background: #a78bfa77; }
-  .div-bar .bval { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 5.5pt; color: #a78bfa; white-space: nowrap; font-weight: 600; }
-  .div-bar-wrap .mo { font-size: 5pt; color: #5a7288; margin-top: 2px; }
-  .footer-ref { position: absolute; bottom: 10mm; left: 13mm; right: 13mm; font-size: 6.5pt; color: #3a4f63; border-top: 1px solid #1a2836; padding-top: 4px; display: flex; justify-content: space-between; }
+
+  .diagram-container { display: flex; align-items: center; justify-content: center; padding: 4px; }
+
+  .footer {
+    position: absolute; bottom: 10mm; left: 13mm; right: 13mm;
+    display: flex; justify-content: space-between;
+    font-size: 6.5pt; color: #3a4f63; letter-spacing: 0.5px;
+    border-top: 1px solid #1a2836; padding-top: 5px;
+  }
 </style>
 </head>
 <body>
 
-<!-- ========== PAGE 1/2: AIRPORT OVERVIEW, WIND, TURBULENCE/LLWS ========== -->
+<!-- ==================== PAGE 1 ==================== -->
 <div class="page">
+
   <div class="header">
     <div class="header-left">
-      <h1>RJOT <span class="icao">TAK</span></h1>
-      <div class="subtitle">高松空港 ── 台地空港・滑昇霧・NW GUST・山岳波</div>
+      <h1>高松空港 <span class="icao">RJOT</span></h1>
+      <div class="subtitle">WEATHER BRIEFING REFERENCE ─ B737 OPERATIONS</div>
     </div>
     <div class="header-right">
-      <div class="rwy-badge">PAGE 1 / 2</div>
-      <div>7 source PDFs ─ Rev.2026-03</div>
+      <div class="rwy-badge">RWY 08 / 26</div>
+      <div>ILS: RWY26 ｜ ELEV 607 ft</div>
     </div>
   </div>
 
-  <div class="metrics-row">
-    <div class="metric"><div class="val">607<span style="font-size:7pt;color:#5a7288;">ft</span></div><div class="label">ELEV（台地）</div></div>
-    <div class="metric"><div class="val" style="color:#ff6b35;">20<span style="font-size:7pt;color:#5a7288;">kt+</span></div><div class="label">NW GUST高確率</div></div>
-    <div class="metric"><div class="val" style="color:#a78bfa;">12<span style="font-size:7pt;color:#5a7288;">便</span></div><div class="label">3月DIV/ATB最多</div></div>
-    <div class="metric"><div class="val" style="color:#f43658;">50<span style="font-size:7pt;color:#5a7288;">kt</span></div><div class="label">5000ft南風→MW</div></div>
-  </div>
-
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>空港諸元 ── RJOT</h2></div>
-      <ul class="bullet-list">
-        <li><span class="highlight">台地状の丘陵地</span>に位置（高根山 742ft）</li>
-        <li>RWY<span class="highlight">08/26</span>（ILS: RWY26）</li>
-        <li>風通報代表点: <span class="highlight">RWY26</span></li>
-        <li>気候: <span class="highlight">瀬戸内海式気候</span>（温暖・年降水量~1,100mm）</li>
-        <li>主要運航影響: <span class="warn-text">低視程</span></li>
-      </ul>
-      <p style="font-size:7.5pt;color:#ff6b35;margin-top:7px;margin-bottom:4px;">&#9654; 周辺地形</p>
-      <div class="terrain-row">
-        <div class="terrain-item"><div class="name">讃岐山脈（S 10nm）</div><div class="elev">~3,000ft (max 3,468ft)</div></div>
-        <div class="terrain-item"><div class="name">剣山（S 22nm）</div><div class="elev">6,414ft</div></div>
-        <div class="terrain-item"><div class="name">高根山（空港域）</div><div class="elev">742ft</div></div>
-      </div>
-      <p style="font-size:7pt;color:#5a7288;margin-top:3px;">南側: 急傾斜の山地。北側: 瀬戸内海に向かう緩斜面。周辺に香東川・本津川・綾川など約10の支流・多数の溜め池。</p>
-      <div class="info-box" style="margin-top:5px;">
-        <strong>地形効果:</strong> 台地空港のため、周辺に低い雲が発生すると<strong>雲が地面に接触し濃霧</strong>となる。特にRWY26 Final側の斜面で滑昇霧が発生しやすい。
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="icon icon-wind">&#9778;</div><h2>風の特徴</h2></div>
-      <ul class="bullet-list">
-        <li>年間最多: <span class="highlight">NW象限</span>（風速が強いほどNW比率増加）</li>
-        <li>次いで<span class="highlight">E〜ESE</span>（瀬戸内海の東西方向に沿う）</li>
-        <li>S・SE・SSE・NNE・NE風は少ない</li>
-      </ul>
-      <p style="font-size:7.5pt;color:#ff6b35;margin-top:7px;margin-bottom:4px;">&#9654; GUST（冬〜春）</p>
-      <ul class="bullet-list">
-        <li class="warn">風向: <span class="warn-text">WNW〜NW〜NNW</span></li>
-        <li>15kt以上で<span class="warn-text">ガスト有意</span>に発生</li>
-        <li class="danger">20kt以上で<span class="danger-text">高確率</span>でガスト発生</li>
-        <li class="warn">強い西風時は<span class="warn-text">ウィンドシアー</span>にも注意</li>
-      </ul>
-      <div class="warn-box" style="margin-top:6px;">
-        <strong>RWY26 THR谷地形:</strong> RWY26手前に谷地形あり。NW風＋GUST時、谷を吹き抜ける風で<strong>AGL 200ft以下にUP/DOWN WASH</strong>が発生。
-      </div>
-    </div>
-  </div>
-
+  <!-- AIRPORT OVERVIEW -->
   <div class="card">
-    <div class="card-header"><div class="icon icon-turb">&#9888;</div><h2>タービュランス・LLWS ── 山岳波とNW GUST</h2></div>
-    <div class="grid-2" style="margin-bottom:0;">
-      <div>
-        <p style="font-size:7.5pt;color:#f43658;margin-bottom:5px;">&#9654; 山岳波 / LLWS（四国山地越え）</p>
-        <div class="pattern-box">
-          <div class="pattern-title"><span class="num" style="background:#f4365822;color:#f43658;">!</span> <span style="color:#f43658;">発生条件</span></div>
-          <ul class="bullet-list" style="margin-top:4px;">
-            <li class="danger">5,000ftの南風（SE〜SW）が<span class="danger-text">50kt以上</span></li>
-            <li class="danger">四国山地による山岳波 → <span class="danger-text">3,000ft以下</span>に影響</li>
-            <li class="danger">山岳波＋<span class="danger-text">LLWS</span>に警戒</li>
-          </ul>
-        </div>
-        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:5px;margin-top:6px;">&#9654; 冬季NW強風</p>
+    <div class="card-header">
+      <div class="icon icon-info">✦</div>
+      <h2>AIRPORT OVERVIEW</h2>
+      <span class="tag tag-orange" style="margin-left:auto;">台地空港</span>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <ul class="bullet-list" style="flex:1;">
+        <li><span class="highlight">台地状の丘陵地</span>に位置（高根山 742ft）</li>
+        <li>気候: <span class="highlight">瀬戸内海式気候</span>（温暖・年降水量~1,100mm）</li>
+        <li>風通報代表点: <span class="highlight">RWY26</span></li>
+        <li>主要運航影響: <span class="warn-text">低視程</span>（滑昇霧・瀬戸内海霧）</li>
+      </ul>
+      <div class="diagram-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" width="170" height="136">
+          <defs>
+            <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a3d5c"/><stop offset="100%" stop-color="#0d1820"/></linearGradient>
+            <linearGradient id="rwy" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#00d4ff88"/></linearGradient>
+          </defs>
+          <!-- 瀬戸内海（北） -->
+          <rect x="0" y="0" width="200" height="40" fill="url(#sea)"/>
+          <text x="100" y="20" font-size="7" fill="#1a5a7a" text-anchor="middle" font-family="Poppins">瀬戸内海</text>
+          <!-- 陸地 -->
+          <rect x="0" y="40" width="200" height="120" fill="#0f1923"/>
+          <!-- 讃岐平野（緩斜面） -->
+          <text x="100" y="55" font-size="5" fill="#1a3040" text-anchor="middle" font-family="Poppins">讃岐平野（北 → 緩斜面）</text>
+          <!-- 台地 -->
+          <rect x="55" y="65" width="90" height="35" fill="#152230" stroke="#1e3448" stroke-width="0.5" rx="3"/>
+          <text x="100" y="78" font-size="5" fill="#3a5060" text-anchor="middle" font-family="Poppins">台地 607ft</text>
+          <!-- 滑走路 08/26 -->
+          <line x1="68" y1="85" x2="132" y2="85" stroke="url(#rwy)" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="60" y="88" font-size="6" fill="#00d4ff" font-family="Poppins" font-weight="500">26</text>
+          <text x="135" y="88" font-size="6" fill="#00d4ff" font-family="Poppins" font-weight="500">08</text>
+          <!-- 高根山 -->
+          <path d="M50,68 Q55,60 60,68" fill="#1a2836" stroke="#2a3d50" stroke-width="0.5"/>
+          <text x="55" y="63" font-size="4.5" fill="#3a5060" text-anchor="middle" font-family="Poppins">高根山742ft</text>
+          <!-- 讃岐山脈（南） -->
+          <path d="M10,130 Q40,110 80,125 Q120,110 160,128 Q180,115 195,130" fill="#1a2836" stroke="#2a3d50" stroke-width="0.5"/>
+          <text x="100" y="148" font-size="5.5" fill="#3a5060" text-anchor="middle" font-family="Poppins">讃岐山脈 3,468ft</text>
+          <!-- 滑昇霧矢印 -->
+          <path d="M155,55 Q145,65 140,78" stroke="#a78bfa66" stroke-width="1.5" fill="none" stroke-dasharray="3,2" marker-end="url(#arrowF)"/>
+          <text x="158" y="62" font-size="5" fill="#a78bfa88" font-family="Poppins">E風→滑昇霧</text>
+          <!-- 山岳波矢印 -->
+          <path d="M100,130 Q100,118 100,103" stroke="#f4365888" stroke-width="1.5" fill="none" stroke-dasharray="3,2" marker-end="url(#arrowW)"/>
+          <text x="115" y="120" font-size="5" fill="#f4365888" font-family="Poppins">山岳波</text>
+          <defs>
+            <marker id="arrowW" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#f4365888" stroke-width="0.8"/></marker>
+            <marker id="arrowF" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#a78bfa66" stroke-width="0.8"/></marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+    <div class="terrain-row" style="margin-top:4px;">
+      <div class="terrain-item"><div class="name">讃岐山脈（S 10nm）</div><div class="elev">~3,000ft (max 3,468ft)</div></div>
+      <div class="terrain-item"><div class="name">剣山（S 22nm）</div><div class="elev">6,414ft</div></div>
+      <div class="terrain-item"><div class="name">高根山（空港域）</div><div class="elev">742ft</div></div>
+    </div>
+    <div class="info-box" style="margin-top:4px;">
+      <div class="info-title">✦ 台地空港の地形効果</div>
+      <div style="font-size:7.5pt;color:#b0c0d0;">周辺に低い雲が発生すると<strong style="color:#34d399;">雲が地面に接触し濃霧</strong>となる。特にRWY26 Final側の斜面で滑昇霧が発生しやすい。</div>
+    </div>
+  </div>
+
+  <!-- WIND SUMMARY -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-wind">◎</div>
+      <h2>WIND SUMMARY</h2>
+    </div>
+    <table>
+      <tr><th>季節</th><th>卓越風向</th><th>備考</th></tr>
+      <tr><td><span class="tag tag-green">春</span></td><td>NW / E～ESE</td><td>NW GUST継続</td></tr>
+      <tr><td><span class="tag tag-blue">夏</span></td><td>E～ESE</td><td>瀬戸内海の東西方向に沿う</td></tr>
+      <tr><td><span class="tag tag-yellow">秋</span></td><td>NW / E</td><td>S・SE・NE風は少ない</td></tr>
+      <tr><td><span class="tag tag-orange">冬</span></td><td>NW</td><td><span class="warn-text">GUST高確率</span>（WNW～NNW）</td></tr>
+    </table>
+    <div class="metrics-row" style="margin-top:6px;">
+      <div class="metric">
+        <div class="val" style="color:#ff6b35;">NW</div>
+        <div class="label">年間最多風向</div>
+      </div>
+      <div class="metric">
+        <div class="val">15<span style="font-size:8pt;font-weight:400;">kt+</span></div>
+        <div class="label">GUST有意（WNW-NNW）</div>
+      </div>
+      <div class="metric">
+        <div class="val" style="color:#f43658;">20<span style="font-size:8pt;font-weight:400;">kt+</span></div>
+        <div class="label">GUST高確率</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 運航に影響を及ぼす風 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-wind">✈</div>
+      <h2>運航に影響を及ぼす風</h2>
+    </div>
+    <div style="display:flex;gap:6px;">
+      <div style="flex:1;min-width:0;background:#0d1820;border-radius:4px;padding:5px 7px;">
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;"><span class="tag tag-orange">冬</span><span style="font-size:7pt;color:#7a8fa6;font-weight:500;">NW GUST</span></div>
+        <div style="font-size:7.5pt;color:#b0c0d0;">→ <span class="danger-text">20kt+ 高確率</span></div>
+      </div>
+      <div style="flex:1;min-width:0;background:#0d1820;border-radius:4px;padding:5px 7px;">
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;"><span class="tag tag-red">通年</span><span style="font-size:7pt;color:#7a8fa6;font-weight:500;">山岳波</span></div>
+        <div style="font-size:7.5pt;color:#b0c0d0;">→ <span class="danger-text">5000ft S50kt+</span></div>
+      </div>
+      <div style="flex:1;min-width:0;background:#0d1820;border-radius:4px;padding:5px 7px;">
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;"><span class="tag tag-blue">夏</span><span style="font-size:7pt;color:#7a8fa6;font-weight:500;">E風滑昇霧</span></div>
+        <div style="font-size:7.5pt;color:#b0c0d0;">→ <span class="warn-text">RWY26 Final</span></div>
+      </div>
+      <div style="flex:1;min-width:0;background:#0d1820;border-radius:4px;padding:5px 7px;">
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;"><span class="tag tag-orange">冬</span><span style="font-size:7pt;color:#7a8fa6;font-weight:500;">谷地形</span></div>
+        <div style="font-size:7.5pt;color:#b0c0d0;">→ <span class="danger-text">AGL200ft WASH</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TURBULENCE / LLWS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-turb">⚡</div>
+      <h2>TURBULENCE / LLWS</h2>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <div style="flex:1;">
+        <div style="font-size:7pt;color:#5a7288;margin-bottom:4px;">山岳波（四国山地越え）</div>
+        <ul class="bullet-list">
+          <li class="danger">5,000ftの南風（SE〜SW）が<span class="danger-text">50kt以上</span></li>
+          <li class="danger">四国山地による山岳波 → <span class="danger-text">3,000ft以下</span>に影響</li>
+          <li class="danger">山岳波＋<span class="danger-text">LLWS</span>に警戒</li>
+        </ul>
+        <div class="sep"></div>
+        <div style="font-size:7pt;color:#5a7288;margin-bottom:4px;">冬季NW強風</div>
         <ul class="bullet-list">
           <li class="warn">強いNW風 → <span class="warn-text">気流の乱れ</span></li>
           <li class="warn">WNW〜NNW 15kt+: <span class="warn-text">GUST有意</span></li>
           <li class="danger">20kt+: <span class="danger-text">GUST高確率</span></li>
         </ul>
       </div>
-      <div>
-        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:5px;">&#9654; RWY26 THR谷地形効果</p>
-        <div class="pattern-box">
-          <div class="pattern-title"><span class="num" style="background:#ff6b3522;color:#ff6b35;">&#9888;</span> <span style="color:#ff6b35;">UP/DOWN WASH</span></div>
-          <ul class="bullet-list" style="margin-top:4px;">
-            <li>RWY26手前の<span class="highlight">谷地形</span></li>
-            <li class="warn">NW風＋GUST → 谷を吹き抜ける風</li>
-            <li class="danger">影響高度: <span class="danger-text">AGL 200ft以下</span></li>
-            <li>Short Final での予期せぬ揺れに注意</li>
-          </ul>
-        </div>
-        <p style="font-size:7.5pt;color:#ff6b35;margin-bottom:5px;margin-top:6px;">&#9654; 監視指標</p>
+      <div style="flex:1;">
+        <div style="font-size:7pt;color:#5a7288;margin-bottom:4px;">RWY26 THR 谷地形効果</div>
+        <ul class="bullet-list">
+          <li>RWY26手前の<span class="highlight">谷地形</span></li>
+          <li class="warn">NW風＋GUST → 谷を吹き抜ける風</li>
+          <li class="danger">影響高度: <span class="danger-text">AGL 200ft以下</span></li>
+          <li>Short Finalでの予期せぬ揺れに注意</li>
+        </ul>
+        <div class="sep"></div>
+        <div style="font-size:7pt;color:#5a7288;margin-bottom:4px;">監視指標</div>
         <table>
-          <tr><th>確認ツール</th><th>確認内容</th></tr>
+          <tr><th>ツール</th><th>確認内容</th></tr>
           <tr><td>METAR / ATIS</td><td>地上風・GUST有無</td></tr>
           <tr><td>ACARS WIND</td><td>5,000ft南風成分</td></tr>
           <tr><td>PIREP</td><td>LLWS・TURB報告</td></tr>
-          <tr><td>下層悪天図</td><td>前線位置・風速</td></tr>
         </table>
       </div>
     </div>
+    <div class="danger-box" style="margin-top:5px;">
+      <div class="danger-title">⚠ RWY26 谷地形 UP/DOWN WASH</div>
+      <div style="font-size:7.5pt;color:#b0c0d0;">NW風＋GUST時、RWY26手前の谷を吹き抜ける風で<strong style="color:#f43658;">AGL 200ft以下にUP/DOWN WASH</strong>が発生。Short Finalで予期せぬ揺れに注意。</div>
+    </div>
   </div>
 
-  <div class="footer-ref"><span>B737 OCC MET INFO / RJOT TAK Weather Briefing</span><span>Page 1 ─ Airport / Wind / Turbulence</span></div>
+  <div class="footer">
+    <div>JAL B737 Weather Manual Rev.24.11 ─ Briefing Reference</div>
+    <div>Page 1 / 2</div>
+  </div>
 </div>
 
-<!-- ========== PAGE 2/2: FOG / VISIBILITY / SNOW / THUNDER / QUICK REF ========== -->
+<!-- ==================== PAGE 2 ==================== -->
 <div class="page">
-  <div class="header">
+
+  <div class="header" style="margin-bottom:10px;">
     <div class="header-left">
-      <h1>RJOT <span class="icao">TAK</span></h1>
-      <div class="subtitle">霧・視程障害・降雪・雷 ── 判断基準</div>
+      <h1 style="font-size:14pt;">RJOT <span class="icao" style="font-size:14pt;">Weather Hazards</span></h1>
     </div>
     <div class="header-right">
-      <div class="rwy-badge">PAGE 2 / 2</div>
-      <div>7 source PDFs ─ Rev.2026-03</div>
+      <span style="color:#5a7288;">視程障害 ｜ 降雪 ｜ 雷</span>
     </div>
   </div>
 
+  <!-- 視程障害 -->
   <div class="card">
-    <div class="card-header"><div class="icon icon-vis">&#9670;</div><h2>霧・視程障害 ── 最重要運航ハザード</h2></div>
-    <div class="grid-2" style="margin-bottom:0;">
-      <div>
-        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:5px;">&#9654; 月別DIV/ATB（2015〜2019年 / 5年間計62便）</p>
-        <div class="div-chart">
-          <div class="div-bar-wrap"><div class="div-bar" style="height:26px;"><span class="bval">7</span></div><span class="mo">1</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:22px;"><span class="bval">6</span></div><span class="mo">2</span></div>
-          <div class="div-bar-wrap"><div class="div-bar peak" style="height:44px;"><span class="bval">12</span></div><span class="mo">3</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:29px;"><span class="bval">8</span></div><span class="mo">4</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:29px;"><span class="bval">8</span></div><span class="mo">5</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:18px;"><span class="bval" style="color:#5a7288;">5</span></div><span class="mo">6</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:26px;"><span class="bval">7</span></div><span class="mo">7</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:4px;"></div><span class="mo">8</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:7px;"></div><span class="mo">9</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:0px;"></div><span class="mo">10</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:11px;"><span class="bval" style="color:#5a7288;">3</span></div><span class="mo">11</span></div>
-          <div class="div-bar-wrap"><div class="div-bar" style="height:11px;"><span class="bval" style="color:#5a7288;">3</span></div><span class="mo">12</span></div>
+    <div class="card-header">
+      <div class="icon icon-fog">◉</div>
+      <h2>視程障害現象</h2>
+      <span class="tag tag-red" style="margin-left:auto;">最重要運航ハザード</span>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <div style="flex:1;">
+        <div style="font-size:7pt;color:#5a7288;margin-bottom:4px;">DIV/ATB実績（2015-2019年 / 5年間計62便）</div>
+        <div class="metrics-row">
+          <div class="metric">
+            <div class="val" style="color:#a78bfa;">62<span style="font-size:8pt;font-weight:400;">便</span></div>
+            <div class="label">5年間 DIV/ATB</div>
+          </div>
+          <div class="metric">
+            <div class="val" style="color:#f43658;">12<span style="font-size:8pt;font-weight:400;">便</span></div>
+            <div class="label">3月（最多）</div>
+          </div>
+          <div class="metric">
+            <div class="val" style="color:#ff6b35;">43<span style="font-size:8pt;font-weight:400;">%</span></div>
+            <div class="label">CIG&lt;1000ft→VIS&lt;1km</div>
+          </div>
         </div>
-        <ul class="bullet-list" style="margin-top:5px;">
-          <li>視程障害: <span class="warn-text">8〜10月以外は通年</span>発生</li>
+        <ul class="bullet-list" style="margin-top:4px;">
+          <li class="warn">視程障害: <span class="warn-text">8〜10月以外は通年</span>発生</li>
           <li>冬季の霧も発生し運航に影響</li>
-          <li>CIG&lt;1000ft時、VIS&lt;1000mとなる確率: <span class="danger-text">43%</span></li>
           <li>6月: VIS&lt;5000m率 43%、VIS&lt;1600m率 25%</li>
         </ul>
+        <div class="sep"></div>
+        <div style="font-size:7pt;color:#5a7288;margin-bottom:4px;">月別DIV/ATB（主要月）</div>
+        <div style="display:flex;gap:4px;">
+          <div style="flex:1;background:#0d1820;border-radius:3px;padding:3px 4px;text-align:center;"><div style="font-size:9pt;color:#a78bfa;">7</div><div style="font-size:5.5pt;color:#5a7288;">1月</div></div>
+          <div style="flex:1;background:#0d1820;border-radius:3px;padding:3px 4px;text-align:center;"><div style="font-size:9pt;color:#a78bfa;">6</div><div style="font-size:5.5pt;color:#5a7288;">2月</div></div>
+          <div style="flex:1;background:#0d1820;border-radius:3px;padding:3px 4px;text-align:center;border:1px solid #a78bfa44;"><div style="font-size:9pt;color:#f43658;font-weight:500;">12</div><div style="font-size:5.5pt;color:#5a7288;">3月</div></div>
+          <div style="flex:1;background:#0d1820;border-radius:3px;padding:3px 4px;text-align:center;"><div style="font-size:9pt;color:#a78bfa;">8</div><div style="font-size:5.5pt;color:#5a7288;">4月</div></div>
+          <div style="flex:1;background:#0d1820;border-radius:3px;padding:3px 4px;text-align:center;"><div style="font-size:9pt;color:#a78bfa;">8</div><div style="font-size:5.5pt;color:#5a7288;">5月</div></div>
+          <div style="flex:1;background:#0d1820;border-radius:3px;padding:3px 4px;text-align:center;"><div style="font-size:9pt;color:#a78bfa;">7</div><div style="font-size:5.5pt;color:#5a7288;">7月</div></div>
+        </div>
       </div>
-      <div>
-        <div class="pattern-box">
-          <div class="pattern-title"><span class="num" style="background:#f4365822;color:#f43658;">1</span> <span class="danger-text">前線通過型</span></div>
-          <p style="font-size:7.5pt;color:#b0c0d0;">四国南岸を東進する前線通過時に視程悪化</p>
+      <div style="flex:1;">
+        <div style="font-size:7pt;color:#5a7288;margin-bottom:4px;">霧パターン（3型）</div>
+        <div style="background:#0d1820;border-radius:4px;padding:6px 8px;border:1px solid #1e3448;margin-bottom:5px;">
+          <div style="font-size:7.5pt;"><span class="tag tag-red">1</span> <span class="danger-text">前線通過型</span></div>
+          <div style="font-size:7pt;color:#b0c0d0;margin-top:2px;">四国南岸を東進する前線通過時に視程悪化</div>
         </div>
-        <div class="pattern-box">
-          <div class="pattern-title"><span class="num" style="background:#ff6b3522;color:#ff6b35;">2</span> <span class="warn-text">東風卓越型（滑昇霧）</span></div>
-          <ul class="bullet-list" style="margin-top:3px;">
-            <li>E風で斜面を吹き上げ → <span class="warn-text">RWY26 Final側に滑昇霧</span></li>
-            <li>空港上空から見えてもFinal視認不能 → <span class="warn-text">G/A</span></li>
-            <li class="danger">E風＋VIS 5km → <span class="danger-text">Circling困難</span></li>
-          </ul>
+        <div style="background:#0d1820;border-radius:4px;padding:6px 8px;border:1px solid #1e3448;margin-bottom:5px;">
+          <div style="font-size:7.5pt;"><span class="tag tag-orange">2</span> <span class="warn-text">東風卓越型（滑昇霧）</span></div>
+          <div style="font-size:7pt;color:#b0c0d0;margin-top:2px;">E風で斜面吹上げ → RWY26 Final側に霧。空港上空から見えてもFinal視認不能 → G/A</div>
         </div>
-        <div class="pattern-box" style="margin-bottom:0;">
-          <div class="pattern-title"><span class="num" style="background:#a78bfa22;color:#a78bfa;">3</span> <span class="purple-text">瀬戸内海霧型</span></div>
-          <ul class="bullet-list" style="margin-top:3px;">
-            <li>北寄り弱風で瀬戸内海の<span class="purple-text">海霧</span>が流入</li>
-            <li class="warn">解消タイミング予測困難 → 速やかに解消or<span class="warn-text">半日持続</span></li>
-            <li>北（海側）から霧が進入</li>
-          </ul>
+        <div style="background:#0d1820;border-radius:4px;padding:6px 8px;border:1px solid #1e3448;margin-bottom:5px;">
+          <div style="font-size:7.5pt;"><span class="tag tag-purple">3</span> <span class="purple-text">瀬戸内海霧型</span></div>
+          <div style="font-size:7pt;color:#b0c0d0;margin-top:2px;">N弱風で海霧流入。解消予測困難 → 速やかに解消 or 半日持続</div>
         </div>
-        <div class="warn-box" style="margin-top:6px;">
-          <strong>放射霧:</strong> 秋〜冬に発生。気温上昇時はHZ（煙霧）に移行しやすい。
+        <div class="info-box">
+          <div class="info-title">✓ E風＋VIS 5km → Circling困難</div>
+          <div style="font-size:7.5pt;color:#b0c0d0;">滑昇霧でRWY26 Final側のみ視程悪化。E風＋VIS 5kmで<strong style="color:#34d399;">Circling困難</strong>。放射霧（秋〜冬）はHZ移行しやすい。</div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- 降雪 + 雷 -->
   <div class="grid-2">
-    <div class="card">
-      <div class="card-header"><div class="icon icon-snow">&#10052;</div><h2>降雪</h2></div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-header">
+        <div class="icon icon-snow">❄</div>
+        <h2>降雪</h2>
+      </div>
       <ul class="bullet-list">
         <li>冬型気圧配置（強い寒気南下）で降雪観測</li>
         <li>積雪は<span class="green-text">まれ</span>。積雪は<span class="highlight">南岸低気圧</span>時に発生</li>
         <li>内陸に位置 → 高松市街より<span class="warn-text">降雪頻度高い</span></li>
-        <li>参考: 高松市 年15日 / 東京 年9日</li>
+        <li>参考: 高松市 年<span class="highlight">15日</span> / 東京 年9日</li>
         <li class="warn"><span class="warn-text">湿った重い雪</span>で着雪しやすい</li>
       </ul>
     </div>
-    <div class="card">
-      <div class="card-header"><div class="icon icon-ts">&#9928;</div><h2>雷</h2></div>
-      <p style="font-size:7.5pt;color:#fbbf24;margin-bottom:4px;">&#9654; 発生時期: 初夏〜初秋</p>
+
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-header">
+        <div class="icon icon-thunder">⚡</div>
+        <h2>雷</h2>
+      </div>
       <ul class="bullet-list">
         <li>雷雲は<span class="highlight">讃岐山脈</span>上空で発達して移動</li>
-        <li>通常は<span class="highlight">北〜北東</span>方向へ移動</li>
+        <li>通常は<span class="highlight">N〜NE</span>方向へ移動</li>
         <li>SW風時: <span class="warn-text">東進</span></li>
         <li class="warn">SE風時: <span class="warn-text">停滞</span>（長時間影響）</li>
       </ul>
-      <p style="font-size:7.5pt;color:#fbbf24;margin-bottom:3px;margin-top:6px;">&#9654; 発生目安</p>
-      <table>
-        <tr><th>パラメータ</th><th>閾値</th></tr>
-        <tr><td>気圧配置</td><td>高気圧に覆われる</td></tr>
-        <tr><td>地上気温</td><td class="warn-text">30℃以上</td></tr>
-        <tr><td>地上風</td><td>海風卓越・内陸収束域</td></tr>
-        <tr><td>500hPa気温</td><td class="danger-text">-5℃以下</td></tr>
-        <tr><td>850hPa風</td><td>南寄り 20kt以下</td></tr>
-      </table>
+      <div class="amber-box">
+        <div style="font-size:7pt;font-weight:500;color:#fbbf24;margin-bottom:2px;">⚠ 発生目安</div>
+        <div style="font-size:7.5pt;color:#b0c0d0;">地上<strong style="color:#fbbf24;">30℃以上</strong> + 500hPa <strong style="color:#fbbf24;">-5℃以下</strong> + 海風卓越・内陸収束。SE風時は停滞 → GND STOP</div>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header"><div class="icon icon-info">&#9670;</div><h2>QUICK REFERENCE ── TAK 判断基準</h2></div>
-    <table>
-      <tr><th>現象</th><th>監視指標</th><th>閾値 / トリガー</th><th>影響</th></tr>
-      <tr><td><span class="danger-text">山岳波/LLWS</span></td><td>5,000ft南風(SE-SW)</td><td class="danger-text">50kt以上</td><td>3,000ft以下MW・LLWS</td></tr>
-      <tr><td><span class="warn-text">NW GUST</span></td><td>地上風WNW-NNW</td><td class="warn-text">15kt+有意 / 20kt+高確率</td><td>RWY26 UP/DOWN WASH</td></tr>
-      <tr><td><span class="danger-text">RWY26谷地形</span></td><td>NW風+GUST</td><td class="danger-text">谷吹き抜け</td><td>AGL 200ft以下揺れ</td></tr>
-      <tr><td><span class="purple-text">滑昇霧(E風)</span></td><td>東風＋台地斜面</td><td class="warn-text">E風＋VIS 5km</td><td>RWY26 Final霧・G/A</td></tr>
-      <tr><td><span class="purple-text">瀬戸内海霧</span></td><td>N弱風＋海霧流入</td><td class="warn-text">解消予測困難</td><td>最大半日持続・DIV</td></tr>
-      <tr><td><span style="color:#e2e8f0;">降雪</span></td><td>南岸低気圧</td><td>内陸＞市街地</td><td>湿雪・着雪注意</td></tr>
-      <tr><td><span class="amber-text">雷</span></td><td>讃岐山脈上空発達</td><td class="warn-text">SE風時→停滞</td><td>GND STOP</td></tr>
-    </table>
+  <!-- Quick Reference Bar -->
+  <div style="display:flex;gap:8px;margin-top:8px;">
+    <div style="flex:1;background:linear-gradient(135deg,#0d1820,#111d28);border:1px solid #1e3448;border-radius:4px;padding:6px 10px;">
+      <div style="font-size:7pt;color:#f43658;font-weight:500;letter-spacing:0.5px;">最重要ハザード</div>
+      <div style="font-size:7.5pt;color:#b0c0d0;">滑昇霧 E風+台地 / 瀬戸内海霧 <span class="danger-text">62便DIV/ATB</span> 5年</div>
+    </div>
+    <div style="flex:1;background:linear-gradient(135deg,#0d1820,#111d28);border:1px solid #1e3448;border-radius:4px;padding:6px 10px;">
+      <div style="font-size:7pt;color:#ff6b35;font-weight:500;letter-spacing:0.5px;">風の注意</div>
+      <div style="font-size:7.5pt;color:#b0c0d0;"><span class="warn-text">NW 20kt+ GUST</span> / 山岳波 S50kt+ / RWY26谷WASH</div>
+    </div>
+    <div style="flex:1;background:linear-gradient(135deg,#0d1820,#111d28);border:1px solid #1e3448;border-radius:4px;padding:6px 10px;">
+      <div style="font-size:7pt;color:#a78bfa;font-weight:500;letter-spacing:0.5px;">空港特性</div>
+      <div style="font-size:7.5pt;color:#b0c0d0;">台地607ft / SE風雷停滞 / 湿雪着雪</div>
+    </div>
   </div>
 
-  <div class="footer-ref"><span>B737 OCC MET INFO / RJOT TAK Weather Briefing</span><span>Page 2 ─ Fog / Snow / Thunder</span></div>
+  <div class="footer">
+    <div>JAL B737 Weather Manual Rev.24.11 ─ For Pre-flight Briefing Reference Only</div>
+    <div>Page 2 / 2</div>
+  </div>
 </div>
 
 </body>
