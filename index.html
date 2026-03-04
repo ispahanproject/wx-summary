@@ -342,6 +342,33 @@
     font-size: 8.5pt;
     letter-spacing: 1px;
   }
+
+  /* ===== HEAVY RAIN CARD ACCENT ===== */
+  .card.rain-accent:hover {
+    border-color: #3b82f655;
+  }
+  .card.rain-accent .airport-name .icao {
+    color: #3b82f6;
+  }
+  .card.rain-accent .metric-val {
+    color: #3b82f6;
+  }
+  .card.rain-accent .card-links a:not(.disabled) {
+    color: #3b82f6;
+    border-color: #3b82f644;
+  }
+  .card.rain-accent .card-links a:not(.disabled):hover {
+    background: #3b82f615;
+  }
+  .info-badge-blue {
+    background: #3b82f622;
+    color: #3b82f6;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 8.5pt;
+    letter-spacing: 1px;
+  }
 </style>
 </head>
 <body>
@@ -352,7 +379,7 @@
   <div class="sub">B737 OPERATIONS — WEATHER SUMMARY DASHBOARD</div>
   <div class="header-meta">
     <span class="badge">7 AIRPORTS</span>
-    <span class="badge" style="background:#a78bfa15;color:#a78bfa;">3 ADVERSE WX</span>
+    <span class="badge" style="background:#a78bfa15;color:#a78bfa;">5 ADVERSE WX</span>
     <span>7 / 7 COMPLETED</span>
     <span>Last updated: 2026-03-04</span>
   </div>
@@ -721,17 +748,17 @@
     </div>
   </div>
 
-  <!-- ===== WIND / RAIN / VIRGA BRIEFING ===== -->
-  <div class="card ready wind-accent" onclick="window.location.href='強風・強雨・VIRGA/Wind_Rain_Virga_Briefing.html'">
+  <!-- ===== STRONG WIND BRIEFING ===== -->
+  <div class="card ready wind-accent" onclick="window.location.href='強風・強雨・VIRGA/Strong_Wind_Briefing.html'">
     <div class="card-top">
       <div>
-        <div class="airport-name">強風・強雨・VIRGA <span class="icao">WIND</span></div>
-        <div class="airport-code">南西強風・爆弾低気圧・線状降水帯・尾流雲</div>
+        <div class="airport-name">強風 <span class="icao">STRONG WIND</span></div>
+        <div class="airport-code">南西強風・爆弾低気圧・寒冷渦・ALWIN活用</div>
       </div>
       <div class="status-badge status-ready">READY</div>
     </div>
     <div class="rwy-row">
-      <span class="info-badge-red">5 PAGES</span>
+      <span class="info-badge-red">3 PAGES</span>
       <span>55 source PDFs</span>
       <span class="rwy-detail">NRT・HND・CTS・KMJ・KOJ・OKA・TKS</span>
     </div>
@@ -756,14 +783,103 @@
     <div class="tags">
       <span class="tag tag-turb">南西強風</span>
       <span class="tag tag-typhoon">爆弾低気圧</span>
-      <span class="tag tag-rain">線状降水帯</span>
-      <span class="tag tag-vis">VIRGA</span>
+      <span class="tag tag-turb">寒冷渦</span>
       <span class="tag tag-turb">LLWS</span>
       <span class="tag tag-general">ALWIN</span>
       <span class="tag tag-thunder">山岳波</span>
     </div>
     <div class="card-links">
-      <a href="強風・強雨・VIRGA/Wind_Rain_Virga_Briefing.html">HTML Briefing</a>
+      <a href="強風・強雨・VIRGA/Strong_Wind_Briefing.html">HTML Briefing</a>
+      <a class="disabled">PDF Download</a>
+    </div>
+  </div>
+
+  <!-- ===== HEAVY RAIN BRIEFING ===== -->
+  <div class="card ready rain-accent" onclick="window.location.href='強風・強雨・VIRGA/Heavy_Rain_Briefing.html'">
+    <div class="card-top">
+      <div>
+        <div class="airport-name">強雨 <span class="icao">HEAVY RAIN</span></div>
+        <div class="airport-code">線状降水帯・バックビルディング・予測指標</div>
+      </div>
+      <div class="status-badge status-ready">READY</div>
+    </div>
+    <div class="rwy-row">
+      <span class="info-badge-blue">1 PAGE</span>
+      <span>55 source PDFs</span>
+      <span class="rwy-detail">CTS・FUK・HND・NRT</span>
+    </div>
+    <div class="metrics">
+      <div class="metric-box">
+        <div class="metric-val" style="color:#3b82f6;">3<span>要素</span></div>
+        <div class="metric-label">発生条件</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#3b82f6;">4<span>事例</span></div>
+        <div class="metric-label">主要ケース</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#3b82f6;">345<span>K</span></div>
+        <div class="metric-label">相当温位閾値</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#3b82f6;">40<span>kt</span></div>
+        <div class="metric-label">下層JET閾値</div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag tag-rain">線状降水帯</span>
+      <span class="tag tag-rain">バックビルディング</span>
+      <span class="tag tag-rain">テーパリング雲</span>
+      <span class="tag tag-rain">集中豪雨</span>
+      <span class="tag tag-general">JMA予測</span>
+    </div>
+    <div class="card-links">
+      <a href="強風・強雨・VIRGA/Heavy_Rain_Briefing.html">HTML Briefing</a>
+      <a class="disabled">PDF Download</a>
+    </div>
+  </div>
+
+  <!-- ===== VIRGA BRIEFING ===== -->
+  <div class="card ready adverse-accent" onclick="window.location.href='強風・強雨・VIRGA/Virga_Briefing.html'">
+    <div class="card-top">
+      <div>
+        <div class="airport-name">VIRGA <span class="icao">尾流雲</span></div>
+        <div class="airport-code">ドライマイクロバースト・HND冬季特有</div>
+      </div>
+      <div class="status-badge status-ready">READY</div>
+    </div>
+    <div class="rwy-row">
+      <span class="info-badge">1 PAGE</span>
+      <span>55 source PDFs</span>
+      <span class="rwy-detail">HND</span>
+    </div>
+    <div class="metrics">
+      <div class="metric-box">
+        <div class="metric-val" style="color:#a78bfa;">3<span>条件</span></div>
+        <div class="metric-label">発生要素</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#a78bfa;">2<span>事例</span></div>
+        <div class="metric-label">HNDケース</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#a78bfa;">11<span>DVT</span></div>
+        <div class="metric-label">2011年被害</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#a78bfa;">G40<span>kt</span></div>
+        <div class="metric-label">ALWIN検出</div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag tag-vis">VIRGA</span>
+      <span class="tag tag-turb">ドライMBA</span>
+      <span class="tag tag-snow">HND冬季</span>
+      <span class="tag tag-general">ALWIN</span>
+      <span class="tag tag-general">LFM</span>
+    </div>
+    <div class="card-links">
+      <a href="強風・強雨・VIRGA/Virga_Briefing.html">HTML Briefing</a>
       <a class="disabled">PDF Download</a>
     </div>
   </div>

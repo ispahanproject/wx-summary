@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923; color: #e0e6ed; font-size: 8.5pt; line-height: 1.45;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page { width: 210mm; min-height: 297mm; padding: 14mm 16mm 12mm 16mm; position: relative; overflow: hidden; page-break-after: always; background: #0f1923; }
+  .page:last-child { page-break-after: avoid; }
+  .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #a78bfa; padding-bottom: 8px; margin-bottom: 12px; }
+  .header-left h1 { font-size: 20pt; font-weight: 300; color: #ffffff; letter-spacing: 4px; }
+  .header-left h1 span.accent { color: #a78bfa; font-weight: 300; }
+  .header-left .subtitle { font-size: 8pt; color: #7a8fa6; letter-spacing: 1px; margin-top: 2px; }
+  .header-right { text-align: right; font-size: 7.5pt; color: #7a8fa6; }
+  .header-right .page-badge { display: inline-block; background: linear-gradient(135deg, #a78bfa22, #a78bfa11); border: 1px solid #a78bfa55; border-radius: 4px; padding: 3px 10px; color: #a78bfa; font-weight: 500; font-size: 9pt; letter-spacing: 2px; margin-bottom: 3px; }
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+  .card { background: linear-gradient(160deg, #1a2836, #152230); border: 1px solid #1e3448; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; }
+  .card-header { display: flex; align-items: center; margin-bottom: 7px; gap: 6px; }
+  .card-header .icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .icon-virga { background: #a78bfa22; color: #a78bfa; }
+  .icon-case { background: #a78bfa22; color: #a78bfa; }
+  .icon-shield { background: #34d39922; color: #34d399; }
+  .icon-tool { background: #22d3ee22; color: #22d3ee; }
+  .card-header h2 { font-size: 9.5pt; font-weight: 500; color: #ffffff; letter-spacing: 1.5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th { background: #0d1820; color: #7a8fa6; font-weight: 400; padding: 4px 6px; text-align: left; font-size: 7pt; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448; }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
+  table tr:last-child td { border-bottom: none; }
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li { position: relative; padding-left: 12px; margin-bottom: 3px; color: #b0c0d0; font-size: 7.8pt; }
+  .bullet-list li::before { content: ''; position: absolute; left: 0; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: #a78bfa; }
+  .bullet-list li.warn::before { background: #ff6b35; }
+  .bullet-list li.danger::before { background: #f43658; }
+  .highlight { color: #a78bfa; font-weight: 500; }
+  .warn-text { color: #ff6b35; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+  .blue-text { color: #60a5fa; font-weight: 500; }
+  .red-text { color: #ef4444; font-weight: 500; }
+  .danger-box { background: linear-gradient(135deg, #ef444412, #ef444408); border: 1px solid #ef444433; border-left: 3px solid #ef4444; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #fca5a5; }
+  .danger-box strong { color: #ef4444; }
+  .info-box { background: linear-gradient(135deg, #a78bfa12, #a78bfa08); border: 1px solid #a78bfa33; border-left: 3px solid #a78bfa; border-radius: 4px; padding: 7px 10px; margin: 6px 0; font-size: 7.5pt; color: #c4b5fd; }
+  .info-box strong { color: #a78bfa; }
+  .pattern-box { background: #0d1820; border-radius: 5px; padding: 8px 10px; border: 1px solid #1e3448; margin-bottom: 8px; }
+  .pattern-box .pattern-title { font-weight: 500; font-size: 8.5pt; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .pattern-box .pattern-title .num { display: inline-flex; width: 18px; height: 18px; border-radius: 50%; background: #a78bfa22; color: #a78bfa; align-items: center; justify-content: center; font-size: 8pt; font-weight: 600; flex-shrink: 0; }
+  .footer-ref { position: absolute; bottom: 10mm; left: 16mm; right: 16mm; font-size: 6.5pt; color: #3a4f63; border-top: 1px solid #1a2836; padding-top: 4px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1/1: VIRGA -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1><span class="accent">VIRGA</span></h1>
+      <div class="subtitle">VIRGA（尾流雲）── HND冬季ドライマイクロバースト・事例・予測</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 1 / 1</div>
+      <div>55 source PDFs ─ Rev.2026-03</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="icon icon-virga">&#10052;</div><h2>VIRGA（尾流雲）── HND冬季特有の現象</h2></div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;">&#9654; 発生メカニズム</p>
+        <ul class="bullet-list">
+          <li>降水粒子が<span class="highlight">地上に到達せず蒸発</span> → 蒸発冷却でドライマイクロバースト(MBA)発生</li>
+          <li>TAFでは<span class="danger-text">予報されない</span>。地上ではVMCのまま突然のWS/MBA</li>
+          <li>VIRGA → ドライマイクロバースト → <span class="danger-text">MBA/WSA</span></li>
+        </ul>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;margin-top:6px;">&#9654; 発生条件（3要素）</p>
+        <ul class="bullet-list">
+          <li><span class="highlight">&#9312;</span> 冬型気圧配置 + 上空寒気の残留</li>
+          <li><span class="highlight">&#9313;</span> JPCZ → 北陸で降雪 → 関東は冬晴れ</li>
+          <li><span class="highlight">&#9314;</span> 丹沢山系で雲発生 → HND/房総半島方面へ流入</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;">&#9654; 典型的パターン</p>
+        <ul class="bullet-list">
+          <li>冬型 → 翌日<span class="highlight">晴れ</span> → <span class="highlight">昼過ぎ</span>にVIRGA発生</li>
+          <li>地上: CAVOK/SKC。上空にちぎれ雲 → VIRGA</li>
+          <li>ALWINで低高度に<span class="warn-text">G40kt</span>が突然出現</li>
+        </ul>
+        <p style="font-size:7.5pt;color:#a78bfa;margin-bottom:4px;margin-top:6px;">&#9654; 確認方法</p>
+        <ul class="bullet-list">
+          <li>気象解説情報の<span class="highlight">VIRGAコメント</span>を確認</li>
+          <li>時系列予想の<span class="highlight">-SHSN</span>表記に注目</li>
+          <li>LFM(局地数値予報) <span class="highlight">10000ft湿域</span>チェック</li>
+          <li>レーダーで降水エコーが地上に達していない領域</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="icon icon-case">&#9888;</div><h2>HND VIRGA事例 &#9312; 2011/1/26</h2></div>
+      <ul class="bullet-list">
+        <li>冬型気圧配置 → HND晴れ → 昼過ぎVIRGA発生</li>
+        <li><span class="danger-text">DVT 11便</span>（JALグループ8便 + 欠航10便）</li>
+        <li>TAFでは全く予報されておらず、<span class="danger-text">突発的</span>に発生</li>
+        <li>ドライマイクロバーストにより着陸困難 → 大量G/A → DIV</li>
+      </ul>
+      <div class="danger-box"><strong>IMPACT:</strong> TAF予報なし・地上VMCの中で<strong>11便DVT</strong>。VIRGA起源のドライMBAの危険性を示す典型事例。</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon icon-case">&#9888;</div><h2>HND VIRGA事例 &#9313; 2015/2/13</h2></div>
+      <ul class="bullet-list">
+        <li>同様の冬型→晴れ→昼過ぎVIRGAパターン</li>
+        <li><span class="warn-text">4便G/A</span>。ALWIN低高度に<span class="danger-text">G40kt</span>を検出</li>
+        <li>2011年事例の教訓から、ALWINデータの早期監視を実施</li>
+        <li>VIRGA発生を早期に検知し、2011年よりDIV数を抑制</li>
+      </ul>
+      <div class="info-box"><strong>LESSON:</strong> ALWINの低高度GUST出現をトリガーに、VIRGA警戒態勢を早期発動することで影響を軽減可能。</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="icon icon-shield">&#9670;</div><h2>QUICK REFERENCE ── 強風・強雨・VIRGA 判断基準</h2></div>
+    <table>
+      <tr><th>現象</th><th>監視指標</th><th>閾値</th><th>主な影響</th><th>確認ツール</th></tr>
+      <tr><td><span class="red-text">南西強風</span></td><td>850hPa風速</td><td class="danger-text">70kt+ → 地上50kt級</td><td>NRT DIV多発, HND欠航</td><td>FXJP854, ALWIN, WINDY</td></tr>
+      <tr><td><span class="red-text">爆弾低気圧</span></td><td>中心気圧低下率</td><td class="danger-text">24hPa/24h以上</td><td>全国暴風, 大量欠航</td><td>ASAS, FSAS24/48</td></tr>
+      <tr><td><span class="blue-text">線状降水帯</span></td><td>相当温位 + 下層JET</td><td class="warn-text">345K + 40kt</td><td>長時間TS COND, DIV</td><td>JMA予測, レーダー</td></tr>
+      <tr><td><span class="highlight">VIRGA</span></td><td>冬型→晴れ→昼過ぎ</td><td class="warn-text">ALWIN低高度GUST</td><td>ドライMBA, WS</td><td>気象解説, LFM 10000ft</td></tr>
+      <tr><td><span class="red-text">山岳波</span></td><td>山越え風向・風速</td><td class="warn-text">2000ft 50kt+</td><td>MOD-SEV TURB, LLWS</td><td>ALWIN, PIREP, WINDY</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="icon icon-tool">&#9881;</div><h2>ALWIN活用フロー ── 強風判断</h2></div>
+    <div class="grid-3" style="margin-bottom:0;">
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num" style="background:#22d3ee22;color:#22d3ee;">1</span> <span style="color:#22d3ee;">APT MODE確認</span></div>
+        <ul class="bullet-list">
+          <li>GND-3000ft風向風速の全体像を把握</li>
+          <li>SPD CHG / GUST表示の有無</li>
+          <li>MB Alert（Microburst検出）の確認</li>
+        </ul>
+      </div>
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num" style="background:#fbbf2422;color:#fbbf24;">2</span> <span style="color:#fbbf24;">RWY MODE確認</span></div>
+        <ul class="bullet-list">
+          <li>使用RWYの経路風(HW/XW)を確認</li>
+          <li>HW GAIN/LOSS量でWS強度を判定</li>
+          <li>XW GUST/SHEAR表示 → 横風急変警戒</li>
+        </ul>
+      </div>
+      <div class="pattern-box" style="margin-bottom:0;">
+        <div class="pattern-title"><span class="num" style="background:#34d39922;color:#34d399;">3</span> <span style="color:#34d399;">意思決定</span></div>
+        <ul class="bullet-list">
+          <li>HW GUST + XW GUST同時 → <span class="danger-text">WS Warning高確率</span></li>
+          <li>10分間のトレンド変化を監視</li>
+          <li>PIREP・先行機情報と照合し最終判断</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-ref"><span>B737 OCC MET INFO / VIRGA Briefing</span><span>VIRGA & Quick Reference ─ 55 PDFs Compiled</span></div>
+</div>
+
+</body>
+</html>
