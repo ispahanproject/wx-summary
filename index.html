@@ -369,6 +369,33 @@
     font-size: 8.5pt;
     letter-spacing: 1px;
   }
+
+  /* ===== TURBULENCE CARD ACCENT ===== */
+  .card.turb-accent:hover {
+    border-color: #ff6b3555;
+  }
+  .card.turb-accent .airport-name .icao {
+    color: #ff6b35;
+  }
+  .card.turb-accent .metric-val {
+    color: #ff6b35;
+  }
+  .card.turb-accent .card-links a:not(.disabled) {
+    color: #ff6b35;
+    border-color: #ff6b3544;
+  }
+  .card.turb-accent .card-links a:not(.disabled):hover {
+    background: #ff6b3515;
+  }
+  .info-badge-orange {
+    background: #ff6b3522;
+    color: #ff6b35;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 8.5pt;
+    letter-spacing: 1px;
+  }
 </style>
 </head>
 <body>
@@ -379,9 +406,9 @@
   <div class="sub">B737 OPERATIONS — WEATHER SUMMARY DASHBOARD</div>
   <div class="header-meta">
     <span class="badge">13 AIRPORTS</span>
-    <span class="badge" style="background:#a78bfa15;color:#a78bfa;">5 ADVERSE WX</span>
+    <span class="badge" style="background:#a78bfa15;color:#a78bfa;">6 ADVERSE WX</span>
     <span>13 / 13 COMPLETED</span>
-    <span>Last updated: 2026-03-04</span>
+    <span>Last updated: 2026-03-06</span>
   </div>
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('airport')">AIRPORT</button>
@@ -1204,6 +1231,53 @@
     </div>
     <div class="card-links">
       <a href="雷/Lightning_Briefing.html">HTML Briefing</a>
+      <a class="disabled">PDF Download</a>
+    </div>
+  </div>
+
+  <!-- ===== TURBULENCE BRIEFING ===== -->
+  <div class="card ready turb-accent" onclick="window.location.href='rannkiryuu%20/Turbulence_Briefing.html'">
+    <div class="card-top">
+      <div>
+        <div class="airport-name">乱気流 <span class="icao">TURBULENCE</span></div>
+        <div class="airport-code">CAT・山岳波・CB・Wake・予報ツール・事故事例</div>
+      </div>
+      <div class="status-badge status-ready">READY</div>
+    </div>
+    <div class="rwy-row">
+      <span class="info-badge-orange">5 PAGES</span>
+      <span>168 source PDFs</span>
+      <span class="rwy-detail">全空港共通・TB1-6分類・FOSTER・SIGMET</span>
+    </div>
+    <div class="metrics">
+      <div class="metric-box">
+        <div class="metric-val" style="color:#ff6b35;">5<span>種</span></div>
+        <div class="metric-label">乱気流分類</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#ff6b35;">9<span>型</span></div>
+        <div class="metric-label">CAT上層パターン</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#ff6b35;">6<span>ツール</span></div>
+        <div class="metric-label">予報・監視</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-val" style="color:#ff6b35;">5<span>事例</span></div>
+        <div class="metric-label">TB6+事故</div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag tag-turb">CAT</span>
+      <span class="tag tag-turb">山岳波</span>
+      <span class="tag tag-turb">CB乱気流</span>
+      <span class="tag tag-turb">Wake Turbulence</span>
+      <span class="tag tag-general">FOSTER</span>
+      <span class="tag tag-general">SIGMET</span>
+      <span class="tag tag-thunder">ダウンバースト</span>
+    </div>
+    <div class="card-links">
+      <a href="rannkiryuu%20/Turbulence_Briefing.html">HTML Briefing</a>
       <a class="disabled">PDF Download</a>
     </div>
   </div>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', 'Noto Sans CJK JP DemiLight', 'Noto Sans CJK JP', sans-serif; font-weight: 300;
+    background: #0f1923;
+    color: #e0e6ed;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 14mm 13mm 12mm 13mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    background: #0f1923;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid #ff6b35;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .header-left h1 {
+    font-size: 20pt;
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: 4px;
+  }
+  .header-left h1 span.accent { color: #ff6b35; font-weight: 300; }
+  .header-left .subtitle {
+    font-size: 8pt;
+    color: #7a8fa6;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 7.5pt;
+    color: #7a8fa6;
+  }
+  .header-right .page-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff6b3522, #ff6b3511);
+    border: 1px solid #ff6b3555;
+    border-radius: 4px;
+    padding: 3px 10px;
+    color: #ff6b35;
+    font-weight: 500;
+    font-size: 9pt;
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+  }
+
+  .grid-2 { display: flex; gap: 12px; margin-bottom: 10px; }
+  .grid-2 > * { flex: 1; }
+  .grid-3 { display: flex; gap: 10px; margin-bottom: 10px; }
+  .grid-3 > * { flex: 1; }
+
+  .card {
+    background: linear-gradient(160deg, #1a2836, #152230);
+    border: 1px solid #1e3448;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 7px;
+    gap: 6px;
+  }
+  .card-header .icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .icon-turb { background: #ff6b3522; color: #ff6b35; }
+  .icon-info { background: #34d39922; color: #34d399; }
+  .icon-warn { background: #fbbf2422; color: #fbbf24; }
+  .icon-cat  { background: #a78bfa22; color: #a78bfa; }
+  .icon-mw   { background: #00d4ff22; color: #00d4ff; }
+  .icon-cb   { background: #f4365822; color: #f43658; }
+  .icon-wake { background: #818cf822; color: #818cf8; }
+  .icon-tool { background: #00d4ff22; color: #00d4ff; }
+  .icon-case { background: #fbbf2422; color: #fbbf24; }
+  .icon-shield { background: #34d39922; color: #34d399; }
+
+  .card-header h2 {
+    font-size: 9.5pt;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 7pt;
+    font-weight: 500;
+    margin-right: 3px;
+    letter-spacing: 0.5px;
+  }
+  .tag-purple { background: #a78bfa18; color: #a78bfa; border: 1px solid #a78bfa44; }
+  .tag-blue { background: #00d4ff18; color: #00d4ff; border: 1px solid #00d4ff44; }
+  .tag-orange { background: #ff6b3518; color: #ff6b35; border: 1px solid #ff6b3544; }
+  .tag-red { background: #f4365818; color: #f43658; border: 1px solid #f4365844; }
+  .tag-yellow { background: #fbbf2418; color: #fbbf24; border: 1px solid #fbbf2444; }
+  .tag-green { background: #34d39918; color: #34d399; border: 1px solid #34d39944; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 7.8pt; }
+  table th {
+    background: #0d1820; color: #7a8fa6; font-weight: 400;
+    padding: 4px 6px; text-align: left; font-size: 7pt;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3448;
+  }
+  table td { padding: 3.5px 6px; border-bottom: 1px solid #1a2836; color: #c8d5e0; }
+  table tr:last-child td { border-bottom: none; }
+
+  .metrics-row { display: flex; gap: 8px; margin: 6px 0; }
+  .metric { background: #0d1820; border-radius: 4px; padding: 5px 8px; flex: 1; text-align: center; }
+  .metric .val { font-size: 14pt; font-weight: 300; color: #ff6b35; line-height: 1.2; letter-spacing: 0.5px; }
+  .metric .label { font-size: 6.5pt; color: #5a7288; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  .bullet-list { padding-left: 0; list-style: none; }
+  .bullet-list li {
+    position: relative; padding-left: 12px; margin-bottom: 3px;
+    color: #b0c0d0; font-size: 7.8pt;
+  }
+  .bullet-list li::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 4px; height: 4px; border-radius: 50%; background: #ff6b35;
+  }
+  .bullet-list li.warn::before { background: #fbbf24; }
+  .bullet-list li.danger::before { background: #f43658; }
+
+  .highlight { color: #ff6b35; font-weight: 500; }
+  .warn-text { color: #fbbf24; font-weight: 500; }
+  .danger-text { color: #f43658; font-weight: 500; }
+
+  .caution-box {
+    background: linear-gradient(135deg, #ff6b3512, #ff6b3508);
+    border: 1px solid #ff6b3533;
+    border-left: 3px solid #ff6b35;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #ffcba4;
+    overflow-wrap: break-word;
+  }
+  .caution-box strong { color: #ff6b35; }
+
+  .info-box {
+    background: linear-gradient(135deg, #34d39912, #34d39908);
+    border: 1px solid #34d39933;
+    border-left: 3px solid #34d399;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #a7f3d0;
+  }
+
+  .danger-box {
+    background: linear-gradient(135deg, #f4365812, #f4365808);
+    border: 1px solid #f4365833;
+    border-left: 3px solid #f43658;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 7.5pt;
+    color: #fda4af;
+  }
+  .danger-box strong { color: #f43658; }
+
+  .type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 6px 0;
+  }
+  .type-item {
+    background: #0d1820;
+    border-radius: 5px;
+    padding: 7px 9px;
+    border: 1px solid #1e3448;
+  }
+  .type-item .name {
+    font-size: 8.5pt;
+    font-weight: 500;
+    color: #ff6b35;
+    margin-bottom: 2px;
+  }
+  .type-item .en {
+    font-size: 6.5pt;
+    color: #5a7288;
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+  }
+  .type-item .desc {
+    font-size: 7pt;
+    color: #8a9ab0;
+    line-height: 1.4;
+  }
+
+  .vws-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 6px 0;
+    border-radius: 4px;
+    overflow: hidden;
+    font-size: 7pt;
+    font-weight: 500;
+  }
+  .vws-bar > div {
+    padding: 5px 8px;
+    text-align: center;
+    flex: 1;
+  }
+
+  .qr-table td:first-child {
+    color: #ff6b35;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 10mm;
+    left: 13mm;
+    right: 13mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 6.5pt;
+    color: #3d5068;
+    border-top: 1px solid #1e3448;
+    padding-top: 5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- PAGE 1: TURBULENCE FUNDAMENTALS                               -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>TURBULENCE <span class="accent">BRIEFING</span></h1>
+      <div class="subtitle">CLASSIFICATION &#x2502; INTENSITY &#x2502; MECHANISMS ─ 168 PDF SOURCES</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 1 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- Metrics Row -->
+  <div class="metrics-row">
+    <div class="metric"><div class="val">168</div><div class="label">PDF SOURCES</div></div>
+    <div class="metric"><div class="val">5</div><div class="label">&#x30A8;&#x30CD;&#x30EB;&#x30AE;&#x30FC;&#x5206;&#x985E;</div></div>
+    <div class="metric"><div class="val">TB1-6</div><div class="label">&#x5F37;&#x5EA6;&#x30B9;&#x30B1;&#x30FC;&#x30EB;</div></div>
+    <div class="metric"><div class="val">3%</div><div class="label">&#x4E88;&#x5831;&#x57DF;&#x906D;&#x9047;&#x7387;</div></div>
+  </div>
+
+  <!-- Classification by Energy Source -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-turb">&#x27E0;</div>
+      <h2>&#x30A8;&#x30CD;&#x30EB;&#x30AE;&#x30FC;&#x6E90;&#x306B;&#x3088;&#x308B;&#x5206;&#x985E; ─ 5 TYPES</h2>
+    </div>
+    <div class="type-grid">
+      <div class="type-item">
+        <div class="name">力学的</div>
+        <div class="en">MECHANICAL</div>
+        <div class="desc">地形や構造物による気流の乱れ。風速大きいほど強い</div>
+      </div>
+      <div class="type-item">
+        <div class="name">熱的</div>
+        <div class="en">THERMAL</div>
+        <div class="desc">対流による上昇・下降気流。CB内部で最大</div>
+      </div>
+      <div class="type-item">
+        <div class="name">山岳波</div>
+        <div class="en">MOUNTAIN WAVE</div>
+        <div class="desc">山岳風下の定常波。FL400以上に伝播</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;">
+      <div class="type-item">
+        <div class="name">晴天乱気流 (CAT)</div>
+        <div class="en">CLEAR AIR TURBULENCE</div>
+        <div class="desc">ジェット気流近傍の風のシアーで発生。予測困難。CATの2/3がジェット近傍で発生</div>
+      </div>
+      <div class="type-item">
+        <div class="name">後流乱気流</div>
+        <div class="en">WAKE TURBULENCE</div>
+        <div class="desc">先行機の翼端渦から発生。重量依存。沈降速度100-150m/min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Classification by Location -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-info">&#x25C6;</div>
+      <h2>&#x767A;&#x751F;&#x9AD8;&#x5EA6;&#x306B;&#x3088;&#x308B;&#x5206;&#x985E; ─ 4 ZONES</h2>
+    </div>
+    <table>
+      <tr><th>&#x5206;&#x985E;</th><th>&#x9AD8;&#x5EA6;</th><th>&#x4E3B;&#x8981;&#x539F;&#x56E0;</th><th>&#x7279;&#x5FB4;</th></tr>
+      <tr><td style="color:#34d399;font-weight:500">LLT</td><td>地表~2,000ft</td><td>地形・建物・摩擦</td><td>30kt+で平坦地MOD+、50kt+で3,000ftまで</td></tr>
+      <tr><td style="color:#00d4ff;font-weight:500">TNT</td><td>2,000ft~対流圏界面</td><td>対流・前線・中層雲</td><td>CB内最大63m/s上昇気流</td></tr>
+      <tr><td style="color:#a78bfa;font-weight:500">CAT</td><td>FL200以上</td><td>ジェット・トラフ(KH波)</td><td>予測困難。2/3がジェット近傍</td></tr>
+      <tr><td style="color:#ff6b35;font-weight:500">MWT</td><td>全高度</td><td>山岳越え定常波</td><td>850hPa 35kt+、FL400+に伝播</td></tr>
+    </table>
+  </div>
+
+  <!-- Intensity Scale -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-warn">&#x26A0;</div>
+      <h2>&#x4E71;&#x6C17;&#x6D41;&#x5F37;&#x5EA6;&#x30B9;&#x30B1;&#x30FC;&#x30EB; ─ INTENSITY SCALE</h2>
+    </div>
+    <table>
+      <tr><th>強度</th><th>TB</th><th>加速度</th><th>機内状況</th><th>運航対応</th></tr>
+      <tr><td style="color:#34d399">LIGHT</td><td>1-2</td><td>&#xB1;0.5G</td><td>ベルトが張る程度</td><td>通常運航</td></tr>
+      <tr><td style="color:#fbbf24">MOD</td><td>3-4</td><td>&#xB1;1.0G</td><td>歩行困難・飲物こぼれ</td><td style="color:#fbbf24">TB3+: 客室安全</td></tr>
+      <tr><td style="color:#ff6b35">SEV</td><td>5-6</td><td>&#xB1;2.0G</td><td>ベルトなしで大きな力</td><td style="color:#ff6b35">TB4+: 正式予報</td></tr>
+      <tr><td style="color:#f43658">EXT</td><td>6+</td><td>>&#xB1;2.0G</td><td style="color:#f43658">構造損傷リスク</td><td style="color:#f43658">絶対回避</td></tr>
+    </table>
+    <div class="vws-bar">
+      <div style="background:#34d39922;color:#34d399;">&#x2264;6 kt/1000ft<br>LGT</div>
+      <div style="background:#fbbf2422;color:#fbbf24;">6-9 kt/1000ft<br>MOD</div>
+      <div style="background:#ff6b3522;color:#ff6b35;">9-15 kt/1000ft<br>SEV</div>
+      <div style="background:#f4365822;color:#f43658;">&#x2265;15 kt/1000ft<br>EXTREME</div>
+    </div>
+    <div class="info-box">
+      VWS&#x8272;&#x5206;&#x3051;&#xFF08;ABJP/FBJP&#xFF09;: <span style="color:#34d399">&#x25A0; &#x7DD1; 6-12kt/1000ft</span> &#x2502; <span style="color:#fbbf24">&#x25A0; &#x9EC4; 12-15kt/1000ft</span> &#x2502; <span style="color:#f43658">&#x25A0; &#x8D64; &#x2265;15kt/1000ft</span>
+    </div>
+  </div>
+
+  <!-- Mechanical Turbulence -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-turb">&#x25B2;</div>
+        <h2>&#x529B;&#x5B66;&#x7684;&#x4E71;&#x6C17;&#x6D41; MECHANICAL</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>&#x5730;&#x5F62;&#x30FB;&#x5EFA;&#x7269;&#x306B;&#x3088;&#x308B;&#x6C17;&#x6D41;&#x306E;&#x4E71;&#x308C;</li>
+        <li>&#x5E73;&#x5766;&#x5730;: <span class="highlight">&#x98A8;&#x901F;30kt+&#x3067;MOD+</span></li>
+        <li>50kt+&#x3067;<span class="highlight">3,000ft&#x307E;&#x3067;&#x5F71;&#x97FF;&#x62E1;&#x5927;</span></li>
+        <li class="warn">&#x5C71;&#x5CB3;&#x5730;&#x5F62;: &#x98A8;&#x901F;&#x3088;&#x308A;&#x4F4E;&#x3044;&#x95BE;&#x5024;&#x3067;&#x767A;&#x751F;</li>
+        <li>&#x53C2;&#x7167;: &#x7A7A;&#x6E2F;&#x5225;&#x30D6;&#x30EA;&#x30FC;&#x30D5;&#x30A3;&#x30F3;&#x30B0;&#xFF08;KMJ/TAK/TKS&#x7B49;&#xFF09;</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-turb">&#x25CF;</div>
+        <h2>&#x524D;&#x7DDA;&#x4E71;&#x6C17;&#x6D41; FRONTAL</h2>
+      </div>
+      <ul class="bullet-list">
+        <li>&#x524D;&#x7DDA;&#x9762;&#x306B;&#x6CBF;&#x3046;&#x6E29;&#x5EA6;&#x30FB;&#x98A8;&#x306E;&#x4E0D;&#x9023;&#x7D9A;&#x3067;&#x767A;&#x751F;</li>
+        <li>&#x5BD2;&#x51B7;&#x524D;&#x7DDA;: <span class="highlight">1,000ft/min&#x4E0A;&#x6607;&#x6C17;&#x6D41;</span></li>
+        <li>&#x524D;&#x7DDA;&#x5F37;&#x5EA6;&#x304C;&#x5F37;&#x3044;&#x307B;&#x3069;&#x4E71;&#x6C17;&#x6D41;&#x3082;&#x5F37;&#x3044;</li>
+        <li class="warn">&#x4E0A;&#x5C64;&#x524D;&#x7DDA;: &#x96F2;&#x3082;&#x306A;&#x304F;&#x4E88;&#x6E2C;&#x56F0;&#x96E3;</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Mid-level Cloud -->
+  <div class="card" style="margin-bottom:0;">
+    <div class="card-header">
+      <div class="icon icon-cb">&#x2601;</div>
+      <h2>&#x4E2D;&#x5C64;&#x96F2;&#x5E95;&#x4E71;&#x6C17;&#x6D41; MID-LEVEL CLOUD BASE TURB</h2>
+      <span class="tag tag-red">&#x6700;&#x91CD;&#x8981;</span>
+    </div>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <ul class="bullet-list">
+          <li>&#x767A;&#x751F;&#x9AD8;&#x5EA6;: <span class="highlight">10,000~20,000ft</span></li>
+          <li>&#x6C17;&#x6E29;: <span class="highlight">0&#x2103;~-15&#x2103;</span>&#xFF08;&#x6C37;&#x6676;&#x6838;&#x5F62;&#x6210;&#x5E2F;&#xFF09;</li>
+          <li class="danger"><span class="danger-text">VIRGA&#xFF08;&#x5C3E;&#x6D41;&#x96F2;&#xFF09;</span>&#x3092;&#x4F34;&#x3046;&#x5834;&#x5408;&#x304C;&#x5371;&#x967A;</li>
+          <li>JL093&#x4E8B;&#x6545;(2014): &#x4E2D;&#x5C64;&#x96F2;&#x5E95;TURB&#x3067;&#x91CD;&#x50B7;&#x8005;</li>
+        </ul>
+      </div>
+      <div>
+        <div class="danger-box">
+          <strong>&#x26A0; JL093 &#x6559;&#x8A13;:</strong> &#x96F2;&#x5E95;&#x4ED8;&#x8FD1;&#x306E;VIRGA&#x30FB;&#x964D;&#x6C34;&#x7C92;&#x304C;&#x84B8;&#x767A;&#x3059;&#x308B;&#x969B;&#x306E;&#x4E0B;&#x964D;&#x6C17;&#x6D41;&#x304C;&#x539F;&#x56E0;&#x3002;&#x96F2;&#x5E95;&#x30EC;&#x30D9;&#x30EB;&#x98DB;&#x884C;&#x6642;&#x306F;&#x8981;&#x8B66;&#x6212;&#x3002;
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>TURBULENCE BRIEFING &#x2500; PAGE 1 / 5</span>
+    <span>SOURCE: JAL B737 WEATHER MANUAL Rev.24.11 / 168 PDFs</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 2: CAT & MOUNTAIN WAVE                                   -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>CAT &amp; <span class="accent">MOUNTAIN WAVE</span></h1>
+      <div class="subtitle">CLEAR AIR TURBULENCE &#x2502; &#x5C71;&#x5CB3;&#x6CE2; &#x2502; &#x30C8;&#x30E9;&#x30F3;&#x30B9;&#x30D0;&#x30FC;&#x30B9;&#x30D0;&#x30F3;&#x30C9;</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 2 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- CAT Overview -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-cat">&#x2248;</div>
+      <h2>CAT &#x6674;&#x5929;&#x4E71;&#x6C17;&#x6D41; ─ KH&#x6CE2; &amp; &#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x6C17;&#x6D41;</h2>
+      <span class="tag tag-purple">FL200+</span>
+    </div>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <ul class="bullet-list">
+          <li>&#x539F;&#x56E0;: <span class="highlight">&#x30B1;&#x30EB;&#x30D3;&#x30F3;&#x30FB;&#x30D8;&#x30EB;&#x30E0;&#x30DB;&#x30EB;&#x30C4;(KH)&#x6CE2;</span></li>
+          <li>&#x30EA;&#x30C1;&#x30E3;&#x30FC;&#x30C9;&#x30BD;&#x30F3;&#x6570;: <span class="highlight">Ri &#x2264; 0.25</span>&#x3067;&#x767A;&#x751F;</li>
+          <li>CAT&#x306E;<span class="highlight">2/3</span>&#x304C;&#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x6C17;&#x6D41;&#x8FD1;&#x508D;</li>
+          <li>&#x5BFE;&#x6D41;&#x570F;&#x754C;&#x9762;: <span class="highlight">+2,000ft / -7,000ft</span></li>
+          <li class="warn">&#x4E88;&#x5831;&#x57DF;&#x3067;&#x306E;&#x906D;&#x9047;&#x7387;&#x306F;&#x7D04;<span class="warn-text">3%</span></li>
+          <li>&#x540C;&#x4E00;&#x7D4C;&#x8DEF;1&#x6642;&#x9593;&#x4EE5;&#x5185;&#x306E;&#x518D;&#x906D;&#x9047;&#x7387;: <span class="highlight">23%</span></li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#7a8fa6;margin-bottom:4px;letter-spacing:0.5px;">VWS&#x95BE;&#x5024;</p>
+        <table>
+          <tr><th>VWS</th><th>&#x5F37;&#x5EA6;</th><th>&#x5224;&#x5B9A;</th></tr>
+          <tr><td style="color:#34d399">6 kt/1000ft</td><td>LGT</td><td>&#x8EFD;&#x5FAE;&#x306A;&#x4E71;&#x6C17;&#x6D41;</td></tr>
+          <tr><td style="color:#fbbf24">9 kt/1000ft</td><td>MOD</td><td>&#x4E2D;&#x7A0B;&#x5EA6;&#x4E71;&#x6C17;&#x6D41;</td></tr>
+          <tr><td style="color:#f43658">15 kt/1000ft</td><td>SEV</td><td>&#x6FC0;&#x3057;&#x3044;&#x4E71;&#x6C17;&#x6D41;</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 Upper Atmospheric Patterns -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-cat">&#x1F30A;</div>
+      <h2>CAT &#x4E0A;&#x5C64;&#x5927;&#x6C17;&#x30D1;&#x30BF;&#x30FC;&#x30F3; ─ 9 PATTERNS</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:7pt;">
+      <div style="background:#0d1820;border-radius:4px;padding:5px 7px;border:1px solid #1e3448;">
+        <span style="color:#a78bfa;font-weight:500;">&#x2460;</span> &#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x6C17;&#x6D41;&#x306E;&#x5317;&#x5074;</div>
+      <div style="background:#0d1820;border-radius:4px;padding:5px 7px;border:1px solid #1e3448;">
+        <span style="color:#a78bfa;font-weight:500;">&#x2461;</span> &#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x6C17;&#x6D41;&#x306E;&#x5357;&#x5074;</div>
+      <div style="background:#0d1820;border-radius:4px;padding:5px 7px;border:1px solid #1e3448;">
+        <span style="color:#a78bfa;font-weight:500;">&#x2462;</span> &#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x5408;&#x6D41;&#x70B9;</div>
+      <div style="background:#0d1820;border-radius:4px;padding:5px 7px;border:1px solid #1e3448;">
+        <span style="color:#a78bfa;font-weight:500;">&#x2463;</span> &#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x5206;&#x6D41;&#x70B9;</div>
+      <div style="background:#0d1820;border-radius:4px;padding:5px 7px;border:1px solid #1e3448;">
+        <span style="color:#a78bfa;font-weight:500;">&#x2464;</span> &#x30C8;&#x30E9;&#x30D5;&#xFF08;&#x6C17;&#x5727;&#x306E;&#x8C37;&#xFF09;</div>
+      <div style="background:#0d1820;border-radius:4px;padding:5px 7px;border:1px solid #1e3448;">
+        <span style="color:#a78bfa;font-weight:500;">&#x2465;</span> &#x30EA;&#x30C3;&#x30B8;&#xFF08;&#x6C17;&#x5727;&#x306E;&#x5C3E;&#x6839;&#xFF09;</div>
+      <div style="background:#0d1820;border-radius:4px;padding:5px 7px;border:1px solid #1e3448;">
+        <span style="color:#a78bfa;font-weight:500;">&#x2466;</span> &#x30AB;&#x30C3;&#x30C8;&#x30AA;&#x30D5;&#x30ED;&#x30FC;</div>
+      <div style="background:#0d1820;border-radius:4px;padding:5px 7px;border:1px solid #1e3448;">
+        <span style="color:#a78bfa;font-weight:500;">&#x2467;</span> &#x5BFE;&#x6D41;&#x570F;&#x754C;&#x9762;&#x4ED8;&#x8FD1;</div>
+      <div style="background:#0d1820;border-radius:4px;padding:5px 7px;border:1px solid #1e3448;">
+        <span style="color:#a78bfa;font-weight:500;">&#x2468;</span> &#x5BFE;&#x6D41;&#x570F;&#x754C;&#x9762;&#x6298;&#x308C;&#x66F2;&#x304C;&#x308A;</div>
+    </div>
+    <div class="caution-box">
+      <strong>&#x26A0; &#x30C8;&#x30E9;&#x30F3;&#x30B9;&#x30D0;&#x30FC;&#x30B9;&#x30D0;&#x30F3;&#x30C9;(TVB):</strong> VWS&#x2265;6kt/1000ft&#x3001;&#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x5357;&#x5074;&#x306B;&#x767A;&#x751F;&#x3002;ABJP&#x3067;&#x306E;&#x307F;&#x8868;&#x793A;&#xFF08;FBJP&#x4E88;&#x5831;&#x306B;&#x306F;&#x542B;&#x307E;&#x308C;&#x306A;&#x3044;&#xFF09;&#x3002;&#x6025;&#x901F;&#x306B;&#x79FB;&#x52D5;&#x3059;&#x308B;&#x305F;&#x3081;&#x30BF;&#x30A4;&#x30E0;&#x30E9;&#x30B0;&#x3042;&#x308A;&#x3002;
+    </div>
+  </div>
+
+  <!-- Mountain Wave -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-mw">&#x25B2;</div>
+      <h2>&#x5C71;&#x5CB3;&#x6CE2; MOUNTAIN WAVE</h2>
+      <span class="tag tag-blue">&#x5168;&#x9AD8;&#x5EA6;</span>
+    </div>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <p style="font-size:7.5pt;color:#7a8fa6;margin-bottom:4px;letter-spacing:0.5px;">&#x767A;&#x751F;&#x6761;&#x4EF6;</p>
+        <table>
+          <tr><th>&#x6761;&#x4EF6;</th><th>&#x95BE;&#x5024;</th><th>&#x5099;&#x8003;</th></tr>
+          <tr><td>&#x4E00;&#x822C;&#x5C71;&#x5CB3;</td><td style="color:#ff6b35;font-weight:500">850hPa &#x2265;35kt</td><td>&#x5C71;&#x8108;&#x306B;&#x5BFE;&#x3057;&#x76F4;&#x4EA4;</td></tr>
+          <tr><td>&#x5BCC;&#x58EB;&#x5C71;</td><td style="color:#f43658;font-weight:500">700hPa &#x2265;50kt</td><td>&#x72EC;&#x7ACB;&#x5CF0;&#x3067;&#x7279;&#x7570;</td></tr>
+          <tr><td>&#x98A8;&#x5411;&#x5909;&#x5316;</td><td>&#x5C0F;&#x3055;&#x3044;</td><td>&#x5C71;&#x9802;~&#x5C71;&#x9802;&#xD7;1.5&#x500D;</td></tr>
+          <tr><td>&#x5B89;&#x5B9A;&#x5EA6;</td><td>&#x5C71;&#x9802;&#x4ED8;&#x8FD1;&#x5B89;&#x5B9A;</td><td>&#x30ED;&#x30FC;&#x30BF;&#x30FC;&#x5F62;&#x6210;</td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#7a8fa6;margin-bottom:4px;letter-spacing:0.5px;">&#x65E5;&#x672C;&#x306E;&#x4E3B;&#x8981;&#x5C71;&#x5CB3;&#x6CE2;&#x767A;&#x751F;&#x5730;&#x57DF;</p>
+        <table>
+          <tr><th>&#x5730;&#x57DF;</th><th>&#x5C71;&#x5CB3;</th><th>&#x5F71;&#x97FF;&#x7A7A;&#x6E2F;</th></tr>
+          <tr><td style="color:#f43658">&#x5BCC;&#x58EB;&#x5C71;</td><td>3,776m</td><td>HND/NRT/FSZ</td></tr>
+          <tr><td style="color:#ff6b35">&#x5317;&#x30A2;&#x30EB;&#x30D7;&#x30B9;</td><td>3,000m&#x7D1A;</td><td>NGO/KMQ</td></tr>
+          <tr><td>&#x6771;&#x5317;&#x810A;&#x6881;&#x5C71;&#x8108;</td><td>1,500m&#x7D1A;</td><td>SDJ/AXT</td></tr>
+          <tr><td>&#x963F;&#x8607;&#x5C71;</td><td>1,592m</td><td>KMJ</td></tr>
+          <tr><td>&#x56DB;&#x56FD;&#x5C71;&#x5730;</td><td>1,000m&#x7D1A;</td><td>TAK/TKS</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mountain Wave Propagation -->
+  <div class="grid-2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header">
+        <div class="icon icon-mw">&#x2B06;</div>
+        <h2>&#x5C71;&#x5CB3;&#x6CE2;&#x306E;&#x4E0A;&#x65B9;&#x4F1D;&#x64AD;</h2>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="highlight">FL400+</span>&#x306B;&#x4F1D;&#x64AD;&#x3059;&#x308B;&#x4E8B;&#x4F8B;&#x3042;&#x308A;</li>
+        <li>&#x2019;&#x5BCC;&#x58EB;&#x5C71;&#x6CE2;&#x2019;: &#x5317;&#x30A2;&#x30EB;&#x30D7;&#x30B9;&#x30FB;&#x5BCC;&#x58EB;&#x5C71;&#x306E;&#x8907;&#x5408;&#x6CE2;</li>
+        <li class="danger">&#x98A8;&#x4E0B;&#x5074;&#x306E;<span class="danger-text">&#x30ED;&#x30FC;&#x30BF;&#x30FC;</span>&#x304C;&#x6700;&#x3082;&#x5371;&#x967A;</li>
+        <li>&#x30EC;&#x30F3;&#x30BA;&#x96F2;(ACSL)&#x304C;&#x76EE;&#x8996;&#x6307;&#x6A19;</li>
+      </ul>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header">
+        <div class="icon icon-warn">&#x26A0;</div>
+        <h2>ABJP/FBJP &#x5C71;&#x5CB3;&#x6CE2;&#x8868;&#x8A18;</h2>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="highlight">&#x25B2;</span>&#x8A18;&#x53F7;: &#x5C71;&#x5CB3;&#x6CE2;&#x306E;&#x767A;&#x751F;&#x3092;&#x793A;&#x3059;</li>
+        <li>ABJP: &#x5B9F;&#x6CC1;&#x89E3;&#x6790;&#x306B;&#x8868;&#x793A;</li>
+        <li>FBJP: &#x4E88;&#x5831;&#x306B;&#x8868;&#x793A;</li>
+        <li class="warn">&#x30E2;&#x30C7;&#x30EB;&#x306E;&#x9650;&#x754C;: &#x5C0F;&#x898F;&#x6A21;&#x5C71;&#x5CB3;&#x6CE2;&#x306F;&#x672A;&#x691C;&#x51FA;</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>TURBULENCE BRIEFING &#x2500; PAGE 2 / 5</span>
+    <span>SOURCE: JAL B737 WEATHER MANUAL Rev.24.11 / 168 PDFs</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 3: CB TURBULENCE & WAKE TURBULENCE                       -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>CB &amp; <span class="accent">WAKE TURBULENCE</span></h1>
+      <div class="subtitle">&#x7A4D;&#x4E71;&#x96F2;&#x4E71;&#x6C17;&#x6D41; &#x2502; &#x5F8C;&#x6D41;&#x4E71;&#x6C17;&#x6D41; &#x2502; &#x30C0;&#x30A6;&#x30F3;&#x30D0;&#x30FC;&#x30B9;&#x30C8;</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 3 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- CB Lifecycle -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-cb">&#x26C8;</div>
+      <h2>CB&#x30E9;&#x30A4;&#x30D5;&#x30B5;&#x30A4;&#x30AF;&#x30EB; ─ 3 STAGES (30-50min)</h2>
+    </div>
+    <div class="type-grid">
+      <div class="type-item">
+        <div class="name" style="color:#34d399;">&#x2460; &#x767A;&#x9054;&#x671F;</div>
+        <div class="en">DEVELOPING (10-15min)</div>
+        <div class="desc">&#x4E0A;&#x6607;&#x6C17;&#x6D41;&#x304C;&#x5353;&#x8D8A;&#x3002;&#x964D;&#x6C34;&#x306A;&#x3057;&#x3002;&#x30A8;&#x30B3;&#x30FC;&#x304C;&#x6025;&#x901F;&#x306B;&#x62E1;&#x5927;&#x3002;&#x96F2;&#x9802;&#x304C;&#x6025;&#x4E0A;&#x6607;&#x3002;</div>
+      </div>
+      <div class="type-item">
+        <div class="name" style="color:#f43658;">&#x2461; &#x6700;&#x76DB;&#x671F;</div>
+        <div class="en">MATURE (15-30min)</div>
+        <div class="desc">&#x4E0A;&#x6607;&#x30FB;&#x4E0B;&#x964D;&#x6C17;&#x6D41;&#x304C;&#x5171;&#x5B58;&#x3002;&#x6700;&#x5927;&#x4E0A;&#x6607;&#x6C17;&#x6D41;<span style="color:#f43658">63m/s</span>&#x3002;&#x964D;&#x6C34;&#x30FB;&#x96F7;&#x30FB;&#x96F9;&#x3002;</div>
+      </div>
+      <div class="type-item">
+        <div class="name" style="color:#fbbf24;">&#x2462; &#x8870;&#x5F31;&#x671F;</div>
+        <div class="en">DISSIPATING (10-30min)</div>
+        <div class="desc">&#x4E0B;&#x964D;&#x6C17;&#x6D41;&#x304C;&#x5353;&#x8D8A;&#x3002;&#x964D;&#x6C34;&#x304C;&#x5F31;&#x307E;&#x308B;&#x3002;&#x304B;&#x306A;&#x3068;&#x3053;&#x96F2;&#x306B;&#x5909;&#x5316;&#x3002;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CB Turbulence Zones -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-cb">&#x26A0;</div>
+      <h2>CB&#x5468;&#x8FBA;&#x306E;&#x4E71;&#x6C17;&#x6D41;&#x5206;&#x5E03;</h2>
+    </div>
+    <div class="grid-3" style="margin-bottom:0">
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#f43658;margin-bottom:3px;">CB&#x5185;&#x90E8;</p>
+        <ul class="bullet-list">
+          <li>&#x6700;&#x5927;&#x4E0A;&#x6607;&#x6C17;&#x6D41; <span class="danger-text">63m/s</span></li>
+          <li>&#x6700;&#x5927;&#x4E0B;&#x964D;&#x6C17;&#x6D41; <span class="highlight">15m/s</span></li>
+          <li class="danger">SEV~EXTREME&#x4E71;&#x6C17;&#x6D41;</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#ff6b35;margin-bottom:3px;">CB&#x5468;&#x8FBA;</p>
+        <ul class="bullet-list">
+          <li>&#x5468;&#x8FBA;&#x4E0B;&#x964D;&#x6C17;&#x6D41; <span class="highlight">2,000-3,000ft/min</span></li>
+          <li>&#x30A8;&#x30B3;&#x30FC;&#x304B;&#x3089;<span class="highlight">20NM</span>&#x4EE5;&#x4E0A;&#x96E2;&#x308C;&#x308B;</li>
+          <li class="warn">&#x96F2;&#x9802;&#x306E;<span class="warn-text">+20%</span>&#x4EE5;&#x4E0A;&#x3092;&#x98DB;&#x884C;</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:8pt;font-weight:500;color:#fbbf24;margin-bottom:3px;">CB&#x4E0B;&#x90E8;</p>
+        <ul class="bullet-list">
+          <li>&#x30AC;&#x30B9;&#x30C8;&#x30D5;&#x30ED;&#x30F3;&#x30C8;</li>
+          <li>&#x30DE;&#x30A4;&#x30AF;&#x30ED;&#x30D0;&#x30FC;&#x30B9;&#x30C8;</li>
+          <li class="warn">&#x5F71;&#x97FF;&#x7BC4;&#x56F2;&#x2264;4km&#x3001;&#x5BFF;&#x547D;~10&#x5206;</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wake Turbulence -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-wake">&#x21BA;</div>
+      <h2>&#x5F8C;&#x6D41;&#x4E71;&#x6C17;&#x6D41; WAKE TURBULENCE</h2>
+    </div>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <p style="font-size:7.5pt;color:#7a8fa6;margin-bottom:3px;">&#x30DC;&#x30FC;&#x30C6;&#x30C3;&#x30AF;&#x30B9;&#x306E;&#x6319;&#x52D5;</p>
+        <table>
+          <tr><th>&#x9805;&#x76EE;</th><th>&#x5024;</th></tr>
+          <tr><td>&#x6C88;&#x964D;&#x901F;&#x5EA6;</td><td style="color:#ff6b35">100-150 m/min</td></tr>
+          <tr><td>&#x6A2A;&#x79FB;&#x52D5;</td><td>&#x7121;&#x98A8;&#x6642;2-3kt</td></tr>
+          <tr><td>&#x6D88;&#x6EC5;&#x6642;&#x9593;</td><td>2-3&#x5206;&#xFF08;&#x6700;&#x5927;5&#x5206;&#xFF09;</td></tr>
+          <tr><td>&#x6A2A;&#x98A8;&#x5F71;&#x97FF;</td><td>5kt+&#x3067;&#x6D41;&#x3055;&#x308C;&#x308B;</td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;color:#7a8fa6;margin-bottom:3px;">&#x56DE;&#x907F;&#x306E;&#x539F;&#x5247;</p>
+        <ul class="bullet-list">
+          <li>&#x5148;&#x884C;HEAVY&#x6A5F;&#x306E;<span class="highlight">&#x4E0A;&#x5074;&#x30FB;&#x98A8;&#x4E0A;&#x5074;</span>&#x3092;&#x98DB;&#x884C;</li>
+          <li>T/O: &#x5148;&#x884C;&#x6A5F;&#x306E;&#x6D6E;&#x63DA;&#x70B9;<span class="highlight">&#x524D;</span>&#x306B;&#x96E2;&#x9678;</li>
+          <li>LDG: &#x5148;&#x884C;&#x6A5F;&#x306E;&#x63A5;&#x5730;&#x70B9;<span class="highlight">&#x5148;</span>&#x306B;&#x63A5;&#x5730;</li>
+          <li class="danger"><span class="danger-text">&#x30A8;&#x30F3;&#x30B8;&#x30F3;&#x30D6;&#x30E9;&#x30B9;&#x30C8;</span>: 23kt&#x4EE5;&#x4E0A;&#x3067;&#x5371;&#x967A;</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wake Turbulence Incidents -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-case">&#x26A0;</div>
+      <h2>&#x5F8C;&#x6D41;&#x4E71;&#x6C17;&#x6D41; &#x4E3B;&#x8981;&#x4E8B;&#x4F8B; (8&#x4EF6;)</h2>
+    </div>
+    <table>
+      <tr><th>&#x65E5;&#x4ED8;</th><th>&#x5834;&#x6240;</th><th>&#x5148;&#x884C;&#x6A5F;</th><th>&#x5F8C;&#x7D9A;&#x6A5F;</th><th>&#x6982;&#x8981;</th></tr>
+      <tr><td style="color:#fbbf24">2001/11</td><td>JFK</td><td>B747</td><td style="color:#f43658">A300</td><td style="color:#f43658">&#x589C;&#x843D;&#x4E8B;&#x6545;&#x30FB;&#x5168;&#x54E1;&#x6B7B;&#x4EA1;</td></tr>
+      <tr><td style="color:#fbbf24">2014/4</td><td>NRT</td><td>B747</td><td>B737</td><td>&#x5DE8;&#x5927;&#x6A5F;&#x5F8C;&#x65B9;&#x3067;&#x52D5;&#x63FA;</td></tr>
+      <tr><td style="color:#fbbf24">2016/12</td><td>FUK</td><td>B777</td><td>Q400</td><td>Circling&#x4E2D;&#x306B;WAKE&#x906D;&#x9047;</td></tr>
+    </table>
+    <div class="caution-box">
+      <strong>&#x30AF;&#x30EB;&#x30FC;&#x30BA;&#x4E2D;Wake:</strong> &#x5DE8;&#x5927;&#x6A5F;&#x306E;&#x4E0B;&#x65B9;1,000ft&#x4EE5;&#x5185;&#x3067;&#x306E;Wake&#x4E71;&#x6C17;&#x6D41;&#x3082;&#x5831;&#x544A;&#x3042;&#x308A;&#x3002;RVSM&#x7A7A;&#x57DF;&#x3067;&#x306E;&#x5DE8;&#x5927;&#x6A5F;&#x5F8C;&#x65B9;&#x98DB;&#x884C;&#x6642;&#x306F;&#x9AD8;&#x5EA6;&#x5909;&#x66F4;&#x3092;&#x691C;&#x8A0E;&#x3002;
+    </div>
+  </div>
+
+  <!-- Downburst / Microburst -->
+  <div class="card" style="margin-bottom:0">
+    <div class="card-header">
+      <div class="icon icon-cb">&#x2193;</div>
+      <h2>&#x30C0;&#x30A6;&#x30F3;&#x30D0;&#x30FC;&#x30B9;&#x30C8; / &#x30DE;&#x30A4;&#x30AF;&#x30ED;&#x30D0;&#x30FC;&#x30B9;&#x30C8;</h2>
+    </div>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <table>
+          <tr><th>&#x9805;&#x76EE;</th><th>&#x5024;</th></tr>
+          <tr><td>&#x30DE;&#x30A4;&#x30AF;&#x30ED;&#x30D0;&#x30FC;&#x30B9;&#x30C8;&#x5F71;&#x97FF;</td><td style="color:#f43658">&#x2264;4km</td></tr>
+          <tr><td>&#x5BFF;&#x547D;</td><td style="color:#ff6b35">~10&#x5206;</td></tr>
+          <tr><td>MBA&#x691C;&#x51FA;&#x57FA;&#x6E96;</td><td>&#x98A8;&#x901F;&#x5DEE;&#x2265;15kt + &#x9762;&#x7A4D;&#x2265;3km&#xB2;</td></tr>
+          <tr><td>&#x4E7E;&#x71E5;&#x578B;</td><td>VIRGA&#x304B;&#x3089;&#x306E;&#x4E0B;&#x964D;&#x6C17;&#x6D41;</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="danger-box">
+          <strong>W/S効果:</strong> ファイナル中MBAは向かい風→下降流→追い風と急変。イニシャルゲインに騙されるな。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>TURBULENCE BRIEFING &#x2500; PAGE 3 / 5</span>
+    <span>SOURCE: JAL B737 WEATHER MANUAL Rev.24.11 / 168 PDFs</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 4: FORECAST TOOLS & SIGMET                               -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>&#x4E88;&#x5831;&#x30C4;&#x30FC;&#x30EB; <span class="accent">FORECAST TOOLS</span></h1>
+      <div class="subtitle">FOSTER &#x2502; ABJP &#x2502; FBJP &#x2502; WIND PROFILER &#x2502; SIGMET</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 4 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- Main Forecast Tools -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-tool">&#x25CE;</div>
+      <h2>&#x4E3B;&#x8981;&#x4E88;&#x5831;&#x30C4;&#x30FC;&#x30EB;&#x4E00;&#x89A7;</h2>
+    </div>
+    <table>
+      <tr><th>ツール</th><th>種別</th><th>更新</th><th>内容</th><th>備考</th></tr>
+      <tr><td style="color:#ff6b35;font-weight:500">FOSTER X-Sec</td><td>断面図</td><td>定時</td><td>経路上TURB/CB/アイシング</td><td>PIREP統合表示</td></tr>
+      <tr><td style="color:#a78bfa;font-weight:500">ABJP</td><td>実況</td><td>6回/日</td><td>風・気温・VWS・トラフ・JET</td><td>TVBはABJPのみ</td></tr>
+      <tr><td style="color:#00d4ff;font-weight:500">FBJP</td><td>予報</td><td>4回/日</td><td>TURB予報域・VWS色分け</td><td>モデル精度に限界</td></tr>
+      <tr><td style="color:#00d4ff;font-weight:500">FBJP112</td><td>計画</td><td>定時</td><td>飛行計画用予報</td><td>予報時間が長い</td></tr>
+      <tr><td style="color:#34d399;font-weight:500">毎時大気解析</td><td>実況</td><td>毎時</td><td>下層風・気温・湿度</td><td>局地現象の把握</td></tr>
+      <tr><td style="color:#fbbf24;font-weight:500">Wind Profiler</td><td>観測</td><td>10分毎</td><td>垂直風分布（全国33局）</td><td>LLWS検出に有効</td></tr>
+    </table>
+  </div>
+
+  <!-- Lower-Level TB Charts -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-tool">&#x1F4CA;</div>
+        <h2>&#x4E0B;&#x5C64;&#x60AA;&#x5929;&#x4E88;&#x60F3;&#x56F3;</h2>
+      </div>
+      <table>
+        <tr><th>TB Index</th><th>&#x5F37;&#x5EA6;</th><th>&#x5BFE;&#x5FDC;</th></tr>
+        <tr><td style="color:#34d399">&lt; 3.0</td><td>LGT</td><td>&#x8EFD;&#x5FAE;&#x306A;&#x4E71;&#x6C17;&#x6D41;</td></tr>
+        <tr><td style="color:#fbbf24;font-weight:500">&#x2265; 3.0</td><td>MOD</td><td style="color:#fbbf24">&#x6CE8;&#x610F;</td></tr>
+        <tr><td style="color:#f43658;font-weight:500">&#x2265; 5.0</td><td>OCNL SEV</td><td style="color:#f43658">&#x8B66;&#x6212;</td></tr>
+      </table>
+      <div class="info-box">
+        LFM&#x30D9;&#x30FC;&#x30B9;&#x306E;&#x5C40;&#x5730;&#x4E88;&#x5831;&#x56F3;&#x3002;TAF&#x306B;&#x53CD;&#x6620;&#x3055;&#x308C;&#x306A;&#x3044;&#x5C40;&#x5730;&#x7684;TURB&#x3092;&#x78BA;&#x8A8D;&#x53EF;&#x80FD;&#x3002;
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-tool">&#x1F4E1;</div>
+        <h2>SIGMET &#x767A;&#x884C;&#x57FA;&#x6E96;</h2>
+      </div>
+      <table>
+        <tr><th>&#x9805;&#x76EE;</th><th>&#x57FA;&#x6E96;</th></tr>
+        <tr><td>SEV TURB</td><td style="color:#f43658">&#x5B9F;&#x6CC1;&#x306E;&#x307F;(OBS)</td></tr>
+        <tr><td>MOD TO SEV</td><td>&#x4E88;&#x5831;(FCST)&#x3067;&#x4F7F;&#x7528;</td></tr>
+        <tr><td>トリガー</td><td style="color:#ff6b35">風≥60kt AND VWS≥14kt/1000ft</td></tr>
+        <tr><td>予報トリガー</td><td style="color:#ff6b35">VWS≥20kt/1000ft</td></tr>
+      </table>
+      <div class="caution-box">
+        <strong>注意:</strong> SIGMETはSEV TURBのみ発行。MOD TURBはABJP/FBJP/PIREPで把握。
+      </div>
+    </div>
+  </div>
+
+  <!-- JMA Abbreviations -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-info">&#x2139;</div>
+      <h2>JMA&#x72EC;&#x81EA;&#x7565;&#x8A9E; &#x2500; &#x4E88;&#x5831;&#x56F3;&#x306E;&#x8AAD;&#x307F;&#x65B9;</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:7.5pt;">
+      <div style="background:#0d1820;border-radius:4px;padding:6px 8px;border:1px solid #1e3448;">
+        <span style="color:#ff6b35;font-weight:500;">TVB</span> ─ &#x30C8;&#x30E9;&#x30F3;&#x30B9;&#x30D0;&#x30FC;&#x30B9;&#x30D0;&#x30F3;&#x30C9;<br>
+        <span style="color:#7a8fa6;font-size:6.5pt;">VWS&#x2265;6kt/1000ft &#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x5357;&#x5074;</span>
+      </div>
+      <div style="background:#0d1820;border-radius:4px;padding:6px 8px;border:1px solid #1e3448;">
+        <span style="color:#ff6b35;font-weight:500;">UCA</span> ─ &#x4E0A;&#x5C64;&#x5BD2;&#x6C17;&#x6838;<br>
+        <span style="color:#7a8fa6;font-size:6.5pt;">&#x5BFE;&#x6D41;&#x4E0D;&#x5B89;&#x5B9A;&#x30FBCB&#x767A;&#x751F;</span>
+      </div>
+      <div style="background:#0d1820;border-radius:4px;padding:6px 8px;border:1px solid #1e3448;">
+        <span style="color:#ff6b35;font-weight:500;">USAM</span> ─ &#x4E0A;&#x5C64;&#x5BFE;&#x6D41;&#x570F;&#x754C;&#x9762;&#x4E0B;&#x964D;<br>
+        <span style="color:#7a8fa6;font-size:6.5pt;">&#x30C8;&#x30E9;&#x30D5;&#x524D;&#x9762;&#x3067;CAT&#x30EA;&#x30B9;&#x30AF;</span>
+      </div>
+      <div style="background:#0d1820;border-radius:4px;padding:6px 8px;border:1px solid #1e3448;">
+        <span style="color:#ff6b35;font-weight:500;">LCVG</span> ─ &#x4E0B;&#x5C64;&#x53CE;&#x675F;<br>
+        <span style="color:#7a8fa6;font-size:6.5pt;">&#x4E0B;&#x5C64;&#x3067;&#x306E;&#x96F2;&#x30FB;&#x964D;&#x6C34;&#x5F37;&#x5316;</span>
+      </div>
+      <div style="background:#0d1820;border-radius:4px;padding:6px 8px;border:1px solid #1e3448;">
+        <span style="color:#ff6b35;font-weight:500;">LWHA</span> ─ &#x4E0B;&#x5C64;&#x6E7F;&#x6F64;&#x57DF;<br>
+        <span style="color:#7a8fa6;font-size:6.5pt;">&#x9727;&#x30FB;&#x4F4E;&#x8996;&#x7A0B;&#x30EA;&#x30B9;&#x30AF;</span>
+      </div>
+      <div style="background:#0d1820;border-radius:4px;padding:6px 8px;border:1px solid #1e3448;">
+        <span style="color:#ff6b35;font-weight:500;">CVX</span> ─ &#x5BFE;&#x6D41;&#x96F2;<br>
+        <span style="color:#7a8fa6;font-size:6.5pt;">CB/TCU&#x306E;&#x767A;&#x9054;&#x3092;&#x793A;&#x3059;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Operational Procedures -->
+  <div class="card" style="margin-bottom:0">
+    <div class="card-header">
+      <div class="icon icon-shield">&#x2713;</div>
+      <h2>&#x4E71;&#x6C17;&#x6D41;&#x904B;&#x822A;&#x624B;&#x9806; ─ FLIGHT PHASES</h2>
+    </div>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <p style="font-size:7.5pt;font-weight:500;color:#34d399;margin-bottom:3px;">&#x98DB;&#x884C;&#x524D;</p>
+        <ul class="bullet-list">
+          <li>ABJP/FBJP&#x3067;TURB&#x4E88;&#x5831;&#x57DF;&#x78BA;&#x8A8D;</li>
+          <li>FOSTER X-Section&#x3067;&#x7D4C;&#x8DEF;&#x4E0A;&#x306E;TURB</li>
+          <li>SIGMET/PIREP&#x78BA;&#x8A8D;</li>
+          <li class="warn">TB3+&#x4E88;&#x60F3;: &#x5BA2;&#x5BA4;&#x5B89;&#x5168;&#x6E96;&#x5099;</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:7.5pt;font-weight:500;color:#34d399;margin-bottom:3px;">&#x98DB;&#x884C;&#x4E2D;</p>
+        <ul class="bullet-list">
+          <li>PIREP&#x6295;&#x5165;&#xFF08;&#x5F8C;&#x7D9A;&#x6A5F;&#x3078;&#x306E;&#x60C5;&#x5831;&#x63D0;&#x4F9B;&#xFF09;</li>
+          <li>&#x9AD8;&#x5EA6;&#x5909;&#x66F4;/&#x7D4C;&#x8DEF;&#x5909;&#x66F4;&#x691C;&#x8A0E;</li>
+          <li>CAT: &#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x30B3;&#x30A2;&#x5074;&#x306B;2,000ft&#x4EE5;&#x4E0A;&#x79FB;&#x52D5;</li>
+          <li class="danger">MOD+&#x4E88;&#x60F3;: &#x901F;&#x5EA6;&#x3092;V<sub>A</sub>&#x306B;&#x5408;&#x308F;&#x305B;&#x308B;</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>TURBULENCE BRIEFING &#x2500; PAGE 4 / 5</span>
+    <span>SOURCE: JAL B737 WEATHER MANUAL Rev.24.11 / 168 PDFs</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 5: CASE STUDIES & QUICK REFERENCE                        -->
+<!-- ============================================================ -->
+<div class="page">
+  <div class="header">
+    <div class="header-left">
+      <h1>&#x4E8B;&#x4F8B; &amp; <span class="accent">QUICK REFERENCE</span></h1>
+      <div class="subtitle">TB6&#x4E8B;&#x4F8B; &#x2502; &#x4E3B;&#x8981;&#x4E8B;&#x6545; &#x2502; &#x904B;&#x822A;&#x30C1;&#x30A7;&#x30C3;&#x30AF;&#x30EA;&#x30B9;&#x30C8;</div>
+    </div>
+    <div class="header-right">
+      <div class="page-badge">PAGE 5 / 5</div><br>
+      ADVERSE WEATHER SERIES
+    </div>
+  </div>
+
+  <!-- TB6 Cases -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-case">&#x26A1;</div>
+      <h2>TB6&#x4E8B;&#x4F8B; ─ EXTREME TURBULENCE</h2>
+      <span class="tag tag-red">CRITICAL</span>
+    </div>
+    <table>
+      <tr><th>&#x65E5;&#x4ED8;</th><th>&#x4FBF;&#x540D;</th><th>&#x9AD8;&#x5EA6;</th><th>&#x539F;&#x56E0;</th><th>&#x5F71;&#x97FF;</th></tr>
+      <tr>
+        <td style="color:#fbbf24">2015/8/12</td>
+        <td>JAL</td>
+        <td>FL350&#x4ED8;&#x8FD1;</td>
+        <td style="color:#f43658">&#x5C71;&#x5CB3;&#x6CE2;&#x4F1D;&#x64AD;+CAT</td>
+        <td>&#x4E57;&#x5BA2;&#x30FB;&#x4E57;&#x54E1;&#x8CA0;&#x50B7;</td>
+      </tr>
+      <tr>
+        <td style="color:#fbbf24">2017/5/28</td>
+        <td>JAL</td>
+        <td>FL380</td>
+        <td style="color:#f43658">&#x8907;&#x5408;&#x8981;&#x56E0;(CAT+&#x5BFE;&#x6D41;)</td>
+        <td>TB6&#x8A18;&#x9332;</td>
+      </tr>
+      <tr>
+        <td style="color:#fbbf24">2019/8</td>
+        <td>JAL</td>
+        <td>&#x4E0D;&#x660E;</td>
+        <td style="color:#ff6b35">&#x53F0;&#x98A8;&#x5916;&#x5074;&#x306E;&#x4E71;&#x6C17;&#x6D41;</td>
+        <td>TB6&#x8A18;&#x9332;</td>
+      </tr>
+    </table>
+    <div class="danger-box">
+      <strong>&#x25B2; 2015/8/12&#x6559;&#x8A13;:</strong> &#x5C71;&#x5CB3;&#x6CE2;&#x304C;FL400+&#x306B;&#x4F1D;&#x64AD;&#x3057;&#x3001;&#x901A;&#x5E38;&#x306E;&#x5DE1;&#x822A;&#x9AD8;&#x5EA6;&#x3067;&#x3082;EXTREME TURB&#x306B;&#x906D;&#x9047;&#x3002;700hPa 50kt+&#x306E;&#x5BCC;&#x58EB;&#x5C71;&#x6CE2;&#x304C;&#x4E0A;&#x65B9;&#x4F1D;&#x64AD;&#x3057;&#x305F;&#x4E8B;&#x4F8B;&#x3002;
+    </div>
+  </div>
+
+  <!-- Major Accidents -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-cb">&#x26A0;</div>
+        <h2>JL093&#x4E8B;&#x6545; (2014)</h2>
+        <span class="tag tag-red">&#x91CD;&#x50B7;</span>
+      </div>
+      <ul class="bullet-list">
+        <li>&#x539F;&#x56E0;: <span class="danger-text">&#x4E2D;&#x5C64;&#x96F2;&#x5E95;TURB</span></li>
+        <li>&#x9AD8;&#x5EA6;: 10,000-20,000ft&#x306E;&#x96F2;&#x5E95;&#x4ED8;&#x8FD1;</li>
+        <li>&#x6C17;&#x6E29;: 0&#x2103;~-15&#x2103;&#xFF08;&#x6C37;&#x6676;&#x5F62;&#x6210;&#x5E2F;&#xFF09;</li>
+        <li class="danger">VIRGA&#x3092;&#x4F34;&#x3046;&#x4E0B;&#x964D;&#x6C17;&#x6D41;&#x304C;&#x539F;&#x56E0;</li>
+        <li>&#x4E57;&#x5BA2;&#x91CD;&#x50B7;&#x8005;&#x767A;&#x751F;</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="icon icon-cat">&#x26A0;</div>
+        <h2>AA280&#x4E8B;&#x6545; (2014)</h2>
+        <span class="tag tag-red">SEV CAT</span>
+      </div>
+      <ul class="bullet-list">
+        <li>&#x539F;&#x56E0;: <span class="danger-text">&#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x5206;&#x6D41;&#x70B9;CAT</span></li>
+        <li>&#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x304C;&#x5206;&#x5C90;&#x3059;&#x308B;&#x30DD;&#x30A4;&#x30F3;&#x30C8;&#x3067;&#x767A;&#x751F;</li>
+        <li class="danger">&#x4E88;&#x5831;&#x56F0;&#x96E3;&#x306A;&#x30D1;&#x30BF;&#x30FC;&#x30F3;</li>
+        <li>ABJP&#x306E;&#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x5206;&#x6D41;&#x70B9;&#x78BA;&#x8A8D;&#x304C;&#x91CD;&#x8981;</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Other Notable Cases -->
+  <div class="card">
+    <div class="card-header">
+      <div class="icon icon-case">&#x2709;</div>
+      <h2>&#x305D;&#x306E;&#x4ED6;&#x306E;&#x91CD;&#x8981;&#x4E8B;&#x4F8B;</h2>
+    </div>
+    <table>
+      <tr><th>&#x65E5;&#x4ED8;</th><th>&#x539F;&#x56E0;</th><th>&#x6982;&#x8981;</th><th>&#x6559;&#x8A13;</th></tr>
+      <tr><td style="color:#fbbf24">2016/1/29</td><td>&#x30B8;&#x30A7;&#x30C3;&#x30C8;HWS</td><td>&#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x8FD1;&#x508D;&#x306ECAT</td><td>&#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x30B3;&#x30A2;&#x306E;&#x4F4D;&#x7F6E;&#x78BA;&#x8A8D;</td></tr>
+      <tr><td style="color:#fbbf24">2019/12</td><td>&#x5BCC;&#x58EB;&#x5C71;&#x6CE2;</td><td>FL350&#x4EE5;&#x4E0A;&#x3067;MW TURB</td><td>700hPa &#x2265;50kt&#x3067;&#x8B66;&#x6212;</td></tr>
+      <tr><td style="color:#fbbf24">2019/11/14</td><td>&#x8907;&#x5408;&#x8981;&#x56E0;</td><td>&#x53F0;&#x98A8;+&#x524D;&#x7DDA;+CAT</td><td>&#x8907;&#x5408;&#x8981;&#x56E0;&#x3067;&#x4E88;&#x6E2C;&#x56F0;&#x96E3;</td></tr>
+    </table>
+  </div>
+
+  <!-- Quick Reference Table -->
+  <div class="card" style="margin-bottom:0">
+    <div class="card-header">
+      <div class="icon icon-shield">&#x1F4CB;</div>
+      <h2>QUICK REFERENCE</h2>
+    </div>
+    <table class="qr-table">
+      <tr><th>&#x9805;&#x76EE;</th><th>&#x5185;&#x5BB9;</th></tr>
+      <tr><td>VWS&#x95BE;&#x5024;</td><td><span style="color:#34d399">6kt=LGT</span> / <span style="color:#fbbf24">9kt=MOD</span> / <span style="color:#f43658">15kt=SEV</span> (per 1000ft)</td></tr>
+      <tr><td>CAT&#x767A;&#x751F;&#x57DF;</td><td>&#x30B8;&#x30A7;&#x30C3;&#x30C8;&#x8FD1;&#x508D;(2/3) &#x2502; &#x30C8;&#x30E9;&#x30D5;+2000ft/-7000ft &#x2502; Ri&#x2264;0.25</td></tr>
+      <tr><td>&#x5C71;&#x5CB3;&#x6CE2;</td><td>850hPa&#x2265;35kt(&#x4E00;&#x822C;) / 700hPa&#x2265;50kt(&#x5BCC;&#x58EB;&#x5C71;) &#x2502; FL400+&#x4F1D;&#x64AD;</td></tr>
+      <tr><td>CB&#x56DE;&#x907F;</td><td>&#x30A8;&#x30B3;&#x30FC;20NM+ &#x2502; &#x96F2;&#x9802;+20%&#x4EE5;&#x4E0A; &#x2502; &#x5BFF;&#x547D;30-50min</td></tr>
+      <tr><td>&#x4E2D;&#x5C64;&#x96F2;&#x5E95;</td><td>10,000-20,000ft / 0&#x2103;~-15&#x2103; / VIRGA&#x2192;SEV TURB</td></tr>
+      <tr><td>Wake</td><td>&#x6C88;&#x964D;100-150m/min &#x2502; &#x6A2A;2-3kt &#x2502; &#x6D88;&#x6EC5;2-3min</td></tr>
+      <tr><td>SIGMET</td><td>SEV TURB: OBS&#x306E;&#x307F; &#x2502; &#x30C8;&#x30EA;&#x30AC;&#x30FC;: &#x2265;60kt AND VWS&#x2265;14kt</td></tr>
+      <tr><td>TB Index</td><td>&#x2265;3.0=MOD &#x2502; &#x2265;5.0=OCNL SEV &#xFF08;&#x4E0B;&#x5C64;&#x60AA;&#x5929;&#x4E88;&#x60F3;&#x56F3;&#xFF09;</td></tr>
+      <tr><td>&#x4E88;&#x5831;&#x57DF;&#x906D;&#x9047;&#x7387;</td><td>&#x7D04;3% &#x2502; &#x540C;&#x4E00;&#x7D4C;&#x8DEF;1h&#x4EE5;&#x5185;&#x518D;&#x906D;&#x9047;23%</td></tr>
+      <tr><td>&#x5B89;&#x5168;&#x95BE;&#x5024;</td><td>TB3+: &#x5BA2;&#x5BA4;&#x5B89;&#x5168; &#x2502; TB4+(MOD): &#x6B63;&#x5F0F;&#x4E88;&#x5831; &#x2502; V<sub>A</sub>&#x3078;&#x6E1B;&#x901F;</td></tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    <span>TURBULENCE BRIEFING &#x2500; PAGE 5 / 5</span>
+    <span>SOURCE: JAL B737 WEATHER MANUAL Rev.24.11 / 168 PDFs</span>
+  </div>
+</div>
+
+</body>
+</html>
